@@ -25,7 +25,6 @@ void cli() {
     }
 
     str_format("BrightOS> ", THEME.PRIMARY_COLOR);
-    // uart_puts("BrightOS> "/);
 
     // Wait until the TX FIFO is empty
     while (!(UART0_FR & UART0_FR_TXFE)) {
@@ -137,39 +136,36 @@ void cli() {
       // Print the command
       str_format(cli_buffer, THEME.SECONDARY_COLOR);
     }
-  } else {
-    // Get the command until newline
-    if (c != '\n') {
-      // Append the character to the buffer
-      if (index < MAX_CMD_SIZE - 1) {
-        cli_buffer[index] = c;
-        index++;
+  } else if (c != '\n') {
+    // Append the character to the buffer
+    if (index < MAX_CMD_SIZE - 1) {
+      cli_buffer[index] = c;
+      index++;
 
-        // Convert character to string and print
-        char str[2] = {c, '\0'};
-        str_format(str, THEME.SECONDARY_COLOR);
-      } else {
-        str_format("Command too long\n", THEME.ERROR_COLOR);
-        index = 0;
-        is_new_command = 1;
-      }
+      // Convert character to string and print
+      char str[2] = {c, '\0'};
+      str_format(str, THEME.SECONDARY_COLOR);
     } else {
-      // Reset the flag
-      was_down = 0;
-
-      // Add null terminator to the buffer
-      cli_buffer[index] = '\0';
-
-      // Push the command to the history stack
-      push_command(&command_stack, cli_buffer);
-
-      // Parse the command from the buffer and execute
-      parse_command(cli_buffer);
-
-      // Reset the flag and index
+      str_format("Command too long\n", THEME.ERROR_COLOR);
       index = 0;
       is_new_command = 1;
     }
+  } else if (c == '\n') {
+    // Reset the flag
+    was_down = 0;
+
+    // Add null terminator to the buffer
+    cli_buffer[index] = '\0';
+
+    // Push the command to the history stack
+    push_command(&command_stack, cli_buffer);
+
+    // Parse the command from the buffer and execute
+    parse_command(cli_buffer);
+
+    // Reset the flag and index
+    index = 0;
+    is_new_command = 1;
   }
 }
 
