@@ -29,7 +29,7 @@
 #define CYAN_BG "\033[46m"
 #define WHITE_BG "\033[47m"
 #define BLACK_BG "\033[40m"
-#define CLEAR "\033[0m"
+#define CLEAR "\x1b[49m"
 
 // User-defined data types
 typedef enum { False = 0, True = 1 } boolean; // Boolean data type

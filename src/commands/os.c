@@ -236,11 +236,11 @@ void show_help(char *command) {
   commands_desc[3][1] = "\nE.g.: hist";
   commands_desc[4][0] = "Change color of OS";
   commands_desc[4][1] =
-      "-[target]: b: background, t: text, "
+      "-[target]: b: background, t: text, os: os theme, "
       "pri: primary, sec: secondary, err: ERROR_COLOR, suc: SUCCESS_COLOR\n";
   commands_desc[4][2] =
       "-[color]: red, green, yellow, blue, purple, cyan, white, "
-      "black";
+      "black, bright (os only), dark (os only), light (os only)";
   commands_desc[4][3] =
       "\nE.g.: setcolor -t red -b yellow -pri green -sec cyan";
   commands_desc[5][0] = "Show reference for a target";
@@ -641,6 +641,32 @@ void parse_command(char *input) {
         // Set the text color
         THEME.PRIMARY_COLOR = color_option;
         THEME.SECONDARY_COLOR = color_option;
+      } else if (is_equal(target, "os")) {
+        // For the os flag, set the OS theme
+        if (is_equal(option, "bright")) {
+          THEME.PRIMARY_COLOR = YELLOW;
+          THEME.SECONDARY_COLOR = WHITE;
+          THEME.BACKGROUND_COLOR = CLEAR;
+          THEME.SUCCESS_COLOR = GREEN;
+          THEME.ERROR_COLOR = RED;
+        } else if (is_equal(option, "dark")) {
+          THEME.PRIMARY_COLOR = CYAN;
+          THEME.SECONDARY_COLOR = WHITE;
+          THEME.BACKGROUND_COLOR = BLACK_BG;
+          THEME.SUCCESS_COLOR = GREEN;
+          THEME.ERROR_COLOR = RED;
+        } else if (is_equal(option, "light")) {
+          THEME.PRIMARY_COLOR = BLUE;
+          THEME.SECONDARY_COLOR = BLACK;
+          THEME.BACKGROUND_COLOR = WHITE_BG;
+          THEME.SUCCESS_COLOR = GREEN;
+          THEME.ERROR_COLOR = RED;
+        } else {
+          show_status(
+              1,
+              "Invalid theme. Type 'help setcolor' to see available themes.");
+          return;
+        }
       } else if (is_equal(target, "pri")) { // Set primary color
         color_option = to_color(option, 0); // Get the color option
 
