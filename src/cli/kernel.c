@@ -143,8 +143,9 @@ void cli() {
       index++;
 
       // Convert character to string and print
-      char str[2] = {c, '\0'};
-      str_format(str, THEME.SECONDARY_COLOR);
+      // char str[2] = {c, '\0'};
+      // str_format(str, THEME.SECONDARY_COLOR);
+      uart_sendc(c);
     } else {
       str_format("Command too long\n", THEME.ERROR_COLOR);
       index = 0;
@@ -171,11 +172,11 @@ void cli() {
 
 int main() {
   uart_init(); // Initialize UART
-  os_greet();  // Show welcome message
+  // os_greet();  // Show welcome message
 
   while (True) {
-    uart_puts(THEME.BACKGROUND_COLOR); // Set background color
-    cli();                             // Get command from user
+    // uart_puts(THEME.BACKGROUND_COLOR); // Set background color
+    cli(); // Get command from user
   }
 
   return 0;

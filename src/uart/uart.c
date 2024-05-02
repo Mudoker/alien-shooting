@@ -10,7 +10,7 @@ BaudRateConfig BAUD_RATE_CONFIG = {
 // State of the UART
 int IS_REINIT_UART = 0;      // UART reinitialization state
 int DATA_BITS_CONFIG = 8;    // Data bits configuration (default 8 bits)
-int STOP_BIT_CONFIG = 2;     // Stop bit configuration (default 2 bit)
+int STOP_BIT_CONFIG = 1;     // Stop bit configuration (default 1 bit)
 int PARITY_CONFIG = 0;       // Parity configuration (default None)
 int HANDSHAKE_CONFIG = 0;    // Handshake configuration (default None)
 int IS_CONFIG_BAUD_RATE = 0; // Baud rate configuration state

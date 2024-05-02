@@ -2,81 +2,11 @@
 
 // OS trademark structure
 Information OS_INFO = {
-    .ASCII_ART_LOGO_TEXT =
-        "  ______ _______ ___   _     ______   ______  _____  "
-        "______ _     _ _______\n"
-        "   ____/ |______ |  \\  |     |_____] |_____/    |   |  "
-        "____ |_____|    |\n"
-        "  /_____ |______ |   \\_|     |_____] |     \\_ __|__ "
-        "|_____| |     |    |\n",
-    .ASCII_ART_LOGO =
-
-        "                                                         mrrm\n"
-        "                                                         rrrr\n"
-        "                                                         mrrrr\n"
-        "                                                        rrrrrm\n"
-        "                                                        mrrrrrr\n"
-        "                                                       mrrrrrrrr\n"
-        "                                                      rrrrrrrrrrr\n"
-        "                                                     rrrrrrrrrrrrrm\n"
-        "                         mrrr                      rrrrrrrrrrrrrrrrrr "
-        "                     rrr\n"
-        "                         rrrrrr                  "
-        "rrrrrrrrrrrrrrrrrrrrrr                 rrrrrrm\n"
-        "                           rrrrrrrrm       "
-        "imrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrmm      mmrrrrrrrr\n"
-        "                            "
-        "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n"
-        "                             "
-        "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n"
-        "                              "
-        "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n"
-        "                              "
-        "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n"
-        "                               rrrrrrrrrrrrrrrrrrrrrr              "
-        "rrrrrrrrrrrrrrrrrrrrrr\n"
-        "                               rrrrrrrrrrrrrrrrrm                     "
-        " rrrrrrrrrrrrrrrrrr\n"
-        "                               rrrrrrrrrrrrrrr                        "
-        "   mrrrrrrrrrrrrrrr\n"
-        "                               rrrrrrrrrrrrrr                         "
-        "     rrrrrrrrrrrrrr\n"
-        "                              rrrrrrrrrrrrr                           "
-        "      rrrrrrrrrrrrrm\n"
-        "                              rrrrrrrrrrrr                            "
-        "        rrrrrrrrrrrr\n"
-        "                             rrrrrrrrrrrr                             "
-        "         rrrrrrrrrrrr\n"
-        "                            rrrrrrrrrrrrr                             "
-        "         rrrrrrrrrrrrr\n"
-        "                          mrrrrrrrrrrrrr                              "
-        "          rrrrrrrrrrrrrm\n"
-        "                        rrrrrrrrrrrrrrrr                              "
-        "          rrrrrrrrrrrrrrrr\n"
-        "                    rrrrrrrrrrrrrrrrrrrr                              "
-        "          rrrrrrrrrrrrrrrrrrrm\n"
-        "                mrrrrrrrrrrrrrrrrrrrrrrr                              "
-        "          rrrrrrrrrrrrrrrrrrrrrrrm\n"
-        "\n"
-        "\n"
-        "\n"
-        "                     rrrrrrrrrrrr   mrrrrrrrrrrrrr  rrrrm "
-        "rrrrrrrrrrrr  rrrr      rrrrmrrrrrrrrrrrrr\n"
-        "                     rrrmrrrrrrrrr  mrrrrrrrrrrrrrr "
-        "rrrrmrrrrrrrrrrrrm  rrrr      rrrrmrrrrrrrrrrrrr\n"
-        "                     rrrm     mrrri mrrrr      mrrr rrrrirrrrm        "
-        "  rrrmiiiiiirrrrr    mrrrr\n"
-        "                     rrrrrrrrrrrrrrrmrrrrrrrrrrrrrr rrrrmrrrrm     "
-        "mrrm rrrrrrrrrrrrrrr    mrrrr\n"
-        "                     rrrm       rrrrmrrrrrrmrrrrrr  rrrrirrrrm     "
-        "mrrm rrrr      rrrrr    rrrrr\n"
-        "                     rrrrrrrrrrrrrrrmrrrr      rrrr "
-        "rrrrirrrrrrrrrrmrrm rrrr      rrrrr    mrrrr\n"
-        "                     rrrrrrrrrrrrrr mrrrr       rrrmrrrri  "
-        "rrrrrrrrrrrm rrrm      rrrrm    mrrrm\n",
+    .ASCII_ART_LOGO_TEXT = "",
+    .ASCII_ART_LOGO = "",
     .OS_VERSION = "0.0.1",
-    .OS_NAME = "BrightOS Administrator Pro",
-    .OS_ID = "brightos",
+    .OS_NAME = "",
+    .OS_ID = "",
     .CREATED_AT = "2024-04-20",
     .UPDATED_AT = "2024-04-28",
 
