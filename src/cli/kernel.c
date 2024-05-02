@@ -12,6 +12,7 @@ void clear_current_command() {
 // CLI function to get the command from the user
 void cli() {
   static char cli_buffer[MAX_CMD_SIZE]; // Buffer to store the command
+  static char tmp_buffer[MAX_CMD_SIZE]; // Temporary buffer to store the command
   static int index = 0;                 // Index to keep track of the buffer
   static int is_new_command = 1; // Flag to check if a new command is entered
   static int history_index = -1; // Index to keep track of command history
@@ -117,7 +118,7 @@ void cli() {
       // Set the flag to true as this is a move down
       was_down = 1;
 
-      // Move forward in history (towards newer commands)
+      // // Move forward in history (towards newer commands)
       clear_current_command();
 
       history_index++;
@@ -125,7 +126,7 @@ void cli() {
       // If the history index is at the top, then add an empty buffer, allowing
       // user to enter a new command
       if (history_index > command_stack.top_index) {
-        copy(cli_buffer, "");
+        copy(cli_buffer, tmp_buffer);
       } else {
         copy(cli_buffer, command_stack.command[history_index]);
       }
@@ -140,6 +141,7 @@ void cli() {
     // Append the character to the buffer
     if (index < MAX_CMD_SIZE - 1) {
       cli_buffer[index] = c;
+      tmp_buffer[index] = c;
       index++;
 
       // Convert character to string and print
