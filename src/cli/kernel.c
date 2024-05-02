@@ -120,7 +120,6 @@ void cli() {
 
       // // Move forward in history (towards newer commands)
       clear_current_command();
-
       history_index++;
 
       // If the history index is at the top, then add an empty buffer, allowing
