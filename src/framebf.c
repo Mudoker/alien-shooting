@@ -10,41 +10,46 @@ unsigned int width, height, pitch;
 /* Frame buffer address
  * (declare as pointer of unsigned char to access each byte) */
 unsigned char *fb;
-/**
- * Set screen resolution to 1024x768
- */
+
 void framebf_init(int physicalWidth, int physicalHeight, int virtualWidth, int virtualHeight, int offsetX, int offsetY)
 {
     mBuf[0] = 35 * 4; // Length of message in bytes
     mBuf[1] = MBOX_REQUEST;
+    
     mBuf[2] = MBOX_TAG_SETPHYWH;  // Set physical width-height
     mBuf[3] = 8;                  // Value size in bytes
     mBuf[4] = 0;                  // REQUEST CODE = 0
     mBuf[5] = physicalWidth;      // Value(width)
     mBuf[6] = physicalHeight;     // Value(height)
+    
     mBuf[7] = MBOX_TAG_SETVIRTWH; // Set virtual width-height
     mBuf[8] = 8;
     mBuf[9] = 0;
     mBuf[10] = virtualWidth;
     mBuf[11] = virtualHeight;
+
     mBuf[12] = MBOX_TAG_SETVIRTOFF; // Set virtual offset
     mBuf[13] = 8;
     mBuf[14] = 0;
     mBuf[15] = offsetX;                 // x offset
     mBuf[16] = offsetY;                // y offset
+
     mBuf[17] = MBOX_TAG_SETDEPTH; // Set color depth
     mBuf[18] = 4;
     mBuf[19] = 0;
     mBuf[20] = COLOR_DEPTH;         // Bits per pixel
+
     mBuf[21] = MBOX_TAG_SETPXLORDR; // Set pixel order
     mBuf[22] = 4;
     mBuf[23] = 0;
     mBuf[24] = PIXEL_ORDER;
+
     mBuf[25] = MBOX_TAG_GETFB; // Get frame buffer
     mBuf[26] = 8;
     mBuf[27] = 0;
     mBuf[28] = 16;                // alignment in 16 bytes
     mBuf[29] = 0;                 // will return Frame Buffer size in bytes
+
     mBuf[30] = MBOX_TAG_GETPITCH; // Get pitch
     mBuf[31] = 4;
     mBuf[32] = 0;
@@ -83,7 +88,7 @@ void framebf_init(int physicalWidth, int physicalHeight, int virtualWidth, int v
 }
 void drawPixelARGB32(int x, int y, unsigned int attr)
 {
-    int offs = (y * pitch) + (COLOR_DEPTH / 8 * x);
+    int offs = (y * pitch) + ((COLOR_DEPTH / 8) * x);
     /* //Access and assign each byte
      *(fb + offs ) = (attr >> 0 ) & 0xFF; //BLUE
      *(fb + offs + 1) = (attr >> 8 ) & 0xFF; //GREEN
@@ -107,11 +112,12 @@ void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill 
 
 void drawImage(int x, int y, int w, int h, const unsigned long *image)
 {
-    for (int i = x, cnt_w = 0; cnt_w < w; i++, cnt_w++)
+    for (int i = 0; i < w; i++)
     {
-        for (int j = y, cnt_h = 0; cnt_h < h; j++, cnt_h++)
+        for (int j = 0; j < h; j++)
         {
-            drawPixelARGB32(i, j, image[cnt_w + cnt_h * w]);
+            drawPixelARGB32(x + i, y + j, image[(x + i) + (y + j) * w]);
         }
     }
 }
+

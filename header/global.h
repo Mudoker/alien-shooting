@@ -15,7 +15,7 @@
 #define SCREEN_WIDTH 500
 #define SCREEN_HEIGHT 500
 
-#define SCROLL_STEP 5
+#define SCROLL_STEP 4
 
 // Text color codes
 #define RED "\033[0;31m"
