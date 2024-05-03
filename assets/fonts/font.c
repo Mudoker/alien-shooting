@@ -1,4 +1,4 @@
-#include "./font.h"
+#include "font.h"
 
 const unsigned char font[FONT_NUMGLYPHS][FONT_BPG] = {
     {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, // U+0000 (nul)
