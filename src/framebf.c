@@ -13,7 +13,7 @@ unsigned char *fb;
 /**
  * Set screen resolution to 1024x768
  */
-void framebf_init(int physicalWidth, int physicalHeight, int virtualWidth, int virtualHeight)
+void framebf_init(int physicalWidth, int physicalHeight, int virtualWidth, int virtualHeight, int offsetX, int offsetY)
 {
     mBuf[0] = 35 * 4; // Length of message in bytes
     mBuf[1] = MBOX_REQUEST;
@@ -30,8 +30,8 @@ void framebf_init(int physicalWidth, int physicalHeight, int virtualWidth, int v
     mBuf[12] = MBOX_TAG_SETVIRTOFF; // Set virtual offset
     mBuf[13] = 8;
     mBuf[14] = 0;
-    mBuf[15] = 0;                 // x offset
-    mBuf[16] = 0;                 // y offset
+    mBuf[15] = offsetX;                 // x offset
+    mBuf[16] = offsetY;                // y offset
     mBuf[17] = MBOX_TAG_SETDEPTH; // Set color depth
     mBuf[18] = 4;
     mBuf[19] = 0;

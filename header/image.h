@@ -7,5 +7,6 @@
 #include "framebf.h"
 #include "utils.h"
 
-void displayImage();
+void imageCli();
+void updatePosition(int x_dir, int y_dir, int *offset_x, int *offset_y);
 #endif

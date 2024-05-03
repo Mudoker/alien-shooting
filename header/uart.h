@@ -130,7 +130,6 @@ void uart_init();                            // Initialize UART
 void uart_sendc(char c);                     // Send a character
 char uart_getc();                            // Get a character
 void uart_puts(char *s);                     // Send a string
-BaudRateConfig get_baud_rate(int baud_rate); // Get the baud rate configuration
 void uart_hex(unsigned int d);               // Print a hex number
 void uart_dec(int num);                      // Print a decimal number
 

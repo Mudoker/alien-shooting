@@ -12,8 +12,10 @@
 
 #define IMAGE_WIDTH 544     // Image width
 #define IMAGE_HEIGHT 842    // Image height
-#define SCREEN_WIDTH 600
-#define SCREEN_HEIGHT 600
+#define SCREEN_WIDTH 500
+#define SCREEN_HEIGHT 500
+
+#define SCROLL_STEP 5
 
 // Text color codes
 #define RED "\033[0;31m"
