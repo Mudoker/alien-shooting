@@ -10,33 +10,12 @@
 #define MAX_ARG_SIZE 100    // Maximum number of arguments size
 #define MAX_CMD_HISTORY 200 // Maximum number of command history
 
-#define IMAGE_WIDTH 544     // Image width
-#define IMAGE_HEIGHT 842    // Image height
+#define IMAGE_WIDTH 544  // Image width
+#define IMAGE_HEIGHT 842 // Image height
 #define SCREEN_WIDTH 500
 #define SCREEN_HEIGHT 500
 
-#define SCROLL_STEP 4
-
-// Text color codes
-#define RED "\033[0;31m"
-#define GREEN "\033[0;32m"
-#define YELLOW "\033[0;33m"
-#define BLUE "\033[0;34m"
-#define PURPLE "\033[0;35m"
-#define CYAN "\033[0;36m"
-#define WHITE "\033[0;37m"
-#define BLACK "\033[0;30m"
-#define RED_BG "\033[41m"
-
-// Background color codes
-#define GREEN_BG "\033[42m"
-#define YELLOW_BG "\033[43m"
-#define BLUE_BG "\033[44m"
-#define PURPLE_BG "\033[45m"
-#define CYAN_BG "\033[46m"
-#define WHITE_BG "\033[47m"
-#define BLACK_BG "\033[40m"
-#define CLEAR "\x1b[49m"
+#define SCROLL_STEP 4 // Scroll step
 
 // User-defined data types
 typedef enum { False = 0, True = 1 } boolean; // Boolean data type
@@ -53,13 +32,6 @@ typedef struct {
   const char *UPDATED_AT;          // OS updated date
   const char *PROMPT;              // Prompt symbol (Default: BrightOS>)
 
-  // Author
-  const char *AUTHOR_NAME;       // Author name
-  const char *AUTHOR_USERNAME;   // Author username
-  const char *AUTHOR_EMAIL;      // Author email
-  const char *AUTHOR_SID;        // Author student id
-  const char *AUTHOR_GITHUB_URL; // Author github
-
   // Acknowledgement
   const char *ACK_SCHOOL;       // School name
   const char *ACK_COURSE;       // Course name
@@ -68,16 +40,24 @@ typedef struct {
   const char *ACK_DECLARATION;  // Declaration
 } Information;
 
+// Member information structure
 typedef struct {
-  char *PRIMARY_COLOR;    // Primary color (Default: Yellow)
-  char *SECONDARY_COLOR;  // Secondary color (Default: White)
-  char *BACKGROUND_COLOR; // Background color (Default: Black)
-  char *SUCCESS_COLOR;    // Success (Default: Green)
-  char *ERROR_COLOR;      // Error (Default: Red)
-} Theme;
+  const char *NAME;         // Member name
+  const char *SID;          // Member ID
+  const char *GITHUB;       // Member GitHub
+  const char *CONTRIBUTION; // Member contribution
+} Member;
+
+// Team information structure
+typedef struct {
+  const char *TEAM_NAME;        // Team name
+  const char *TEAM_ID;          // Team ID
+  const char *TEAM_DESCRIPTION; // Team description
+  const Member MEMBERS[4];      // Team members
+} Team;
 
 // Global variables and structures
 extern Information OS_INFO; // OS trademark information
-extern Theme THEME;         // Theme configuration
+extern Team TEAM_X;         // Team X information
 
 #endif

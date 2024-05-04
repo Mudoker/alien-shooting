@@ -10,12 +10,12 @@ GAMEOFILES = $(GAMECFILES:$(GAME_DIR)/%.c=$(BUILD_DIR)/%.o)
 
 GCCFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib
 
-all: clean kernel8.img
+all: clean kernel8.img run
 
 ./build/boot.o: ./linker/boot.S
 	aarch64-none-elf-gcc $(GCCFLAGS) -c $< -o $@
 
-./build/%.o: ./src/%.c 
+./build/%.o: ./src/%.c
 	aarch64-none-elf-gcc $(GCCFLAGS) -c $< -o $@
 
 $(BUILD_DIR)/%.o: $(GAME_DIR)/%.c

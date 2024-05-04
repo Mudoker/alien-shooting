@@ -1,9 +1,9 @@
-#include "../header/image.h"
-#include "../header/game/game.h"
+// #include "../header/image.h"
+#include "../header/text.h"
 
 int main() {
   uart_init(); // Initialize UART
-  imageCli();
-  //gameCli();
+  // load_image();
+  load_inf();
   return 0;
 }
