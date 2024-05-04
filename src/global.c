@@ -15,7 +15,7 @@ Information OS_INFO = {
     .ACK_SCHOOL = "RMIT University",
     .ACK_COURSE = "EEET2490: Embedded System: OS and Interfacing",
     .ACK_LECTURER = "Mr Linh T.D.",
-    .ACK_SUBMITTED_BY = "Team X",
+    .ACK_SUBMITTED_BY = "Team 10",
     .ACK_DECLARATION =
         "I declare that in submitting all work for this assessment "
         "I have read, understood and agree to the content and "
@@ -24,8 +24,8 @@ Information OS_INFO = {
 
 // Team information structure
 Team TEAM_X = {
-    .TEAM_NAME = "Team X",
-    .TEAM_ID = "X",
+    .TEAM_NAME = "Team 10",
+    .TEAM_ID = "10",
 
     // Team members
     .MEMBERS =
