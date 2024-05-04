@@ -2,41 +2,57 @@
 
 // OS trademark structure
 Information OS_INFO = {
-    .ASCII_ART_LOGO_TEXT = "",
-    .ASCII_ART_LOGO = "",
     .OS_VERSION = "0.0.1",
-    .OS_NAME = "",
-    .OS_ID = "",
-    .CREATED_AT = "2024-04-20",
-    .UPDATED_AT = "2024-04-28",
+    .OS_NAME = "Bright OS Administrator",
+    .OS_ID = "BOS-001",
+    .CREATED_AT = "2024-04-05",
+    .UPDATED_AT = "2024-04-05",
 
     // Prompt text
     .PROMPT = "BrightOS> ",
-
-    // Author
-    .AUTHOR_NAME = "Quoc Doan",
-    .AUTHOR_USERNAME = "Mudoker",
-    .AUTHOR_EMAIL = "huuquoc7603@gmail.com",
-    .AUTHOR_SID = "S3927776",
-    .AUTHOR_GITHUB_URL = "https://github.com/Mudoker",
 
     // Acknowledgement
     .ACK_SCHOOL = "RMIT University",
     .ACK_COURSE = "EEET2490: Embedded System: OS and Interfacing",
     .ACK_LECTURER = "Mr Linh T.D.",
-    .ACK_SUBMITTED_BY = "Quoc Doan",
+    .ACK_SUBMITTED_BY = "Team X",
     .ACK_DECLARATION =
         "I declare that in submitting all work for this assessment "
         "I have read, understood and agree to the content and "
         "expectations of the Assessment declaration.",
 };
 
-// BrightOS theme configuration
-Theme THEME = {
-    .PRIMARY_COLOR = "\033[0;33m",
-    .SECONDARY_COLOR = "\033[0m",
-    .BACKGROUND_COLOR = "\x1b[49m",
-    .SUCCESS_COLOR = "\033[0;32m",
-    .ERROR_COLOR = "\033[0;31m",
-};
+// Team information structure
+Team TEAM_X = {
+    .TEAM_NAME = "Team X",
+    .TEAM_ID = "X",
 
+    // Team members
+    .MEMBERS =
+        {
+            {
+                .NAME = "Quoc Doan",
+                .SID = "s3927776",
+                .GITHUB = "https://github.com/Mudoker",
+                .CONTRIBUTION = "25%",
+            },
+            {
+                .NAME = "Viet Nguyen",
+                .SID = "s3927291",
+                .GITHUB = "https://github.com/felix101003",
+                .CONTRIBUTION = "25%",
+            },
+            {
+                .NAME = "Anh Tran",
+                .SID = "s3916566",
+                .GITHUB = "https://github.com/Mudoker",
+                .CONTRIBUTION = "25%",
+            },
+            {
+                .NAME = "Kim Seokyung",
+                .SID = "s3939114",
+                .GITHUB = "https://github.com/Mudoker",
+                .CONTRIBUTION = "25%",
+            },
+        },
+};

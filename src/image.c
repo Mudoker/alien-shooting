@@ -1,4 +1,5 @@
 #include "../header/image.h"
+#include "../assets/fonts/font.h"
 #include "../assets/images/image_resource.h"
 #include "../header/uart.h"
 
@@ -36,18 +37,3 @@ void load_image() {
   }
 }
 
-void update_position(int x_dir, int y_dir, int *offset_x, int *offset_y) {
-  // Check if the new offset values are within the image bounds
-  if (*offset_x + x_dir * SCROLL_STEP >= 0 &&
-      *offset_x + x_dir * SCROLL_STEP <= IMAGE_WIDTH - SCREEN_WIDTH) {
-    // Update the offset values
-    *offset_x += x_dir * SCROLL_STEP;
-  }
-
-  // Check if the new offset values are within the image bounds
-  if (*offset_y + y_dir * SCROLL_STEP >= 0 &&
-      *offset_y + y_dir * SCROLL_STEP <= IMAGE_HEIGHT - SCREEN_HEIGHT) {
-    // Update the offset values
-    *offset_y += y_dir * SCROLL_STEP;
-  }
-}
