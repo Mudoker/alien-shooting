@@ -15,13 +15,13 @@ void framebf_init(int physicalWidth, int physicalHeight, int virtualWidth, int v
 {
     mBuf[0] = 35 * 4; // Length of message in bytes
     mBuf[1] = MBOX_REQUEST;
-    
+
     mBuf[2] = MBOX_TAG_SETPHYWH;  // Set physical width-height
     mBuf[3] = 8;                  // Value size in bytes
     mBuf[4] = 0;                  // REQUEST CODE = 0
     mBuf[5] = physicalWidth;      // Value(width)
     mBuf[6] = physicalHeight;     // Value(height)
-    
+
     mBuf[7] = MBOX_TAG_SETVIRTWH; // Set virtual width-height
     mBuf[8] = 8;
     mBuf[9] = 0;
@@ -86,7 +86,7 @@ void framebf_init(int physicalWidth, int physicalHeight, int virtualWidth, int v
         uart_puts("Unable to get a frame buffer with provided setting\n");
     }
 }
-void drawPixelARGB32(int x, int y, unsigned int attr)
+void draw_pixelARGB32(int x, int y, unsigned int attr)
 {
     int offs = (y * pitch) + ((COLOR_DEPTH / 8) * x);
     /* //Access and assign each byte
@@ -98,26 +98,25 @@ void drawPixelARGB32(int x, int y, unsigned int attr)
     // Access 32-bit together
     *((unsigned int *)(fb + offs)) = attr;
 }
-void drawRectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill )
+void draw_rectARGB32(int x1, int y1, int x2, int y2, unsigned int attr, int fill )
 {
     for (int y = y1; y <= y2; y++)
         for (int x = x1; x <= x2; x++)
         {
             if ((x == x1 || x == x2) || (y == y1 || y == y2))
-                drawPixelARGB32(x, y, attr);
+                draw_pixelARGB32(x, y, attr);
             else if (fill)
-                drawPixelARGB32(x, y, attr);
+                draw_pixelARGB32(x, y, attr);
         }
 }
 
-void drawImage(int x, int y, int w, int h, const unsigned long *image)
+void draw_image(int x, int y, int w, int h, const unsigned long *image)
 {
     for (int i = 0; i < w; i++)
     {
         for (int j = 0; j < h; j++)
         {
-            drawPixelARGB32(x + i, y + j, image[(x + i) + (y + j) * w]);
+            draw_pixelARGB32(x + i, y + j, image[(x + i) + (y + j) * w]);
         }
     }
 }
-

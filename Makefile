@@ -5,12 +5,12 @@ OFILES = $(CFILES:./src/%.c=./build/%.o)
 
 GCCFLAGS = -Wall -O2 -ffreestanding -nostdinc -nostdlib
 
-all: clean kernel8.img
+all: clean kernel8.img run
 
 ./build/boot.o: ./linker/boot.S
 	aarch64-none-elf-gcc $(GCCFLAGS) -c $< -o $@
 
-./build/%.o: ./src/%.c 
+./build/%.o: ./src/%.c
 	aarch64-none-elf-gcc $(GCCFLAGS) -c $< -o $@
 
 kernel8.img: ./build/boot.o $(OFILES)

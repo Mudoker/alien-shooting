@@ -2,6 +2,6 @@
 
 int main() {
   uart_init(); // Initialize UART
-  imageCli();
+  load_image();
   return 0;
 }
