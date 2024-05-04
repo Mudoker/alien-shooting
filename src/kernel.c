@@ -3,7 +3,7 @@
 
 int main() {
   uart_init(); // Initialize UART
-  // imageCli();
-  gameCli();
+  imageCli();
+  //gameCli();
   return 0;
 }
