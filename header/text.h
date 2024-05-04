@@ -6,7 +6,7 @@
 #include "framebf.h"
 #include "utils.h"
 
-#define TEXT_AREA_WIDTH 1000
+#define TEXT_AREA_WIDTH 842
 #define TEXT_AREA_HEIGHT 842
 #define FONT_WIDTH 12
 #define FONT_HEIGHT 20

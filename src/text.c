@@ -3,7 +3,7 @@
 void load_inf() {
   int offset_x = 0, offset_y = 0;
 
-  framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_AREA_HEIGHT, TEXT_AREA_HEIGHT,
+  framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT,
                offset_x, offset_y);
 
   draw_boxed_stringARGB32(0, 12, "OS Information", 0xFFFF00);
@@ -94,7 +94,6 @@ void load_inf() {
 
   while (1) {
     char c = uart_getc();
-    uart_sendc(c);
     switch (c) {
     case 'w':
       update_position(0, -1, &offset_x, &offset_y);
