@@ -9,11 +9,8 @@ void load_image() {
   framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT,
                IMAGE_WIDTH * (epd_bitmap_allArray_LEN), IMAGE_HEIGHT, offset_x,
                offset_y);
-  //   draw_image(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, image);
+  draw_image(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, image);
 
-  // Assuming you have initialized your display system
-  draw_stringARGB32(10, 10, "Hello, World!", 0xFFFFFFFF);
-//   draw_charARGB32(10, 20, 'A', 0xFFFFFFFF);
   while (1) {
     char c = uart_getc();
     uart_sendc(c);

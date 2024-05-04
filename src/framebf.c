@@ -113,7 +113,7 @@ void draw_image(int x, int y, int w, int h, const unsigned long *image) {
   }
 }
 
-void draw_charARGB32(int x, int y, char ch, unsigned int attr) {
+void draw_charARGB32(int x, int y, unsigned char ch, unsigned int attr) {
   for (int j = 0; j < FONT_HEIGHT; j++) {
     for (int i = 0; i < FONT_WIDTH; i++) {
       if ((font[ch][j] >> i) & 1) {
@@ -129,4 +129,32 @@ void draw_stringARGB32(int x, int y, const char *str, unsigned int attr) {
     draw_charARGB32(x + i * FONT_WIDTH, y, str[i], attr);
     i++;
   }
+}
+
+void drawt_stringARGB32(int x, int y, const char *title, const char *str,
+                        unsigned int title_attr, unsigned int str_attr) {
+  draw_stringARGB32(x, y, title, title_attr);
+  draw_stringARGB32(x + len(title) * FONT_WIDTH, y, str, str_attr);
+}
+
+void draw_boxed_stringARGB32(int x, int y, const char *str, unsigned int attr) {
+  // Calculate the width and height of the box
+  int str_length = len(str);
+  int box_width = (str_length * FONT_WIDTH) + 16; // Add 16 for padding
+  int box_height = FONT_HEIGHT + 24;              // Add 24 for padding
+
+  // Draw top and bottom horizontal lines of the box
+  for (int i = 0; i < box_width; i++) {
+    draw_pixelARGB32(x + i, y, attr);                  // Top line
+    draw_pixelARGB32(x + i, y + box_height - 1, attr); // Bottom line
+  }
+
+  // Draw left and right vertical lines of the box
+  for (int j = 0; j < box_height; j++) {
+    draw_pixelARGB32(x, y + j, attr);                 // Left line
+    draw_pixelARGB32(x + box_width - 1, y + j, attr); // Right line
+  }
+
+  // Draw the string inside the box
+  draw_stringARGB32(x + 8, y + 12, str, attr);
 }
