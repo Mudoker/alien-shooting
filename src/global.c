@@ -26,9 +26,6 @@ Information OS_INFO = {
 Team TEAM_X = {
     .TEAM_NAME = "Team X",
     .TEAM_ID = "X",
-    .TEAM_DESCRIPTION = "We are a team of four students from RMIT University. "
-                        "We are passionate about embedded systems and OS. "
-                        "We are excited to develop Bright OS.",
 
     // Team members
     .MEMBERS =
@@ -41,19 +38,19 @@ Team TEAM_X = {
             },
             {
                 .NAME = "Viet Nguyen",
-                .SID = "s3879055",
-                .GITHUB = "https://github.com/Mudoker",
+                .SID = "s3927291",
+                .GITHUB = "https://github.com/felix101003",
                 .CONTRIBUTION = "25%",
             },
             {
                 .NAME = "Anh Tran",
-                .SID = "s3879055",
+                .SID = "s3916566",
                 .GITHUB = "https://github.com/Mudoker",
                 .CONTRIBUTION = "25%",
             },
             {
                 .NAME = "Kim Seokyung",
-                .SID = "s3879055",
+                .SID = "s3939114",
                 .GITHUB = "https://github.com/Mudoker",
                 .CONTRIBUTION = "25%",
             },

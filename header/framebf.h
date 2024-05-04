@@ -15,5 +15,6 @@ void draw_stringARGB32(int x, int y, const char *str, unsigned int attr);
 void draw_boxed_stringARGB32(int x, int y, const char *str, unsigned int attr);
 void drawt_stringARGB32(int x, int y, const char *title, const char *str,
                         unsigned int title_attr, unsigned int str_attr);
+void update_position(int dx, int dy, int *offsetX, int *offsetY);
 
 #endif
