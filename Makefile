@@ -18,7 +18,7 @@ kernel8.img: ./build/boot.o $(OFILES)
 	aarch64-none-elf-objcopy -O binary kernel8.elf kernel8.img
 
 clean:
-	del *.img *.elf .\build\*.o
+	rm -rf *.img *.elf ./build/*.o
 
 run:
-	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial stdio
+	qemu-system-aarch64 -M raspi3b -kernel kernel8.img -serial stdio

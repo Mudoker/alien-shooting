@@ -1,4 +1,5 @@
 #include "global.h"
+#include "gpio.h"
 
 int tolower(int c);
 int strcasecmp(const char *str1, const char *str2);
