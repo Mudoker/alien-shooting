@@ -15,7 +15,35 @@
 #define SCREEN_WIDTH 500
 #define SCREEN_HEIGHT 500
 
-#define SCROLL_STEP 4 // Scroll step
+#define VIDEO_HEIGHT 240 // Video height
+#define VIDEO_WIDTH 320 // Video width
+#define SCREEN_WIDTH 500 // Video screen width
+#define SCREEN_HEIGHT 500 // Video screen height
+#define NUM_FRAMES 45 // Number of frames
+#define VIDEO_LOOP 10 // Video loop
+
+#define SCROLL_STEP 4
+
+// Text color codes
+#define RED "\033[0;31m"
+#define GREEN "\033[0;32m"
+#define YELLOW "\033[0;33m"
+#define BLUE "\033[0;34m"
+#define PURPLE "\033[0;35m"
+#define CYAN "\033[0;36m"
+#define WHITE "\033[0;37m"
+#define BLACK "\033[0;30m"
+#define RED_BG "\033[41m"
+
+// Background color codes
+#define GREEN_BG "\033[42m"
+#define YELLOW_BG "\033[43m"
+#define BLUE_BG "\033[44m"
+#define PURPLE_BG "\033[45m"
+#define CYAN_BG "\033[46m"
+#define WHITE_BG "\033[47m"
+#define BLACK_BG "\033[40m"
+#define CLEAR "\x1b[49m"
 
 // User-defined data types
 typedef enum { False = 0, True = 1 } boolean; // Boolean data type

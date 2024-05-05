@@ -1,4 +1,6 @@
 #include "../header/uart.h"
+#include "../header/gpio.h"
+#include "../header/utils.h"
 
 /**
  * Set baud rate and characteristics and map to GPIO
