@@ -1,7 +1,6 @@
 #include "../header/video.h"
 #include "../assets/video/video_resource.h"
 #include "../header/framebf.h"
-#include "../header/uart.h"
 #include "../header/mbox.h"
 #include "../header/timer.h"
 #include "../header/global.h"

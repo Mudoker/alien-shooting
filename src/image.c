@@ -1,6 +1,6 @@
 #include "../header/image.h"
 #include "../assets/fonts/font.h"
-#include "../assets/images/image_resource.h"
+#include "../assets/images/image_resource.c"
 #include "../header/uart.h"
 
 void load_image() {
@@ -36,4 +36,3 @@ void load_image() {
                  offset_x, offset_y);
   }
 }
-

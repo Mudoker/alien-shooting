@@ -1,5 +1,5 @@
 #include "../header/text.h"
-#include "../assets/images/app_logo.h"
+#include "../assets/images/app_logo.c"
 
 void load_inf() {
   int offset_x = 0, offset_y = 0;
