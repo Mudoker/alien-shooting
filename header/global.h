@@ -15,6 +15,14 @@
 #define SCREEN_WIDTH 500
 #define SCREEN_HEIGHT 500
 
+
+#define VIDEO_HEIGHT 240 // Video height
+#define VIDEO_WIDTH 320 // Video width
+#define SCREEN_WIDTH 500 // Video screen width
+#define SCREEN_HEIGHT 500 // Video screen height
+#define NUM_FRAMES 45 // Number of frames
+#define VIDEO_LOOP 10 // Video loop
+
 #define SCROLL_STEP 4
 
 // Text color codes

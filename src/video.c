@@ -4,10 +4,12 @@
 #include "../header/uart.h"
 #include "../header/mbox.h"
 #include "../header/timer.h"
+#include "../header/global.h"
+
 void video_mode()
 {
-    framebf_init(VID_SCREEN_WIDTH, VID_SCREEN_HEIGHT, VID_WIDTH, VID_HEIGHT,0,0);
-    display_video(0, 0, VID_WIDTH, VID_HEIGHT, 120,epd_bitmap_allArray_video);
+    framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, VIDEO_WIDTH, VIDEO_HEIGHT,0,0);
+    display_video(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, 45, epd_bitmap_allArray_video);
 }
 
 void display_video(int x, int y, int w, int h, int num_frames, const unsigned long **video)
@@ -17,7 +19,7 @@ void display_video(int x, int y, int w, int h, int num_frames, const unsigned lo
         for (int frame = 0; frame < num_frames; frame++)
         {
             drawImage(x, y, w, h, video[frame]);
-            wait_msec(100);
+            wait_msec(100500);
         }
     }
 }

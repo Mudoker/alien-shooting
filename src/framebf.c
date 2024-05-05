@@ -121,28 +121,4 @@ void drawImage(int x, int y, int w, int h, const unsigned long *image)
     }
 }
 
-void drawCharacterImage(int x, int y, int w, int h, const unsigned long *image)
-{
-    for (int i = x, cnt_w = 0; cnt_w < w; i++, cnt_w++)
-    {
-        for (int j = y, cnt_h = 0; cnt_h < h; j++, cnt_h++)
-        {
-            if(image[cnt_w + cnt_h * w] != 0x00ffffff){
-                drawPixelARGB32(i, j, image[cnt_w + cnt_h * w]);
-            }
-            
-        }
-    }
-}
-
-void redrawBackground(int x, int y, const unsigned long *image)
-{
-    for (int i = x; i < 64; i++)
-    {
-        for (int j = y; j < 64; j++)
-        {
-            drawPixelARGB32(i, j, image[i + j * 64]);
-        }
-    }
-}
 
