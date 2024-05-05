@@ -18,7 +18,7 @@ void display_video(int x, int y, int w, int h, int num_frames, const unsigned lo
     {
         for (int frame = 0; frame < num_frames; frame++)
         {
-            drawImage(x, y, w, h, video[frame]);
+            draw_image(x, y, w, h, video[frame]);
             wait_msec(100500);
         }
     }
