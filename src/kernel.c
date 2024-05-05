@@ -5,5 +5,5 @@ int main() {
   uart_init(); // Initialize UART
   // load_image();
   load_inf();
-  return 0;
+return 0;
 }

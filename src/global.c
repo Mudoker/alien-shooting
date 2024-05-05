@@ -10,16 +10,6 @@ Information OS_INFO = {
 
     // Prompt text
     .PROMPT = "BrightOS> ",
-
-    // Acknowledgement
-    .ACK_SCHOOL = "RMIT University",
-    .ACK_COURSE = "EEET2490: Embedded System: OS and Interfacing",
-    .ACK_LECTURER = "Mr Linh T.D.",
-    .ACK_SUBMITTED_BY = "Team X",
-    .ACK_DECLARATION =
-        "I declare that in submitting all work for this assessment "
-        "I have read, understood and agree to the content and "
-        "expectations of the Assessment declaration.",
 };
 
 // Team information structure

@@ -1,4 +1,5 @@
 #include "../header/text.h"
+#include "../assets/images/app_logo.h"
 
 void load_inf() {
   int offset_x = 0, offset_y = 0;
@@ -6,9 +7,11 @@ void load_inf() {
   framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT,
                offset_x, offset_y);
 
-  draw_boxed_stringARGB32(0, 12, "OS Information", 0xFFFF00);
+  draw_image(0, 0, 136, 103, epd_bitmap_logoallArray[0]);
 
-  int offset = 1.5 * FONT_HEIGHT + 24;
+  draw_boxed_stringARGB32(0, 12 + 120, "OS Information", 0xFFFF00);
+
+  int offset = 1.5 * FONT_HEIGHT + 24 + 120;
 
   drawt_stringARGB32(8, offset, "OS Name: ", OS_INFO.OS_NAME, 0xFFFF00,
                      0xFFFFFF);

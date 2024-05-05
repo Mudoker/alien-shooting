@@ -23,21 +23,12 @@ typedef enum { False = 0, True = 1 } boolean; // Boolean data type
 // OS trademark structure
 typedef struct {
   // OS information
-  const char *ASCII_ART_LOGO;      // OS logo
-  const char *ASCII_ART_LOGO_TEXT; // OS logo small
-  const char *OS_NAME;             // OS name
-  const char *OS_ID;               // OS id
-  const char *OS_VERSION;          // OS version
-  const char *CREATED_AT;          // OS created date
-  const char *UPDATED_AT;          // OS updated date
-  const char *PROMPT;              // Prompt symbol (Default: BrightOS>)
-
-  // Acknowledgement
-  const char *ACK_SCHOOL;       // School name
-  const char *ACK_COURSE;       // Course name
-  const char *ACK_LECTURER;     // Lecturer name
-  const char *ACK_SUBMITTED_BY; // Submitted by
-  const char *ACK_DECLARATION;  // Declaration
+  const char *OS_NAME;    // OS name
+  const char *OS_ID;      // OS id
+  const char *OS_VERSION; // OS version
+  const char *CREATED_AT; // OS created date
+  const char *UPDATED_AT; // OS updated date
+  const char *PROMPT;     // Prompt symbol (Default: BrightOS>)
 } Information;
 
 // Member information structure
