@@ -14,8 +14,8 @@ Information OS_INFO = {
 
 // Team information structure
 Team TEAM_X = {
-    .TEAM_NAME = "Team X",
-    .TEAM_ID = "X",
+    .TEAM_NAME = "Team 10",
+    .TEAM_ID = "10",
 
     // Team members
     .MEMBERS =
