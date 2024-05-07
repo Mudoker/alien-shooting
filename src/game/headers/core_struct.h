@@ -2,8 +2,8 @@
 #define MAX_EQUIPMENTS 10
 #define MAX_STR_LENGTH 50
 
-#define GAME_WIDTH 800
-#define GAME_HEIGHT 600
+#define GAME_WIDTH 500
+#define GAME_HEIGHT 640
 
 typedef enum { False = 0, True = 1 } boolean;
 

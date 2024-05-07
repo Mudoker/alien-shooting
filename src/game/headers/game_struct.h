@@ -14,7 +14,7 @@ typedef struct Spaceship {
   char name[MAX_STR_LENGTH]; // Spaceship name
   Position position = {
       GAME_WIDTH / 2,
-      GAME_HEIGHT / 2,
+      GAME_HEIGHT,
   }; // Position
   Size size;                       // Size
   float health = 100;              // Health
