@@ -8,11 +8,11 @@
 void video_mode()
 {
     framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, VIDEO_WIDTH, VIDEO_HEIGHT,0,0);
-    display_video(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, 45, epd_bitmap_allArray_video);
+    display_video(0, 0, VIDEO_WIDTH, VIDEO_HEIGHT, 50, epd_bitmap_allArray_video);
 }
 
 void display_video(int x, int y, int w, int h, int num_frames, const unsigned long **video)
-{
+    {
     for (int i = 0; i < VIDEO_LOOP; i++)
     {
         for (int frame = 0; frame < num_frames; frame++)
