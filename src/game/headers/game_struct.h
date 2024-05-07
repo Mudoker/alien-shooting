@@ -8,6 +8,7 @@ struct Equipment;
 struct Alien;
 struct Spaceship;
 
+// Game structs
 typedef struct Spaceship {
   char *id;                  // Unique identifier
   char name[MAX_STR_LENGTH]; // Spaceship name
@@ -24,6 +25,7 @@ typedef struct Spaceship {
   char equipments[MAX_EQUIPMENTS]; // Equipments
 
   // Methods
+  boolean (*draw)();                               // Draw the spaceship
   boolean (*move)(int x, int y);                   // Move the spaceship
   boolean (*shoot)(int x, int y);                  // Shoot
   boolean (*equip)(struct Equipment *equipment);   // Equip an equipment
@@ -40,9 +42,9 @@ typedef struct Equipment {
   Position position;                // Position
 
   // Methods
-  boolean (*spawn)(int x, int y); // Spawn the equipment
-  boolean (*destroy)();           // Destroy the equipment
-  boolean (*move)(int x, int y);  // Move the equipment
+  boolean (*draw)(int x, int y); // Spawn the equipment
+  boolean (*destroy)();          // Destroy the equipment
+  boolean (*move)(int x, int y); // Move the equipment
 } Equipment;
 
 typedef struct Alien {
@@ -56,6 +58,7 @@ typedef struct Alien {
   unsigned long **sprite;    // Sprite (Image)
 
   // Methods
+  boolean (*draw)();              // Draw the alien
   boolean (*move)(int x, int y);  // Move the alien
   boolean (*shoot)(int x, int y); // Shoot
   boolean (*die)();               // Die

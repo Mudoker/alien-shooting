@@ -7,6 +7,11 @@
 
 typedef enum { False = 0, True = 1 } boolean;
 
+// Forward declaration
+struct Position;
+struct Size;
+
+// Core structs
 typedef struct Position {
   int x; // X coordinate
   int y; // Y coordinate
