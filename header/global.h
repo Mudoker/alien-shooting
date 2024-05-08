@@ -10,15 +10,17 @@
 #define MAX_ARG_SIZE 100    // Maximum number of arguments size
 #define MAX_CMD_HISTORY 200 // Maximum number of command history
 
-#define IMAGE_WIDTH 544   // Image width
-#define IMAGE_HEIGHT 842  // Image height
+#define IMAGE_WIDTH 544  // Image width
+#define IMAGE_HEIGHT 842 // Image height
+
 #define SCREEN_WIDTH 500  // Screen width
 #define SCREEN_HEIGHT 640 // Screen height
 
-#define VIDEO_HEIGHT 640 // Video height
-#define VIDEO_WIDTH 500  // Video width
-#define NUM_FRAMES 45    // Number of frames
-#define VIDEO_LOOP 10    // Video loop
+#define VIDEO_HEIGHT 240 // Video height
+#define VIDEO_WIDTH 320 // Video width
+
+#define NUM_FRAMES 45 // Number of frames
+#define VIDEO_LOOP 10 // Video loop
 
 #define SCROLL_STEP 4
 

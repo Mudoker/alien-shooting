@@ -7,5 +7,5 @@ void draw_button(int x, int y, char *text, int selected) {
 
 
 void draw_center_button(int y, char *text, int selected) {
-    draw_button((GAME_WIDTH - BUTTON_WIDTH) / 2, y, text, selected);
+    draw_button((GAME_WIDTH - BUTTON_WIDTH) / 2, GAME_HEIGHT - BUTTON_HEIGHT, text, selected);
 }
