@@ -5,3 +5,4 @@ void gameCli() {
     draw_center_button(100, "Start", 1);
     draw_center_button(540, "Exit", 0);
 }
+
