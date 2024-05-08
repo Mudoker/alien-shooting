@@ -1,6 +1,6 @@
 #include "../header/image.h"
 #include "../assets/fonts/font.h"
-#include "../assets/images/image_resource.c"
+#include "../assets/images/image_resource.h"
 #include "../header/uart.h"
 
 void load_image() {

@@ -1,5 +1,5 @@
 #include "../header/framebf.h"
-#include "../assets/fonts/font.h"
+#include "../assets/fonts/normal_font.h"
 #include "../header/uart.h"
 
 // Use RGBA32 (32 bits for each pixel)
