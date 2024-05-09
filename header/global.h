@@ -12,14 +12,12 @@
 
 #define IMAGE_WIDTH 544  // Image width
 #define IMAGE_HEIGHT 842 // Image height
-#define SCREEN_WIDTH 500
-#define SCREEN_HEIGHT 500
+#define SCREEN_WIDTH 640
+#define SCREEN_HEIGHT 640
 
-#define VIDEO_HEIGHT 240 // Video height
-#define VIDEO_WIDTH 320 // Video width
-#define SCREEN_WIDTH 500 // Video screen width
-#define SCREEN_HEIGHT 500 // Video screen height
-#define NUM_FRAMES 45 // Number of frames
+#define VIDEO_HEIGHT 236 // Video height
+#define VIDEO_WIDTH 420 // Video width
+#define NUM_FRAMES 50 // Number of frames
 #define VIDEO_LOOP 10 // Video loop
 
 #define SCROLL_STEP 4

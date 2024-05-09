@@ -106,9 +106,10 @@ void draw_rectARGB32(int x1, int y1, int x2, int y2, unsigned int attr,
 }
 
 void draw_image(int x, int y, int w, int h, const unsigned long *image) {
-  for (int i = 0; i < w; i++) {
-    for (int j = 0; j < h; j++) {
-      draw_pixelARGB32(x + i, y + j, image[(x + i) + (y + j) * w]);
+  for (int j = 0; j < h; j++) {
+    for (int i = 0; i < w; i++) {
+      unsigned long pixel = image[j * w + i];
+      draw_pixelARGB32(x + i, y + j, pixel);
     }
   }
 }
