@@ -4,6 +4,7 @@
 #include "../../assets/games/spaceship/blader.h"
 #include "../../header/framebf.h"
 
+// Initialize the spaceship object
 void init_spaceship(GameController *game_controller) {
     Spaceship your_spaceship;
     your_spaceship.size.width = 124;
