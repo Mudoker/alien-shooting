@@ -1,6 +1,7 @@
 #include "../header/framebf.h"
 #include "../assets/fonts/normal_font.h"
 #include "../header/uart.h"
+#include "../header/timer.h"
 // #include "../assets/games/boss/small_boss.h"
 
 // Use RGBA32 (32 bits for each pixel)
@@ -186,5 +187,3 @@ void draw_all_images(int ship_position_X, int ship_position_Y, int w, int h,
   draw_image(ship_position_X, ship_position_Y, w, h, spaceship);
   draw_image(boss_X, boss_Y, w_boss, h_boss, boss);
 }
-
-
