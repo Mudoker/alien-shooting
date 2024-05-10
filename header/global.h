@@ -14,7 +14,7 @@
 #define IMAGE_HEIGHT 842 // Image height
 
 #define SCREEN_WIDTH 500  // Screen width
-#define SCREEN_HEIGHT 640 // Screen height
+#define SCREEN_HEIGHT 800 // Screen height
 
 #define VIDEO_HEIGHT 240 // Video height
 #define VIDEO_WIDTH 320 // Video width
@@ -22,6 +22,7 @@
 #define NUM_FRAMES 45 // Number of frames
 #define VIDEO_LOOP 10 // Video loop
 
+#define NULL ((void *)0)
 #define SCROLL_STEP 4
 
 // Text color codes

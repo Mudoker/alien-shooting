@@ -1,6 +1,7 @@
 #include "../header/framebf.h"
 #include "../assets/fonts/normal_font.h"
 #include "../header/uart.h"
+// #include "../assets/games/boss/small_boss.h"
 
 // Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
@@ -54,6 +55,8 @@ void framebf_init(int pw, int ph, int vw, int vh, int offsetX, int offsetY) {
   mBuf[31] = 4;
   mBuf[32] = 0;
   mBuf[33] = 0; // Will get pitch value here
+
+
   mBuf[34] = MBOX_TAG_LAST;
   // Call Mailbox
   if (mbox_call(ADDR(mBuf), MBOX_CH_PROP) // mailbox call is successful ?
@@ -70,12 +73,6 @@ void framebf_init(int pw, int ph, int vw, int vh, int offsetX, int offsetY) {
     mBuf[28] &= 0x3FFFFFFF;
     // Access frame buffer as 1 byte per each address
     fb = (unsigned char *)((unsigned long)mBuf[28]);
-    // uart_puts("Got allocated Frame Buffer at RAM physical address: ");
-    // uart_hex(mBuf[28]);
-    // uart_puts("\n");
-    // uart_puts("Frame Buffer Size (bytes): ");
-    // uart_dec(mBuf[29]);
-    // uart_puts("\n");
     width = mBuf[5];  // Actual physical width
     height = mBuf[6]; // Actual physical height
     pitch = mBuf[33]; // Number of bytes per line
@@ -83,17 +80,16 @@ void framebf_init(int pw, int ph, int vw, int vh, int offsetX, int offsetY) {
     uart_puts("Unable to get a frame buffer with provided setting\n");
   }
 }
+
 void draw_pixelARGB32(int x, int y, unsigned int attr) {
+  if (attr == 0) {
+    return;
+  }
+
   int offs = (y * pitch) + ((COLOR_DEPTH / 8) * x);
-  /* //Access and assign each byte
-   *(fb + offs ) = (attr >> 0 ) & 0xFF; //BLUE
-   *(fb + offs + 1) = (attr >> 8 ) & 0xFF; //GREEN
-   *(fb + offs + 2) = (attr >> 16) & 0xFF; //RED
-   *(fb + offs + 3) = (attr >> 24) & 0xFF; //ALPHA
-   */
-  // Access 32-bit together
   *((unsigned int *)(fb + offs)) = attr;
 }
+
 void draw_rectARGB32(int x1, int y1, int x2, int y2, unsigned int attr,
                      int fill) {
   for (int y = y1; y <= y2; y++)
@@ -103,14 +99,6 @@ void draw_rectARGB32(int x1, int y1, int x2, int y2, unsigned int attr,
       else if (fill)
         draw_pixelARGB32(x, y, attr);
     }
-}
-
-void draw_image(int x, int y, int w, int h, const unsigned long *image) {
-  for (int i = 0; i < w; i++) {
-    for (int j = 0; j < h; j++) {
-      draw_pixelARGB32(x + i, y + j, image[(x + i) + (y + j) * w]);
-    }
-  }
 }
 
 void draw_charARGB32(int x, int y, unsigned char ch, unsigned int attr) {
@@ -174,3 +162,29 @@ void update_position(int x_dir, int y_dir, int *offset_x, int *offset_y) {
     *offset_y += y_dir * SCROLL_STEP;
   }
 }
+
+void clear_image(int x, int y, int w, int h) {
+  for (int j = 0; j < h; j++) {
+    for (int i = 0; i < w; i++) {
+      draw_pixelARGB32(x + i, y + j, 1);
+    }
+  }
+}
+
+void draw_image(int x, int y, int w, int h, const unsigned long *image) {
+  for (int j = 0; j < h; j++) {
+    for (int i = 0; i < w; i++) {
+      unsigned long pixel = image[j * w + i];
+      draw_pixelARGB32(x + i, y + j, pixel);
+    }
+  }
+}
+
+void draw_all_images(int ship_position_X, int ship_position_Y, int w, int h,
+                     const unsigned long *spaceship, int boss_X, int boss_Y,
+                     int w_boss, int h_boss, const unsigned long *boss) {
+  draw_image(ship_position_X, ship_position_Y, w, h, spaceship);
+  draw_image(boss_X, boss_Y, w_boss, h_boss, boss);
+}
+
+

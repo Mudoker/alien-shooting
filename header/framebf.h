@@ -14,7 +14,9 @@ void draw_charARGB32(int x, int y, unsigned char ch, unsigned int attr);
 void draw_stringARGB32(int x, int y, const char *str, unsigned int attr);
 void draw_boxed_stringARGB32(int x, int y, const char *str, unsigned int attr);
 void drawt_stringARGB32(int x, int y, const char *title, const char *str,
-                        unsigned int title_attr, unsigned int str_attr);
+                        unsigned int title_attr, unsigned int str_attr);;
 void update_position(int dx, int dy, int *offsetX, int *offsetY);
+void clear_image(int x, int y, int w, int h);
+void draw_all_images(int ship_position_X, int ship_position_Y, int w, int h, const unsigned long *spaceship, int boss_X, int boss_Y, int w_boss, int h_boss, const unsigned long *boss);
 
 #endif
