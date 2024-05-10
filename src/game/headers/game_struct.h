@@ -9,18 +9,16 @@ struct Alien;
 struct Spaceship;
 
 // Game structs
-typedef struct Spaceship {
+typedef struct Spaceship
+{
   char *id;                  // Unique identifier
   char name[MAX_STR_LENGTH]; // Spaceship name
-  Position position = {
-      GAME_WIDTH / 2,
-      GAME_HEIGHT,
-  }; // Position
+  Position position;                // Position
   Size size;                       // Size
-  float health = 100;              // Health
-  int speed = 10;                  // Speed
-  float damage = 10;               // Damage
-  float mana = 0;                  // Mana
+  float health;              // Health
+  int speed;                  // Speed
+  float damage;               // Damage
+  float mana;                  // Mana
   unsigned long **sprite;          // Sprite (Image)
   char equipments[MAX_EQUIPMENTS]; // Equipments
 
@@ -33,11 +31,12 @@ typedef struct Spaceship {
   boolean (*powerup)(int x, int y);                // Powerup (use mana)
 } Spaceship;
 
-typedef struct Equipment {
+typedef struct Equipment
+{
   char *id;                         // Unique identifier
   char name[MAX_STR_LENGTH];        // Equipment name
   char description[MAX_STR_LENGTH]; // Equipment description
-  float damage = 0;                 // Damage
+  float damage;                 // Damage
   unsigned long **sprite;           // Sprite (Image)
   Position position;                // Position
 
@@ -47,14 +46,15 @@ typedef struct Equipment {
   boolean (*move)(int x, int y); // Move the equipment
 } Equipment;
 
-typedef struct Alien {
+typedef struct Alien
+{
   char *id;                  // Unique identifier
   char name[MAX_STR_LENGTH]; // Alien name
   Position position;         // Position
   Size size;                 // Size
-  float health = 100;        // Health
-  int speed = 10;            // Speed
-  float damage = 10;         // Damage
+  float health;        // Health
+  int speed;            // Speed
+  float damage;         // Damage
   unsigned long **sprite;    // Sprite (Image)
 
   // Methods

@@ -13,4 +13,7 @@ typedef struct GameController
     // int score, diff, map, cancel_attack_timer;
 } GameController;
 
+void init_spaceship(GameController *game_controller);
+void draw_spaceship(GameController *game_controller);
+
 #endif

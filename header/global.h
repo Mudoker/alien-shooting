@@ -47,7 +47,7 @@
 #define CLEAR "\x1b[49m"
 
 // User-defined data types
-typedef enum { False = 0, True = 1 } boolean; // Boolean data type
+// typedef enum { False = 0, True = 1 } boolean; // Boolean data type
 
 // OS trademark structure
 typedef struct {
