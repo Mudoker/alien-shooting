@@ -5,6 +5,5 @@
 #include "screen.h"
 
 void gameCli();
-void clear_image(int x, int y, int w, int h);
 
 #endif

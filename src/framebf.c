@@ -1,7 +1,5 @@
 #include "../header/framebf.h"
 #include "../assets/fonts/normal_font.h"
-#include "../header/uart.h"
-// #include "../assets/games/boss/small_boss.h"
 
 // Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32

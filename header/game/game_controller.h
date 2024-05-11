@@ -5,6 +5,7 @@
 #include "../global.h"
 #include "../framebf.h"
 
+#define STEP 10
 typedef struct GameController
 {
     //int game_map[MAP_HEIGHT][MAP_WIDTH], is_game_active;

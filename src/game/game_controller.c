@@ -25,14 +25,14 @@ void move_spaceship(GameController *game_controller, int x_dir, int y_dir) {
     Spaceship *spaceship = &game_controller->spaceship;
     clear_image(spaceship->position.x, spaceship->position.y, spaceship->size.width, spaceship->size.height);
 
-    if (spaceship->position.x + x_dir * 5 >= 0 &&
-        spaceship->position.x + x_dir * 5 <= SCREEN_WIDTH - spaceship->size.width) {
-        spaceship->position.x += x_dir * 5;
+    if (spaceship->position.x + x_dir * STEP >= 0 &&
+        spaceship->position.x + x_dir * STEP <= SCREEN_WIDTH - spaceship->size.width) {
+        spaceship->position.x += x_dir * STEP;
     }
 
-    if (spaceship->position.y + y_dir * 5 >= 0 &&
-        spaceship->position.y + y_dir * 5 <= SCREEN_HEIGHT - spaceship->size.height) {
-        spaceship->position.y += y_dir * 5;
+    if (spaceship->position.y + y_dir * STEP >= 0 &&
+        spaceship->position.y + y_dir * STEP <= SCREEN_HEIGHT - spaceship->size.height) {
+        spaceship->position.y += y_dir * STEP;
     }
 
     draw_spaceship(game_controller);
