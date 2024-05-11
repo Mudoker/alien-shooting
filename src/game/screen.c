@@ -35,8 +35,8 @@ void in_game_screen(GameController *game_controller) {
         bullet_timer += 8000; // Assuming this is the delay between bullet movements
         
         // Check if 5 seconds have elapsed
-        if (bullet_timer > 1000000) { // 5 seconds * 1000000 microseconds
-            init_bullet(game_controller); // Create a new bullet
+        if (bullet_timer > 1000000) { // 1 seconds
+            init_bullet(game_controller); // Create a new bullet after 1 second
             bullet_timer = 0; // Reset the timer
         }
          
