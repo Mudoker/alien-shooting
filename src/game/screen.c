@@ -1,11 +1,17 @@
 #include "../../header/game/screen.h"
+#include "../../header/timer.h"
 
 void in_game_screen(GameController *game_controller) {
     // Initialize the spaceship object
     init_spaceship(game_controller);
+    init_bullet(game_controller);
+    
+    int bullet_timer = 0; // Variable to track time elapsed for bullet creation
 
     while (1) {
-        char c = uart_getc();
+        
+        // Check if a character is received
+        char c = getUart();
         switch (c) {
             case 'w':
                 move_spaceship(game_controller, 0, -1);
@@ -22,5 +28,17 @@ void in_game_screen(GameController *game_controller) {
             default:
                 break;
         }
+
+        // Move the bullet
+        move_bullet(game_controller, 0, -1);
+        // Increment the bullet timer
+        bullet_timer += 8000; // Assuming this is the delay between bullet movements
+        
+        // Check if 5 seconds have elapsed
+        if (bullet_timer > 1000000) { // 5 seconds * 1000000 microseconds
+            init_bullet(game_controller); // Create a new bullet
+            bullet_timer = 0; // Reset the timer
+        }
+         
     }
 }

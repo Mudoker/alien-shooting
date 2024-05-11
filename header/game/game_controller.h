@@ -4,6 +4,7 @@
 #include "game_struct.h"
 #include "../global.h"
 #include "../framebf.h"
+#include "../timer.h"
 
 #define STEP 10
 typedef struct GameController
@@ -17,7 +18,10 @@ typedef struct GameController
 } GameController;
 
 void init_spaceship(GameController *game_controller);
+void init_bullet(GameController *game_controller);
 void draw_spaceship(GameController *game_controller);
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir);
+void draw_bullet(GameController *game_controller);
+void move_bullet(GameController *game_controller, int x_dir, int y_dir);
 
 #endif
