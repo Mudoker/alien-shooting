@@ -1,7 +1,9 @@
 #ifndef GAME_CONTROLLER_H
 #define GAME_CONTROLLER_H
 
-#include "../../src/game/headers/game_struct.h"
+#include "game_struct.h"
+#include "../global.h"
+#include "../framebf.h"
 
 typedef struct GameController
 {
@@ -15,5 +17,6 @@ typedef struct GameController
 
 void init_spaceship(GameController *game_controller);
 void draw_spaceship(GameController *game_controller);
+void move_spaceship(GameController *game_controller, int x_dir, int y_dir);
 
 #endif

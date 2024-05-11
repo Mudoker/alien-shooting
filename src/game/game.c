@@ -1,16 +1,16 @@
 #include "../../header/game/game.h"
-// #include "../../header/framebf.h"
+//#include "../../header/framebf.h"
 // #include "../../header/global.h"
 // #include "../../assets/games/boss/small_boss.h"
 // #include "../../assets/games/spaceship/blader.h"
-#include "../../header/game/game_controller.h"
 
 void gameCli() {
     framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
     GameController game_controller_obj;
     GameController *game_controller = &game_controller_obj;
 
-    init_spaceship(game_controller);
+    //init_spaceship(game_controller);
+    in_game_screen(game_controller);
 
     // int ship_position_X = (SCREEN_WIDTH - 124) / 2, ship_position_Y = SCREEN_HEIGHT - 128;
     // const unsigned long *boss = epd_bitmap_boss_allArray[0];
@@ -38,8 +38,9 @@ void gameCli() {
     //             break;
     //     }
     //     draw_image(ship_position_X, ship_position_Y, 124, 128, spaceship);
-        // draw_image(0, 0, 467, 301, boss);
-    
+    //     //clear_image(0, 0, 467, 301);
+    //     draw_image(0, 0, 467, 301, boss);
+    // }
 }
 
 // void update_position_game(int x_dir, int y_dir, int *offset_x, int *offset_y, const unsigned long *spaceship) {
