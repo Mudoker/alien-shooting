@@ -107,6 +107,15 @@ void draw_rectARGB32(int x1, int y1, int x2, int y2, unsigned int attr,
     }
 }
 
+void draw_image(int x, int y, int w, int h, const unsigned long *image) {
+  for (int j = 0; j < h; j++) {
+    for (int i = 0; i < w; i++) {
+      unsigned long pixel = image[j * w + i];
+      draw_pixelARGB32(x + i, y + j, pixel);
+    }
+  }
+}
+
 void draw_charARGB32(int x, int y, unsigned char ch, unsigned int attr) {
   for (int j = 0; j < FONT_HEIGHT; j++) {
     for (int i = 0; i < FONT_WIDTH; i++) {
