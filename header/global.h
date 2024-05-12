@@ -16,6 +16,10 @@
 #define SCREEN_WIDTH 780 // Screen width
 #define SCREEN_HEIGHT 900 // Screen height
 
+#define cinema_bg_width 780 // Cinema background width
+#define cinema_bg_height 900 // Cinema background height
+#define paddingLeft 180 // Padding left
+#define paddingTop 240 // Padding top
 #define VIDEO_HEIGHT 236 // Video height
 #define VIDEO_WIDTH 420 // Video width
 

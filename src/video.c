@@ -9,10 +9,9 @@
 
 void video_mode()
 {
-  framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, 640, 640, 0, 0);
-  draw_image_rect(0, 0, 640, 640, epd_bitmap_allArray_bg[0]);
-  display_video(110, 250, VIDEO_WIDTH, VIDEO_HEIGHT, 30, epd_bitmap_allArray_video);
-  // draw_image(110,250,420, 295, epd_bitmap_allArray_bg[0]);
+  framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, cinema_bg_width, cinema_bg_height, 0, 0);
+  draw_image_rect(0, 0, cinema_bg_width, cinema_bg_height, cinemaallArray[0]);
+  display_video(paddingLeft, paddingTop, VIDEO_WIDTH, VIDEO_HEIGHT, 30, epd_bitmap_allArray_video);
 }
 
 void display_video(int x, int y, int w, int h, int num_frames, const unsigned long **video)
@@ -23,7 +22,6 @@ void display_video(int x, int y, int w, int h, int num_frames, const unsigned lo
     {
       draw_image_rect(x, y, w, h, video[frame]);
       wait_msec(100500);
-      // wait_msec(1000);
     }
   }
 }
