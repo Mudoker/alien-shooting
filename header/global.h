@@ -16,8 +16,8 @@
 #define SCREEN_WIDTH 780 // Screen width
 #define SCREEN_HEIGHT 900 // Screen height
 
-#define VIDEO_HEIGHT 240 // Video height
-#define VIDEO_WIDTH 320 // Video width
+#define VIDEO_HEIGHT 236 // Video height
+#define VIDEO_WIDTH 420 // Video width
 
 #define NUM_FRAMES 45 // Number of frames
 #define VIDEO_LOOP 10 // Video loop
