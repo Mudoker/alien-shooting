@@ -9,7 +9,7 @@ void load_image() {
   framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT,
                IMAGE_WIDTH * (epd_bitmap_allArray_LEN), IMAGE_HEIGHT, offset_x,
                offset_y);
-  draw_image(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, image);
+  draw_image_rect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, image);
 
   while (1) {
     char c = uart_getc();

@@ -15,11 +15,10 @@ int main()
   // load_image();
   // load_inf();
   video_mode();
-  load_image();
+  // load_image();
   // load_inf();
   // video_mode();
   gameCli();
 
   return 0;
 }
-

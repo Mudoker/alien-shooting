@@ -7,7 +7,7 @@ void load_inf() {
   framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT,
                offset_x, offset_y);
 
-  draw_image(0, 0, 136, 103, epd_bitmap_logoallArray[0]);
+  draw_image_rect(0, 0, 136, 103, epd_bitmap_logoallArray[0]);
 
   draw_boxed_stringARGB32(0, 12 + 120, "OS Information", 0xFFFF00);
 
