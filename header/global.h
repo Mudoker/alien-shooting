@@ -10,11 +10,11 @@
 #define MAX_ARG_SIZE 100    // Maximum number of arguments size
 #define MAX_CMD_HISTORY 200 // Maximum number of command history
 
-#define IMAGE_WIDTH 544  // Image width
-#define IMAGE_HEIGHT 842 // Image height
+#define IMAGE_WIDTH 816  // Image width
+#define IMAGE_HEIGHT 1263 // Image height
 
-#define SCREEN_WIDTH 500  // Screen width
-#define SCREEN_HEIGHT 640 // Screen height
+#define SCREEN_WIDTH 780 // Screen width
+#define SCREEN_HEIGHT 900 // Screen height
 
 #define VIDEO_HEIGHT 240 // Video height
 #define VIDEO_WIDTH 320 // Video width
@@ -22,6 +22,7 @@
 #define NUM_FRAMES 45 // Number of frames
 #define VIDEO_LOOP 10 // Video loop
 
+#define NULL ((void *)0)
 #define SCROLL_STEP 4
 
 // Text color codes
@@ -46,7 +47,7 @@
 #define CLEAR "\x1b[49m"
 
 // User-defined data types
-typedef enum { False = 0, True = 1 } boolean; // Boolean data type
+// typedef enum { False = 0, True = 1 } boolean; // Boolean data type
 
 // OS trademark structure
 typedef struct {
