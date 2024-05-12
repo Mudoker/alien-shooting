@@ -7,6 +7,5 @@
 #define BUTTON_HEIGHT 100
 
 void draw_button(int x, int y, char *text, int selected);
-void draw_center_button(int y, char *text, int selected);
 
 #endif

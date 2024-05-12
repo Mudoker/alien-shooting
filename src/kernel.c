@@ -5,6 +5,8 @@
 // #include "../header/text.h"
 #include "../header/game/game.h"
 #include "../header/image.h"
+#include "../header/text.h"
+
 
 int main()
 {

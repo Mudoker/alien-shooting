@@ -1,8 +1,13 @@
 #include "../../header/game/game.h"
+//#include "../../header/framebf.h"
+// #include "../../header/global.h"
+// #include "../../assets/games/boss/small_boss.h"
+// #include "../../assets/games/spaceship/blader.h"
 
 void gameCli() {
-    framebf_init(GAME_WIDTH, GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT, 0, 0);
-    draw_center_button(100, "Start", 1);
-    draw_center_button(540, "Exit", 0);
+    framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+    GameController game_controller_obj;
+    GameController *game_controller = &game_controller_obj;
+    
+    in_game_screen(game_controller);
 }
-
