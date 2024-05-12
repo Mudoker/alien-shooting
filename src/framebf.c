@@ -1,6 +1,7 @@
 #include "../header/framebf.h"
 #include "../assets/fonts/normal_font.h"
 
+
 // Use RGBA32 (32 bits for each pixel)
 #define COLOR_DEPTH 32
 // Pixel Order: BGR in memory order (little endian --> RGB in byte order)
@@ -80,7 +81,14 @@ void framebf_init(int pw, int ph, int vw, int vh, int offsetX, int offsetY) {
 }
 
 void draw_pixelARGB32(int x, int y, unsigned int attr) {
+  int offs = (y * pitch) + ((COLOR_DEPTH / 8) * x);
+  *((unsigned int *)(fb + offs)) = attr;
+}
+
+void draw_pixelARGB32_image(int x, int y, unsigned int attr, const unsigned long *background) {
   if (attr == 0) {
+    // unsigned int pixel = background[y * SCREEN_WIDTH + x];
+    // attr = pixel;
     return;
   }
 
@@ -161,10 +169,11 @@ void update_position(int x_dir, int y_dir, int *offset_x, int *offset_y) {
   }
 }
 
-void clear_image(int x, int y, int w, int h) {
-  for (int j = 0; j < h; j++) {
-    for (int i = 0; i < w; i++) {
-      draw_pixelARGB32(x + i, y + j, 1);
+void clear_image(int x, int y, int w, int h, const unsigned long *background) {
+  for (int j = y; j < y + h; j++) {
+    for (int i = x; i < x + w; i++) {
+      unsigned long pixel = background[j * w + i];
+      draw_pixelARGB32(i, j, pixel);
     }
   }
 }
@@ -178,9 +187,12 @@ void draw_image(int x, int y, int w, int h, const unsigned long *image) {
   }
 }
 
-void draw_all_images(int ship_position_X, int ship_position_Y, int w, int h,
-                     const unsigned long *spaceship, int boss_X, int boss_Y,
-                     int w_boss, int h_boss, const unsigned long *boss) {
-  draw_image(ship_position_X, ship_position_Y, w, h, spaceship);
-  draw_image(boss_X, boss_Y, w_boss, h_boss, boss);
+void draw_image_ver2(int x, int y, int w, int h, const unsigned long *image, const unsigned long *background) {
+  for (int j = 0; j < h; j++) {
+    for (int i = 0; i < w; i++) {
+      unsigned long pixel = image[j * w + i];
+      draw_pixelARGB32_image(x + i, y + j, pixel, background);
+    }
+  }
 }
+

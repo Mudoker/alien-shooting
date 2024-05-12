@@ -1,10 +1,16 @@
 #include "../../header/game/game_controller.h"
 #include "../../assets/games/spaceship/blader.h"
 #include "../../assets/games/bullet/bullet_lv1.h"
+#include "../../assets/games/background.h"
+
+void init_background(GameController *game_controller) {
+    draw_image(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background_allArray[0]);
+}
 
 // Initialize the spaceship object
 void init_spaceship(GameController *game_controller) {
     Spaceship your_spaceship;
+    init_background(game_controller);
 
     // Spaceship's size 
     your_spaceship.size.width = 124;
@@ -31,17 +37,18 @@ void init_bullet(GameController *game_controller) {
 }
 // Draw the spaceship on the screen
 void draw_spaceship(GameController *game_controller) {
-    draw_image(game_controller->spaceship.position.x, game_controller->spaceship.position.y, game_controller->spaceship.size.width, game_controller->spaceship.size.height, game_controller->spaceship.sprite);
+    draw_image_ver2(game_controller->spaceship.position.x, game_controller->spaceship.position.y, game_controller->spaceship.size.width, game_controller->spaceship.size.height, game_controller->spaceship.sprite, epd_bitmap_background_allArray[0]);
 }
 
 // Draw the bullet on the screen
 void draw_bullet(GameController *game_controller) {
-    draw_image(game_controller->spaceship.bullet.position.x, game_controller->spaceship.bullet.position.y, 12, 48, game_controller->spaceship.bullet.sprite);
+    draw_image_ver2(game_controller->spaceship.bullet.position.x, game_controller->spaceship.bullet.position.y, 12, 48, game_controller->spaceship.bullet.sprite, epd_bitmap_background_allArray[0]);
 }
 
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir) {
     Spaceship *spaceship = &game_controller->spaceship;
-    clear_image(spaceship->position.x, spaceship->position.y, spaceship->size.width, spaceship->size.height);
+    //clear_image(spaceship->position.x, spaceship->position.y, spaceship->size.width, spaceship->size.height, epd_bitmap_background_allArray[0]);
+    draw_image(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,epd_bitmap_background_allArray[0]);
 
     if (spaceship->position.x + x_dir * STEP >= 0 &&
         spaceship->position.x + x_dir * STEP <= SCREEN_WIDTH - spaceship->size.width) {
@@ -52,23 +59,23 @@ void move_spaceship(GameController *game_controller, int x_dir, int y_dir) {
         spaceship->position.y + y_dir * STEP <= SCREEN_HEIGHT - spaceship->size.height) {
         spaceship->position.y += y_dir * STEP;
     }
-
     draw_spaceship(game_controller);
 }
 
 void move_bullet(GameController *game_controller, int x_dir, int y_dir) {
     Spaceship *spaceship = &game_controller->spaceship;
     Bullet *bullet = &spaceship->bullet;
-    clear_image(bullet->position.x, bullet->position.y, 12, 48);
+    // clear_image(bullet->position.x, bullet->position.y, 12, 48, epd_bitmap_background_allArray[0]);
+    draw_image(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,epd_bitmap_background_allArray[0]);
 
-    if (bullet->position.x + x_dir * STEP >= 0 &&
-        bullet->position.x + x_dir * STEP <= SCREEN_WIDTH - 12) {
-        bullet->position.x += x_dir * STEP;
+    if (bullet->position.x + x_dir * 48 >= 0 &&
+        bullet->position.x + x_dir * 48 <= SCREEN_WIDTH - 12) {
+        bullet->position.x += x_dir * 48;
     }
 
-    if (bullet->position.y + y_dir * STEP >= 0 &&
-        bullet->position.y + y_dir * STEP <= SCREEN_HEIGHT - 48) {
-        bullet->position.y += y_dir * STEP;
+    if (bullet->position.y + y_dir * 48 >= 0 &&
+        bullet->position.y + y_dir * 48 <= SCREEN_HEIGHT - 48) {
+        bullet->position.y += y_dir * 48;
     }
 
     draw_bullet(game_controller);

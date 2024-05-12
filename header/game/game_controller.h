@@ -6,7 +6,7 @@
 #include "../framebf.h"
 #include "../timer.h"
 
-#define STEP 10
+#define STEP 150
 typedef struct GameController
 {
     //int game_map[MAP_HEIGHT][MAP_WIDTH], is_game_active;
@@ -17,6 +17,7 @@ typedef struct GameController
     // int score, diff, map, cancel_attack_timer;
 } GameController;
 
+void init_background(GameController *game_controller);
 void init_spaceship(GameController *game_controller);
 void init_bullet(GameController *game_controller);
 void draw_spaceship(GameController *game_controller);
