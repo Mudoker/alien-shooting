@@ -47,8 +47,12 @@ void draw_bullet(GameController *game_controller) {
 
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir) {
     Spaceship *spaceship = &game_controller->spaceship;
-    //clear_image(spaceship->position.x, spaceship->position.y, spaceship->size.width, spaceship->size.height, epd_bitmap_background_allArray[0]);
-    draw_image(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,epd_bitmap_background_allArray[0]);
+    clear_image(spaceship->position.x, spaceship->position.y, spaceship->size.width, spaceship->size.height, epd_bitmap_background_allArray[0]);
+
+    // Now you can modify the bitmap data
+    //repl_bitmap_background[spaceship->position.y * SCREEN_WIDTH + spaceship->position.x] = 0;
+
+    //draw_image(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,epd_bitmap_background_allArray[0]);
 
     if (spaceship->position.x + x_dir * STEP >= 0 &&
         spaceship->position.x + x_dir * STEP <= SCREEN_WIDTH - spaceship->size.width) {
@@ -65,8 +69,8 @@ void move_spaceship(GameController *game_controller, int x_dir, int y_dir) {
 void move_bullet(GameController *game_controller, int x_dir, int y_dir) {
     Spaceship *spaceship = &game_controller->spaceship;
     Bullet *bullet = &spaceship->bullet;
-    // clear_image(bullet->position.x, bullet->position.y, 12, 48, epd_bitmap_background_allArray[0]);
-    draw_image(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,epd_bitmap_background_allArray[0]);
+    clear_image(bullet->position.x, bullet->position.y, 12, 48, epd_bitmap_background_allArray[0]);
+    //draw_image(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,epd_bitmap_background_allArray[0]);
 
     if (bullet->position.x + x_dir * 48 >= 0 &&
         bullet->position.x + x_dir * 48 <= SCREEN_WIDTH - 12) {

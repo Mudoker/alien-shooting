@@ -6,7 +6,7 @@
 #include "../framebf.h"
 #include "../timer.h"
 
-#define STEP 150
+#define STEP 5
 typedef struct GameController
 {
     //int game_map[MAP_HEIGHT][MAP_WIDTH], is_game_active;
