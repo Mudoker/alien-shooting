@@ -3,6 +3,7 @@
 #include "../../assets/games/bullet/bullet_lv1.h"
 #include "../../assets/games/background.h"
 
+
 void init_background(GameController *game_controller) {
     draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background_allArray[0]);
 }
@@ -10,7 +11,7 @@ void init_background(GameController *game_controller) {
 // Initialize the spaceship object
 void init_spaceship(GameController *game_controller) {
     Spaceship your_spaceship;
-    init_background(game_controller);
+    // init_background(game_controller);
 
     // Spaceship's size
     your_spaceship.size.width = 124;
@@ -37,7 +38,8 @@ void init_bullet(GameController *game_controller) {
 }
 // Draw the spaceship on the screen
 void draw_spaceship(GameController *game_controller) {
-    draw_image_object(game_controller->spaceship.position.x, game_controller->spaceship.position.y, game_controller->spaceship.size.width, game_controller->spaceship.size.height, game_controller->spaceship.sprite, epd_bitmap_background_allArray[0]);
+    // draw_image_object(game_controller->spaceship.position.x, game_controller->spaceship.position.y, game_controller->spaceship.size.width, game_controller->spaceship.size.height, game_controller->spaceship.sprite, epd_bitmap_background_allArray[0]);
+    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background_allArray[0]);
 }
 
 // Draw the bullet on the screen
