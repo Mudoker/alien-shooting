@@ -28,11 +28,15 @@ void in_game_screen(GameController *game_controller)
         case 'd':
             move_spaceship(game_controller, 1, 0);
             break;
+        // Handle Continue Button
+        case 'c':
+            display_stages();
+            break;
         default:
             break;
         }
 
-        draw_button(190, 350, "Continue", 0);
+        draw_button(190, 350, "Continue (c)", 0);
 
         // Move the bullet
         move_bullet(game_controller, 0, -1);

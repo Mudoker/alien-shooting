@@ -9,8 +9,8 @@
 #define STEP 5
 typedef struct GameController
 {
-    //int game_map[MAP_HEIGHT][MAP_WIDTH], is_game_active;
-    //EnemyList enemy_list;
+    // int game_map[MAP_HEIGHT][MAP_WIDTH], is_game_active;
+    // EnemyList enemy_list;
     Spaceship spaceship;
 
     // int weapon_x, weapon_y, weapon;
@@ -24,5 +24,6 @@ void draw_spaceship(GameController *game_controller);
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir);
 void draw_bullet(GameController *game_controller);
 void move_bullet(GameController *game_controller, int x_dir, int y_dir);
+void display_stages();
 
 #endif
