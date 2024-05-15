@@ -36,8 +36,6 @@ void in_game_screen(GameController *game_controller)
             break;
         }
 
-        draw_button(190, 350, "Continue (c)", 0);
-
         // Move the bullet
         move_bullet(game_controller, 0, -1);
         // Increment the bullet timer

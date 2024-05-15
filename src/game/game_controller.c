@@ -96,8 +96,3 @@ void move_bullet(GameController *game_controller, int x_dir, int y_dir)
     draw_bullet(game_controller);
     wait_msec(8000);
 }
-
-void display_stages()
-{
-    uart_puts("Displaying Stages . . .");
-}
