@@ -4,7 +4,8 @@
 void in_game_screen(GameController *game_controller) {
     // Initialize the spaceship object
     init_spaceship(game_controller);
-    init_bullet(game_controller);
+    // init_bullet(game_controller);
+    init_alien(game_controller);
     
     int bullet_timer = 0; // Variable to track time elapsed for bullet creation
 
@@ -30,7 +31,7 @@ void in_game_screen(GameController *game_controller) {
         }
 
         // Move the bullet
-        move_bullet(game_controller, 0, -1);
+        // move_bullet(game_controller, 0, -1);
         // Increment the bullet timer
         bullet_timer += 8000; // Assuming this is the delay between bullet movements
         
