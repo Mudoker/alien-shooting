@@ -2,6 +2,7 @@
 #include "../../assets/games/spaceship/blader.h"
 #include "../../assets/games/bullet/bullet_lv1.h"
 #include "../../assets/games/background.h"
+#include "../../assets/games/stages.h"
 
 void init_background(GameController *game_controller)
 {
