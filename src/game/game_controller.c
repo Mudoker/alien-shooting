@@ -100,4 +100,6 @@ void move_bullet(GameController *game_controller, int x_dir, int y_dir)
 void display_stages()
 {
     uart_puts("Displaying Stages . . .");
+
+    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_stages[0]);
 }

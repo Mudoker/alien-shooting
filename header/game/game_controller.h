@@ -5,6 +5,7 @@
 #include "../global.h"
 #include "../framebf.h"
 #include "../timer.h"
+#include "../../assets/games/stages.h"
 
 #define STEP 5
 typedef struct GameController
