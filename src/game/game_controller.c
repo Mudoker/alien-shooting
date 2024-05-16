@@ -101,5 +101,5 @@ void display_stages()
 {
     uart_puts("Displaying Stages . . .");
 
-    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_stages[0]);
+    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_stagesallArray[0]);
 }
