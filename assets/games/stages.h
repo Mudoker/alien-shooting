@@ -1,3 +1,6 @@
+#ifndef STAGES_H
+#define STAGES_H
+
 // 'stages', 349x403px
 const unsigned char epd_bitmap_stages[] = {
 	0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
@@ -1114,3 +1117,5 @@ const unsigned char epd_bitmap_stages[] = {
 const int epd_bitmap_stagesallArray_LEN = 1;
 const unsigned char *epd_bitmap_stagesallArray[1] = {
 	epd_bitmap_stages};
+
+#endif
