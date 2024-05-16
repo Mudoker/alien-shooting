@@ -1113,4 +1113,4 @@ const unsigned char epd_bitmap_stages[] = {
 // Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 17760)
 const int epd_bitmap_stagesallArray_LEN = 1;
 const unsigned char *epd_bitmap_stagesallArray[1] = {
-	epd_bitmap_stagesstages};
+	epd_bitmap_stages};
