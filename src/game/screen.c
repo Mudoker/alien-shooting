@@ -28,10 +28,6 @@ void in_game_screen(GameController *game_controller)
         case 'd':
             move_spaceship(game_controller, 1, 0);
             break;
-        // Handle Continue Button
-        case 'c':
-            display_stages();
-            break;
         default:
             break;
         }

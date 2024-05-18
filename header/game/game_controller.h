@@ -24,5 +24,9 @@ void draw_spaceship(GameController *game_controller);
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir);
 void draw_bullet(GameController *game_controller);
 void move_bullet(GameController *game_controller, int x_dir, int y_dir);
+<<<<<<< HEAD
+void display_stages(GameController *game_controller);
+=======
+>>>>>>> ad684d3d4e8b6c492669bac4e1a781c8a23e1a10
 
 #endif

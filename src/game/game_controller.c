@@ -2,6 +2,7 @@
 #include "../../assets/games/spaceship/blader.h"
 #include "../../assets/games/bullet/bullet_lv1.h"
 #include "../../assets/games/background.h"
+#include "../../assets/games/stages.h"
 
 void init_background(GameController *game_controller)
 {
@@ -95,4 +96,37 @@ void move_bullet(GameController *game_controller, int x_dir, int y_dir)
 
     draw_bullet(game_controller);
     wait_msec(8000);
+}
+
+void display_stages(GameController *game_controller)
+{
+    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_stages_allArray[0]);
+
+    while (1)
+    {
+
+        // Check if a character is received
+        char c = getUart();
+        switch (c)
+        {
+        case '1':
+            in_game_screen(game_controller);
+            break;
+        case '2':
+            in_game_screen(game_controller);
+            break;
+        case '3':
+            in_game_screen(game_controller);
+            break;
+        case '4':
+            in_game_screen(game_controller);
+            break;
+        // 5~8
+        case '9':
+            in_game_screen(game_controller);
+            break;
+        default:
+            break;
+        }
+    }
 }
