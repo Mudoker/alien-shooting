@@ -12,21 +12,26 @@ typedef struct GameController
     // int game_map[MAP_HEIGHT][MAP_WIDTH], is_game_active;
     // EnemyList enemy_list;
     Spaceship spaceship;
+    int stage_level;
 
     // int weapon_x, weapon_y, weapon;
     // int score, diff, map, cancel_attack_timer;
 } GameController;
 
+// Functions to initialize
 void init_background(GameController *game_controller);
 void init_spaceship(GameController *game_controller);
 void init_bullet(GameController *game_controller);
+void init_stages(GameController *game_controller);
+
+
+
 void draw_spaceship(GameController *game_controller);
-void move_spaceship(GameController *game_controller, int x_dir, int y_dir);
 void draw_bullet(GameController *game_controller);
+void draw_stages(GameController *game_controller);
+
+
+void move_spaceship(GameController *game_controller, int x_dir, int y_dir);
 void move_bullet(GameController *game_controller, int x_dir, int y_dir);
-<<<<<<< HEAD
-void display_stages(GameController *game_controller);
-=======
->>>>>>> ad684d3d4e8b6c492669bac4e1a781c8a23e1a10
 
 #endif
