@@ -9,6 +9,6 @@ void gameCli()
     GameController game_controller_obj;
     GameController *game_controller = &game_controller_obj;
 
-    display_stages(game_controller);
+    stage_screen(game_controller);
     // in_game_screen(game_controller);
 }
