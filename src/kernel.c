@@ -13,12 +13,12 @@ int main()
   uart_init(); // Initialize UART
 
   // load_image();
-  // load_inf();
+  //load_inf();
   video_mode();
   // load_image();
   // load_inf();
   // video_mode();
-  // gameCli();
+  //gameCli();
 
   return 0;
 }
