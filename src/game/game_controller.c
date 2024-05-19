@@ -4,17 +4,20 @@
 #include "../../assets/games/background.h"
 #include "../../assets/games/stages.h"
 
-void init_background(GameController *game_controller)
+void init_controller(GameController *game_controller)
 {
-    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background_allArray[0]);
+    // game_controller->stage_level = 1;
+    // init_background(game_controller);
+    init_spaceship(game_controller);
+    //init_bullet(game_controller);
+    init_stages(game_controller);
 }
+
 
 // Initialize the spaceship object
 void init_spaceship(GameController *game_controller)
 {
     Spaceship your_spaceship;
-    init_background(game_controller);
-
     // Spaceship's size
     your_spaceship.size.width = 124;
     your_spaceship.size.height = 128;
@@ -27,7 +30,7 @@ void init_spaceship(GameController *game_controller)
     your_spaceship.sprite = epd_bitmap_spaceship_allArray[0];
     game_controller->spaceship = your_spaceship;
 
-    draw_spaceship(game_controller);
+    // draw_spaceship(game_controller);
 }
 
 void init_bullet(GameController *game_controller)
@@ -43,7 +46,7 @@ void init_bullet(GameController *game_controller)
 void init_stages(GameController *game_controller)
 {
     game_controller->stage_level = 1;
-    draw_stages(game_controller);
+    // draw_stages(game_controller);
 }
 
 // Draw the spaceship on the screen
@@ -60,8 +63,20 @@ void draw_bullet(GameController *game_controller)
 
 void draw_stages(GameController *game_controller)
 {
-    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_stages_allArray[0]);
+    draw_background();
+    for (int i = 0; i < 9; i++) {
+        char label[20]; // Allocate space for the label
+        strcpy(label, "Stage ");
+        strcat(label, int_to_string(i + 1));
+        draw_button(SCREEN_WIDTH / 2 - 150, 100 + i * 80, 300, 40, label, 0);
+    }
 }
+
+void draw_background()
+{
+    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background_allArray[0]);
+}
+
 
 
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir)

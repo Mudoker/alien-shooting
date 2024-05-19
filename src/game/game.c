@@ -6,9 +6,14 @@
 void gameCli()
 {
     framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
+
     GameController game_controller_obj;
     GameController *game_controller = &game_controller_obj;
+    init_controller(game_controller);
 
     stage_screen(game_controller);
+
+
+    // stage_screen(game_controller);
     // in_game_screen(game_controller);
 }

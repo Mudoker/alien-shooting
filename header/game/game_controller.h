@@ -5,6 +5,7 @@
 #include "../global.h"
 #include "../framebf.h"
 #include "../timer.h"
+#include "ui.h"
 
 #define STEP 5
 typedef struct GameController
@@ -19,7 +20,8 @@ typedef struct GameController
 } GameController;
 
 // Functions to initialize
-void init_background(GameController *game_controller);
+
+void init_controller(GameController *game_controller);
 void init_spaceship(GameController *game_controller);
 void init_bullet(GameController *game_controller);
 void init_stages(GameController *game_controller);
@@ -29,7 +31,7 @@ void init_stages(GameController *game_controller);
 void draw_spaceship(GameController *game_controller);
 void draw_bullet(GameController *game_controller);
 void draw_stages(GameController *game_controller);
-
+void draw_background();
 
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir);
 void move_bullet(GameController *game_controller, int x_dir, int y_dir);
