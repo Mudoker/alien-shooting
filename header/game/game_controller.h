@@ -12,6 +12,7 @@ typedef struct GameController
 {
     // int game_map[MAP_HEIGHT][MAP_WIDTH], is_game_active;
     // EnemyList enemy_list;
+    Stage stages[9];
     Spaceship spaceship;
     int stage_level;
 
@@ -35,5 +36,7 @@ void draw_background();
 
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir);
 void move_bullet(GameController *game_controller, int x_dir, int y_dir);
+
+void change_stage(GameController *game_controller, int stage_level);
 
 #endif

@@ -51,33 +51,24 @@ void stage_screen(GameController *game_controller)
 {
     // Display the stages
     //init_stages(game_controller);
+    draw_background();
     draw_stages(game_controller);
 
 
-    // while (1)
-    // {
-    //     // Check if a character is received
-    //     char c = getUart();
-    //     switch (c)
-    //     {
-    //     case '1':
-    //         in_game_screen(game_controller);
-    //         break;
-    //     case '2':
-    //         in_game_screen(game_controller);
-    //         break;
-    //     case '3':
-    //         in_game_screen(game_controller);
-    //         break;
-    //     case '4':
-    //         in_game_screen(game_controller);
-    //         break;
-    //     // 5~8
-    //     case '9':
-    //         in_game_screen(game_controller);
-    //         break;
-    //     default:
-    //         break;
-    //     }
-    // }
+    while (1)
+    {
+        // Check if a character is received
+        char c = getUart();
+        switch (c)
+        {
+        case 'w':
+            change_stage(game_controller, -1);
+            break;
+        case 's':
+            change_stage(game_controller, 1);
+            break;
+        default:
+            break;
+        }
+    }
 }

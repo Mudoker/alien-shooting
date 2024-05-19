@@ -45,6 +45,13 @@ void init_bullet(GameController *game_controller)
 
 void init_stages(GameController *game_controller)
 {
+    for (int i = 0; i < 9; i++) {
+        Stage stage;
+        stage.level = i + 1;
+        strcpy(stage.name, "Stage ");
+        strcat(stage.name, int_to_string(i + 1));
+        game_controller->stages[i] = stage;
+    }
     game_controller->stage_level = 1;
     // draw_stages(game_controller);
 }
@@ -63,12 +70,13 @@ void draw_bullet(GameController *game_controller)
 
 void draw_stages(GameController *game_controller)
 {
-    draw_background();
+    // draw_background();
     for (int i = 0; i < 9; i++) {
-        char label[20]; // Allocate space for the label
-        strcpy(label, "Stage ");
-        strcat(label, int_to_string(i + 1));
-        draw_button(SCREEN_WIDTH / 2 - 150, 100 + i * 80, 300, 40, label, 0);
+        if (game_controller->stages[i].level == game_controller->stage_level) {
+            draw_button(SCREEN_WIDTH / 2 - 150, 100 + i * 80, 300, 40, game_controller->stages[i].name, 1);
+        } else {
+            draw_button(SCREEN_WIDTH / 2 - 150, 100 + i * 80, 300, 40, game_controller->stages[i].name, 0);
+        }
     }
 }
 
@@ -126,3 +134,18 @@ void move_bullet(GameController *game_controller, int x_dir, int y_dir)
     wait_msec(8000);
 }
 
+
+void change_stage(GameController *game_controller, int diff)
+{
+    draw_button(SCREEN_WIDTH / 2 - 150, 100 + (game_controller->stage_level - 1) * 80, 300, 40, game_controller->stages[game_controller->stage_level - 1].name, 0);
+    game_controller->stage_level += diff;
+    if (game_controller->stage_level < 1)
+    {
+        game_controller->stage_level = 9;
+    }
+    else if (game_controller->stage_level > 9)
+    {
+        game_controller->stage_level = 1;
+    }
+    draw_button(SCREEN_WIDTH / 2 - 150, 100 + (game_controller->stage_level - 1) * 80, 300, 40, game_controller->stages[game_controller->stage_level - 1].name, 1);
+}

@@ -65,4 +65,11 @@ typedef struct Alien
   boolean (*die)();               // Die
 } Alien;
 
+typedef struct Stage
+{
+  char name[MAX_STR_LENGTH]; // Stage name
+  int level;
+  // description[MAX_STR_LENGTH]; // Stage description
+} Stage;
+
 #endif
