@@ -29,6 +29,10 @@
 #define NULL ((void *)0)
 #define SCROLL_STEP 4
 
+#define MAX_ENEMY 5 // Maximum number of enemies
+#define MAX_ENEMY_IN_ROW 5
+#define MAX_ENEMY_IN_COL 1
+
 // Text color codes
 #define RED "\033[0;31m"
 #define GREEN "\033[0;32m"
