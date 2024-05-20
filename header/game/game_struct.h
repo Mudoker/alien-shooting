@@ -52,6 +52,8 @@ typedef struct Alien
   char *id;                  // Unique identifier
   char name[MAX_STR_LENGTH]; // Alien name
   Position position;         // Position
+  Position target;
+  int reached_target; 
   Size size;                 // Size
   float health;        // Health
   int speed;            // Speed

@@ -195,3 +195,4 @@ void draw_image_object(int x, int y, int w, int h, const unsigned long *image, c
     }
   }
 }
+
