@@ -7,6 +7,7 @@
 #include "../../header/uart.h"
 #include "../utils/abs_int.h"
 #include "../utils/memcpy.h"
+#include "../../assets/games/stages.h"
 
 void init_background(GameController *game_controller)
 {
@@ -208,6 +209,13 @@ void copy_alien(Alien *dest, const Alien *src)
 //     }
 // }
 
+
+void init_stages(GameController *game_controller)
+{
+    game_controller->stage_level = 1;
+    draw_stages(game_controller);
+}
+
 // Draw the spaceship on the screen
 void draw_spaceship(GameController *game_controller)
 {
@@ -220,6 +228,12 @@ void draw_bullet(GameController *game_controller)
 {
     draw_image_object(game_controller->spaceship.bullet.position.x, game_controller->spaceship.bullet.position.y, 12, 48, game_controller->spaceship.bullet.sprite, epd_bitmap_background_allArray[0]);
 }
+
+void draw_stages(GameController *game_controller)
+{
+    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_stages_allArray[0]);
+}
+
 
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir)
 {
@@ -270,14 +284,6 @@ void move_bullet(GameController *game_controller, int x_dir, int y_dir)
 
     draw_bullet(game_controller);
     wait_msec(8000);
-}
-
-void send_serial(char *message)
-{
-    while (*message)
-    {
-        uart_puts(*message++); // uart_write is a hypothetical function to send a character over UART
-    }
 }
 
 char *itoa(int num)
