@@ -159,6 +159,7 @@ void game_loop(GameController *game_controller)
         wait_msec(16); // Correct timing for approximately 60 FPS
     }
 }
+
 int all_aliens_reached(GameController *game_controller)
 {
     for (int i = 0; i < MAX_ENEMY; i++)
@@ -170,6 +171,7 @@ int all_aliens_reached(GameController *game_controller)
     }
     return 1; // All aliens have reached their positions
 }
+
 void draw_aliens(GameController *game_controller)
 {
     for (int i = 0; i < game_controller->alien_count; i++)
@@ -178,6 +180,7 @@ void draw_aliens(GameController *game_controller)
         draw_image_object(alien->position.x, alien->position.y, 130, 109, alien->sprite, epd_bitmap_background_allArray[0]);
     }
 }
+
 void init_all_enemies(GameController *game_controller)
 {
     for (int i = 0; i < 5; i++)
