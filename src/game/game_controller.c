@@ -3,6 +3,7 @@
 #include "../../assets/games/bullet/bullet_lv1.h"
 #include "../../assets/games/background.h"
 #include "../../assets/games/stages.h"
+#include "../../assets/games/health.h"
 
 void init_controller(GameController *game_controller)
 {
@@ -23,8 +24,8 @@ void init_spaceship(GameController *game_controller)
     your_spaceship.size.height = 128;
 
     // Initial position of the spaceship
-    your_spaceship.position.x = (SCREEN_WIDTH - your_spaceship.size.width) / 2;
-    your_spaceship.position.y = SCREEN_HEIGHT - your_spaceship.size.height;
+    // your_spaceship.position.x = (SCREEN_WIDTH - your_spaceship.size.width) / 2;
+    // your_spaceship.position.y = SCREEN_HEIGHT - your_spaceship.size.height;
 
     // Image of the spaceship
     your_spaceship.sprite = epd_bitmap_spaceship_allArray[0];
@@ -56,11 +57,13 @@ void init_stages(GameController *game_controller)
     // draw_stages(game_controller);
 }
 
-// Draw the spaceship on the screen
-void draw_spaceship(GameController *game_controller)
+void init_game(GameController *game_controller)
 {
-    draw_image_object(game_controller->spaceship.position.x, game_controller->spaceship.position.y, game_controller->spaceship.size.width, game_controller->spaceship.size.height, game_controller->spaceship.sprite, epd_bitmap_background_allArray[0]);
+    game_controller->spaceship.health = 100;
+    game_controller->spaceship.position.x = (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
+    game_controller->spaceship.position.y = SCREEN_HEIGHT - game_controller->spaceship.size.height;
 }
+
 
 // Draw the bullet on the screen
 void draw_bullet(GameController *game_controller)
@@ -68,9 +71,14 @@ void draw_bullet(GameController *game_controller)
     draw_image_object(game_controller->spaceship.bullet.position.x, game_controller->spaceship.bullet.position.y, 12, 48, game_controller->spaceship.bullet.sprite, epd_bitmap_background_allArray[0]);
 }
 
+void draw_spaceship(GameController *game_controller)
+{
+    draw_image_object(game_controller->spaceship.position.x, game_controller->spaceship.position.y, game_controller->spaceship.size.width, game_controller->spaceship.size.height, game_controller->spaceship.sprite, epd_bitmap_background_allArray[0]);
+}
+
+
 void draw_stages(GameController *game_controller)
 {
-    // draw_background();
     for (int i = 0; i < 9; i++) {
         if (game_controller->stages[i].level == game_controller->stage_level) {
             draw_button(SCREEN_WIDTH / 2 - 150, 100 + i * 80, 300, 40, game_controller->stages[i].name, 1);
@@ -83,6 +91,19 @@ void draw_stages(GameController *game_controller)
 void draw_background()
 {
     draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background_allArray[0]);
+}
+
+void draw_health_bar(GameController *game_controller)
+{
+    draw_image_object(0, SCREEN_HEIGHT - 80, 448, 79, epd_bitmap_health_bar_allArray[0], epd_bitmap_background_allArray[0]);
+    
+    // Replace epd_bitmap_health_bar_allArray[0] that have "0x002a2e47" with red color
+    for (int i = 0; i < 448 * 79; i++) {
+        if (epd_bitmap_health_bar_allArray[0][i] >= 0x002a2e40 && epd_bitmap_health_bar_allArray[0][i] <= 0x002a2e49 ) {
+            draw_pixelARGB32(i % 448, i / 448 + SCREEN_HEIGHT - 80, 0x00AA0000);
+        }
+    }
+
 }
 
 

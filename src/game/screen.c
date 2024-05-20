@@ -5,8 +5,12 @@ void in_game_screen(GameController *game_controller)
 {
     // Initialize the spaceship object
     draw_background();
-    init_spaceship(game_controller);
-    init_bullet(game_controller);
+    // init_spaceship(game_controller);
+    // init_bullet(game_controller);
+    init_game(game_controller);
+
+    draw_health_bar(game_controller);
+    draw_spaceship(game_controller);
 
     int bullet_timer = 0; // Variable to track time elapsed for bullet creation
 
@@ -47,13 +51,10 @@ void in_game_screen(GameController *game_controller)
     }
 }
 
-void stage_screen(GameController *game_controller)
-{
+void stage_screen(GameController *game_controller) {
     // Display the stages
-    //init_stages(game_controller);
     draw_background();
     draw_stages(game_controller);
-
 
     while (1)
     {
@@ -66,6 +67,9 @@ void stage_screen(GameController *game_controller)
             break;
         case 's':
             change_stage(game_controller, 1);
+            break;
+        case '\n':
+            in_game_screen(game_controller);
             break;
         default:
             break;
