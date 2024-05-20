@@ -6,8 +6,8 @@ void in_game_screen(GameController *game_controller) {
     init_spaceship(game_controller);
     init_bullet(game_controller);
 
-    init_all_enemies(game_controller);
-
+    // init_all_enemies(game_controller);
+    game_loop(game_controller);
     
     int bullet_timer = 0; // Variable to track time elapsed for bullet creation
 
