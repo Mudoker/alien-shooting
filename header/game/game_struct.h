@@ -53,12 +53,12 @@ typedef struct Alien
   char name[MAX_STR_LENGTH]; // Alien name
   Position position;         // Position
   Position target;
-  int reached_target; 
+  int reached_target;
   Size size;                 // Size
   float health;        // Health
   int speed;            // Speed
   float damage;         // Damage
-  unsigned long **sprite;    // Sprite (Image)
+  unsigned long *sprite;    // Sprite (Image)
 
   // Methods
   boolean (*draw)();              // Draw the alien
