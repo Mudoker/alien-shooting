@@ -14,11 +14,11 @@ int main()
 
   // load_image();
   // load_inf();
-  video_mode();
+  // video_mode();
   // load_image();
   // load_inf();
   // video_mode();
-  // gameCli();
+  gameCli();
 
   return 0;
 }
