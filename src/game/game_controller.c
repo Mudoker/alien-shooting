@@ -266,15 +266,8 @@ void draw_background()
 
 void draw_health_bar(GameController *game_controller)
 {
-    draw_image_object(0, SCREEN_HEIGHT - 80, 448, 79, epd_bitmap_health_bar_allArray[0], epd_bitmap_background_allArray[0]);
-    
-    // Replace epd_bitmap_health_bar_allArray[0] that have "0x002a2e47" with red color
-    for (int i = 0; i < 448 * 79; i++) {
-        if (epd_bitmap_health_bar_allArray[0][i] >= 0x002a2e40 && epd_bitmap_health_bar_allArray[0][i] <= 0x002a2e49 ) {
-            draw_pixelARGB32(i % 448, i / 448 + SCREEN_HEIGHT - 80, 0x00AA0000);
-        }
-    }
-
+    float healthPercentage = (float) game_controller->spaceship.health / 100.0;
+    draw_capsuleARGB32(50, 50, 300, 50, 0x00FF0000, 1, healthPercentage);
 }
 
 

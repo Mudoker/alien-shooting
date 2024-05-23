@@ -14,6 +14,11 @@ void draw_rectARGB32(int x1, int y1, int x2, int y2, unsigned int attr,
 void draw_image_rect(int x, int y, int w, int h, const unsigned long *image);
 void draw_image_object(int x, int y, int w, int h, const unsigned long *image, const unsigned long *background);
 
+void draw_left_half_circleARGB32(int x0, int y0, int radius, unsigned int attr, int fill);
+void draw_right_half_circleARGB32(int x0, int y0, int radius, unsigned int attr, int fill);
+void drawLineARGB32(int x1, int y1, int x2, int y2, unsigned int attr);
+void draw_capsuleARGB32(int x, int y, int w, int h, unsigned int attr, int fill,float percentage);
+
 void draw_charARGB32(int x, int y, unsigned char ch, unsigned int attr);
 void draw_stringARGB32(int x, int y, const char *str, unsigned int attr);
 void draw_boxed_stringARGB32(int x, int y, const char *str, unsigned int attr);

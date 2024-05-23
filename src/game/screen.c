@@ -5,6 +5,7 @@ void in_game_screen(GameController *game_controller)
 {
     // Initialize the spaceship object
     draw_background();
+    // draw_capsuleARGB32(100, 100, 200, 200, 0x00AA0000);
     // init_spaceship(game_controller);
     // init_bullet(game_controller);
     init_game(game_controller);
@@ -13,7 +14,7 @@ void in_game_screen(GameController *game_controller)
     draw_spaceship(game_controller);
 
     // init_all_enemies(game_controller);
-    game_loop(game_controller);
+    // game_loop(game_controller);
     
     int bullet_timer = 0; // Variable to track time elapsed for bullet creation
 

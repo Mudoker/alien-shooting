@@ -8,7 +8,7 @@
 #include "ui.h"
 
 
-#define STEP 5
+#define STEP 20
 typedef struct GameController
 {
     // int game_map[MAP_HEIGHT][MAP_WIDTH], is_game_active;

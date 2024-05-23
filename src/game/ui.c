@@ -5,3 +5,4 @@ void draw_button(int x, int y, int w, int h, char *text, int selected) {
     draw_stringARGB32(x + w / 2 - 4 * len(text), y + h / 2 - 4, text, 0xFFFFFFFF);
 }
 
+
