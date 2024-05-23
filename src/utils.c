@@ -40,7 +40,7 @@ int len(const char *str) {
 }
 
 // Concatenate two strings
-void concat(char *dest, const char *src) {
+void strcat(char *dest, const char *src) {
   while (*dest) {
     dest++;
   }
@@ -51,3 +51,37 @@ void concat(char *dest, const char *src) {
   }
   *dest = '\0';
 }
+
+void strcpy(char *dest, const char *src) {
+    while (*src) {
+        *dest = *src;
+        dest++;
+        src++;
+    }
+    *dest = '\0';
+}
+
+char* int_to_string(int num) {
+  static char str[11];
+  str[0] = '\0'; // Empty string
+  int i = 0;
+  if (num == 0) {
+    str[i++] = '0';
+  } else {
+    if (num < 0) {
+      str[i++] = '-';
+      num = -num;
+    }
+    int j = 1000000000;
+    while (num / j == 0) {
+      j /= 10;
+    }
+    while (j > 0) {
+      str[i++] = num / j + '0';
+      num %= j;
+      j /= 10;
+    }
+  }
+  str[i] = '\0';
+  return str;
+} 

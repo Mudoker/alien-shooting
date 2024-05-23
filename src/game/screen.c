@@ -1,15 +1,22 @@
 #include "../../header/game/screen.h"
 #include "../../header/timer.h"
 
-void in_game_screen(GameController *game_controller) {
-  // Initialize the spaceship object
-  init_spaceship(game_controller);
-  init_bullet(game_controller);
+void in_game_screen(GameController *game_controller)
+{
+    // Initialize the spaceship object
+    draw_background();
+    // draw_capsuleARGB32(100, 100, 200, 200, 0x00AA0000);
+    // init_spaceship(game_controller);
+    // init_bullet(game_controller);
+    init_game(game_controller);
 
-  // init_all_enemies(game_controller);
-  game_loop(game_controller);
+    draw_health_bar(game_controller);
+    draw_spaceship(game_controller);
 
-  int bullet_timer = 0; // Variable to track time elapsed for bullet creation
+    // init_all_enemies(game_controller);
+    // game_loop(game_controller);
+    
+    int bullet_timer = 0; // Variable to track time elapsed for bullet creation
 
   while (1) {
 
@@ -46,17 +53,58 @@ void in_game_screen(GameController *game_controller) {
 }
 
 void stage_screen(GameController *game_controller) {
-  // Display the stages
-  init_stages(game_controller);
-  while (1) {
-    // Check if a character is received
-    char c = getUart();
-    if (c < '1' || c > '9') {
-      continue;
+    // Display the stages
+    draw_background();
+    draw_stages(game_controller);
+
+    while (1)
+    {
+        // Check if a character is received
+        char c = getUart();
+        switch (c)
+        {
+        case 'w':
+            change_stage(game_controller, -1);
+            break;
+        case 's':
+            change_stage(game_controller, 1);
+            break;
+        case '\n':
+            in_game_screen(game_controller);
+            break;
+        default:
+            break;
+        }
+    }
+    
+}
+
+void welcome_screen(GameController *game_controller) {
+    init_spaceship(game_controller);
+    draw_welcome_screen();
+    game_controller->spaceship.position.x = (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
+    game_controller->spaceship.position.y = (SCREEN_HEIGHT- game_controller->spaceship.size.height) / 2;
+
+    draw_spaceship(game_controller);
+    while (1)
+    {
+        // Check if a character is received
+        char c = getUart();
+        switch (c)
+        {
+        case '1':
+            stage_screen(game_controller);
+            break;
+        case '2':
+            // change_stage(game_controller, 1);
+            break;
+        case '3':
+            // in_game_screen(game_controller);
+            break;
+        default:
+            break;
+        }
     }
 
-    game_controller->stage_level = c - '0';
-    in_game_screen(game_controller);
-    break;
-  }
+    
 }

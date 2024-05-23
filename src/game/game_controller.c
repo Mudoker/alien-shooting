@@ -7,25 +7,34 @@
 #include "../../header/uart.h"
 #include "../utils/memcpy.h"
 #include "../utils/randomNum.h"
+#include "../../assets/games/welcome.h"
 
+void init_controller(GameController *game_controller)
+{
+    // game_controller->stage_level = 1;
+    // init_background(game_controller);
+    init_spaceship(game_controller);
+    //init_bullet(game_controller);
+    init_stages(game_controller);
+}
 void init_all_enemies(GameController *game_controller);
 void init_background(GameController *game_controller) {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                   epd_bitmap_background_allArray[0]);
 }
 
+
 // Initialize the spaceship object
-void init_spaceship(GameController *game_controller) {
-  Spaceship your_spaceship;
-  init_background(game_controller);
+void init_spaceship(GameController *game_controller)
+{
+    Spaceship your_spaceship;
+    // Spaceship's size
+    your_spaceship.size.width = 124;
+    your_spaceship.size.height = 128;
 
-  // Spaceship's size
-  your_spaceship.size.width = 124;
-  your_spaceship.size.height = 128;
-
-  // Initial position of the spaceship
-  your_spaceship.position.x = (SCREEN_WIDTH - your_spaceship.size.width) / 2;
-  your_spaceship.position.y = SCREEN_HEIGHT - your_spaceship.size.height;
+    // Initial position of the spaceship
+    // your_spaceship.position.x = (SCREEN_WIDTH - your_spaceship.size.width) / 2;
+    // your_spaceship.position.y = SCREEN_HEIGHT - your_spaceship.size.height;
 
   // Image of the spaceship
   your_spaceship.sprite = epd_bitmap_spaceship_allArray[0];
@@ -193,11 +202,27 @@ void copy_alien(Alien *dest, const Alien *src) {
 //     }
 // }
 
-void init_stages(GameController *game_controller) {
-  game_controller->stage_level = 1;
-  draw_stages(game_controller);
+
+void init_stages(GameController *game_controller)
+{
+    for (int i = 0; i < 9; i++) {
+        Stage stage;
+        stage.level = i + 1;
+        strcpy(stage.name, "Stage ");
+        strcat(stage.name, int_to_string(i + 1));
+        game_controller->stages[i] = stage;
+    }
+    game_controller->stage_level = 1;
+    // draw_stages(game_controller);
 }
 
+void init_game(GameController *game_controller)
+{
+    game_controller->spaceship.health = 100;
+    game_controller->spaceship.position.x = (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
+    game_controller->spaceship.position.y = SCREEN_HEIGHT - game_controller->spaceship.size.height;
+}
+    // draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background_allArray[0]);
 // Draw the spaceship on the screen
 void draw_spaceship(GameController *game_controller) {
   draw_image_object(game_controller->spaceship.position.x,
@@ -206,9 +231,8 @@ void draw_spaceship(GameController *game_controller) {
                     game_controller->spaceship.size.height,
                     game_controller->spaceship.sprite,
                     epd_bitmap_background_allArray[0]);
-  // draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-  // epd_bitmap_background_allArray[0]);
 }
+
 
 // Draw the bullet on the screen
 void draw_bullet(GameController *game_controller) {
@@ -218,22 +242,39 @@ void draw_bullet(GameController *game_controller) {
                     epd_bitmap_background_allArray[0]);
 }
 
-void draw_stages(GameController *game_controller) {
-  draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                  epd_bitmap_stages_allArray[0]);
+
+void draw_stages(GameController *game_controller)
+{
+    for (int i = 0; i < 9; i++) {
+        if (game_controller->stages[i].level == game_controller->stage_level) {
+            draw_button(SCREEN_WIDTH / 2 - 150, 100 + i * 80, 300, 40, game_controller->stages[i].name, 1);
+        } else {
+            draw_button(SCREEN_WIDTH / 2 - 150, 100 + i * 80, 300, 40, game_controller->stages[i].name, 0);
+        }
+    }
 }
 
-void move_spaceship(GameController *game_controller, int x_dir, int y_dir) {
-  Spaceship *spaceship = &game_controller->spaceship;
-  clear_image(spaceship->position.x, spaceship->position.y,
-              spaceship->size.width, spaceship->size.height,
-              epd_bitmap_background_allArray[0]);
+void draw_background()
+{
+    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background_allArray[0]);
+}
 
-  // Now you can modify the bitmap data
-  // repl_bitmap_background[spaceship->position.y * SCREEN_WIDTH +
-  // spaceship->position.x] = 0;
+void draw_health_bar(GameController *game_controller)
+{
+    float healthPercentage = (float) game_controller->spaceship.health / 100.0;
+    draw_capsuleARGB32(50, 50, 300, 50, 0x00FF0000, 1, healthPercentage);
+}
 
-  // draw_image(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,epd_bitmap_background_allArray[0]);
+void draw_welcome_screen()
+{
+    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_welcome);
+}
+
+
+void move_spaceship(GameController *game_controller, int x_dir, int y_dir)
+{
+    Spaceship *spaceship = &game_controller->spaceship;
+    clear_image(spaceship->position.x, spaceship->position.y, spaceship->size.width, spaceship->size.height, epd_bitmap_background_allArray[0]);
 
   if (spaceship->position.x + x_dir * STEP >= 0 &&
       spaceship->position.x + x_dir * STEP <=
@@ -246,10 +287,6 @@ void move_spaceship(GameController *game_controller, int x_dir, int y_dir) {
           SCREEN_HEIGHT - spaceship->size.height) {
     spaceship->position.y += y_dir * STEP;
   }
-  uart_puts("spaceship x: ");
-  uart_puts(itoa(spaceship->position.x));
-  uart_puts("spaceship y: ");
-  uart_puts(itoa(spaceship->position.y));
   draw_spaceship(game_controller);
 }
 
@@ -319,4 +356,19 @@ char *itoa(int num) {
   }
 
   return str;
+}
+
+void change_stage(GameController *game_controller, int diff)
+{
+    draw_button(SCREEN_WIDTH / 2 - 150, 100 + (game_controller->stage_level - 1) * 80, 300, 40, game_controller->stages[game_controller->stage_level - 1].name, 0);
+    game_controller->stage_level += diff;
+    if (game_controller->stage_level < 1)
+    {
+        game_controller->stage_level = 9;
+    }
+    else if (game_controller->stage_level > 9)
+    {
+        game_controller->stage_level = 1;
+    }
+    draw_button(SCREEN_WIDTH / 2 - 150, 100 + (game_controller->stage_level - 1) * 80, 300, 40, game_controller->stages[game_controller->stage_level - 1].name, 1);
 }

@@ -5,4 +5,5 @@
 
 void in_game_screen(GameController *game_controller);
 void stage_screen(GameController *game_controller);
+void welcome_screen(GameController *game_controller);
 #endif
