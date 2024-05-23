@@ -11,7 +11,7 @@ void gameCli()
     GameController *game_controller = &game_controller_obj;
     init_controller(game_controller);
 
-    stage_screen(game_controller);
+    welcome_screen(game_controller);
 
 
     // stage_screen(game_controller);

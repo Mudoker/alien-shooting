@@ -49,6 +49,7 @@ void draw_bullet(GameController *game_controller);
 void draw_stages(GameController *game_controller);
 void draw_background();
 void draw_health_bar(GameController *game_controller);
+void draw_welcome_screen();
 
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir);
 void move_bullet(GameController *game_controller, int x_dir, int y_dir);

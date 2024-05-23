@@ -8,7 +8,7 @@
 #include "../utils/abs_int.h"
 #include "../utils/memcpy.h"
 #include "../../assets/games/stages.h"
-#include "../../assets/games/health.h"
+#include "../../assets/games/welcome.h"
 
 void init_controller(GameController *game_controller)
 {
@@ -270,6 +270,10 @@ void draw_health_bar(GameController *game_controller)
     draw_capsuleARGB32(50, 50, 300, 50, 0x00FF0000, 1, healthPercentage);
 }
 
+void draw_welcome_screen()
+{
+    draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_welcome);
+}
 
 
 void move_spaceship(GameController *game_controller, int x_dir, int y_dir)

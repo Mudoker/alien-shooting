@@ -81,3 +81,14 @@ void stage_screen(GameController *game_controller) {
     }
     
 }
+
+void welcome_screen(GameController *game_controller) {
+    init_spaceship(game_controller);
+    draw_welcome_screen();
+    game_controller->spaceship.position.x = (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
+    game_controller->spaceship.position.y = (SCREEN_HEIGHT- game_controller->spaceship.size.height) / 2;
+
+    draw_spaceship(game_controller);
+
+    
+}
