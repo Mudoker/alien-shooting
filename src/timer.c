@@ -33,4 +33,4 @@ void set_wait_timer(int set, unsigned int msVal)
             asm volatile("mrs %0, cntpct_el0" : "=r"(r));
         } while (r < expiredTime);
     }
-} 
+}
