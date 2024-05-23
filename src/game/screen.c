@@ -89,6 +89,25 @@ void welcome_screen(GameController *game_controller) {
     game_controller->spaceship.position.y = (SCREEN_HEIGHT- game_controller->spaceship.size.height) / 2;
 
     draw_spaceship(game_controller);
+    while (1)
+    {
+        // Check if a character is received
+        char c = getUart();
+        switch (c)
+        {
+        case '1':
+            stage_screen(game_controller);
+            break;
+        case '2':
+            // change_stage(game_controller, 1);
+            break;
+        case '3':
+            // in_game_screen(game_controller);
+            break;
+        default:
+            break;
+        }
+    }
 
     
 }
