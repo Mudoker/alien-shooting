@@ -16,6 +16,7 @@ void init_controller(GameController *game_controller)
     init_spaceship(game_controller);
     //init_bullet(game_controller);
     init_stages(game_controller);
+}
 void init_all_enemies(GameController *game_controller);
 void init_background(GameController *game_controller) {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
@@ -220,6 +221,7 @@ void init_game(GameController *game_controller)
     game_controller->spaceship.health = 100;
     game_controller->spaceship.position.x = (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
     game_controller->spaceship.position.y = SCREEN_HEIGHT - game_controller->spaceship.size.height;
+}
     // draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background_allArray[0]);
 // Draw the spaceship on the screen
 void draw_spaceship(GameController *game_controller) {
@@ -229,8 +231,6 @@ void draw_spaceship(GameController *game_controller) {
                     game_controller->spaceship.size.height,
                     game_controller->spaceship.sprite,
                     epd_bitmap_background_allArray[0]);
-  // draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-  // epd_bitmap_background_allArray[0]);
 }
 
 
@@ -240,11 +240,6 @@ void draw_bullet(GameController *game_controller) {
                     game_controller->spaceship.bullet.position.y, 12, 48,
                     game_controller->spaceship.bullet.sprite,
                     epd_bitmap_background_allArray[0]);
-}
-
-void draw_spaceship(GameController *game_controller)
-{
-    draw_image_object(game_controller->spaceship.position.x, game_controller->spaceship.position.y, game_controller->spaceship.size.width, game_controller->spaceship.size.height, game_controller->spaceship.sprite, epd_bitmap_background_allArray[0]);
 }
 
 
@@ -273,9 +268,6 @@ void draw_health_bar(GameController *game_controller)
 void draw_welcome_screen()
 {
     draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_welcome);
-void draw_stages(GameController *game_controller) {
-  draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
-                  epd_bitmap_stages_allArray[0]);
 }
 
 
@@ -283,12 +275,6 @@ void move_spaceship(GameController *game_controller, int x_dir, int y_dir)
 {
     Spaceship *spaceship = &game_controller->spaceship;
     clear_image(spaceship->position.x, spaceship->position.y, spaceship->size.width, spaceship->size.height, epd_bitmap_background_allArray[0]);
-
-  // Now you can modify the bitmap data
-  // repl_bitmap_background[spaceship->position.y * SCREEN_WIDTH +
-  // spaceship->position.x] = 0;
-
-  // draw_image(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,epd_bitmap_background_allArray[0]);
 
   if (spaceship->position.x + x_dir * STEP >= 0 &&
       spaceship->position.x + x_dir * STEP <=
@@ -301,10 +287,6 @@ void move_spaceship(GameController *game_controller, int x_dir, int y_dir)
           SCREEN_HEIGHT - spaceship->size.height) {
     spaceship->position.y += y_dir * STEP;
   }
-  uart_puts("spaceship x: ");
-  uart_puts(itoa(spaceship->position.x));
-  uart_puts("spaceship y: ");
-  uart_puts(itoa(spaceship->position.y));
   draw_spaceship(game_controller);
 }
 
