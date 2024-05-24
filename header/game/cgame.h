@@ -15,6 +15,25 @@ typedef enum {
   KEY_RIGHT,
 } Key;
 
+typedef enum {
+  STAGE_1 = 0,
+  STAGE_2,
+  STAGE_3,
+  STAGE_4,
+  STAGE_5,
+  STAGE_6,
+  STAGE_7,
+  STAGE_8,
+  STAGE_9,
+} StageLevel;
+
+// Current page
+typedef enum {
+  WELCOME = 0,
+  STAGE,
+  IN_GAME,
+} Page;
+
 typedef struct Display Display;
 
 typedef struct GameController {
@@ -26,6 +45,7 @@ typedef struct GameController {
   int alien_count;
   int stage_level;
   Display *screen;
+  Page page;
 
   // Methods
   void (*init)(void);
