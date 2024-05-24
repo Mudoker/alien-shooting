@@ -17,11 +17,12 @@ typedef struct GameController
     Spaceship spaceship;
     Alien alien;
     Alien aliens[5];
-    int alien_count; 
+    int alien_count;
     int stage_level;
     // int weapon_x, weapon_y, weapon;
     // int score, diff, map, cancel_attack_timer;
 } GameController;
+
 extern int pos_x[5];
 extern int pos_y[4] ;
 extern int row_counts[4];
