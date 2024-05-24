@@ -248,6 +248,7 @@
 //     for (int i = 0; i < 9; i++) {
 //         if (game_controller->stages[i].level == game_controller->stage_level) {
 //             draw_button(SCREEN_WIDTH / 2 - 150, 100 + i * 80, 300, 40, game_controller->stages[i].name, 1);
+//             
 //         } else {
 //             draw_button(SCREEN_WIDTH / 2 - 150, 100 + i * 80, 300, 40, game_controller->stages[i].name, 0);
 //         }

@@ -64,7 +64,7 @@ typedef struct Alien {
 } Alien;
 
 typedef struct Stage {
-  char name[MAX_STR_LENGTH]; // Stage name
+  char *name; // Stage name
   int level;
 } Stage;
 

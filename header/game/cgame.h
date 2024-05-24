@@ -69,5 +69,6 @@ void init_spaceship(GameController *game_controller,
                     int y);
 void draw_spaceship(Spaceship *spaceship);
 void draw_background(const unsigned long *sprite);
+void init_controller(GameController *game_controller);
 
 #endif // CGAME_H

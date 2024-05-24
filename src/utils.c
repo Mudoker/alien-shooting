@@ -86,6 +86,43 @@ char *int_to_string(int num) {
   return str;
 }
 
+// Function to convert integer to string
+void int_to_string_2(int num, char *str) {
+  int is_negative = 0;
+  int temp_num = num;
+  int length = 0;
+  char buffer[1000];
+
+  // Handle the special case of 0
+  if (num == 0) {
+    str[0] = '0';
+    str[1] = '\0';
+    return;
+  }
+
+  // Check if the number is negative
+  if (num < 0) {
+    is_negative = 1;
+    temp_num = -temp_num;
+  }
+
+  // Convert each digit to a character
+  while (temp_num != 0) {
+    buffer[length++] = (temp_num % 10) + '0';
+    temp_num /= 10;
+  }
+
+  // Add the negative sign if necessary
+  if (is_negative) {
+    buffer[length++] = '-';
+  }
+
+  // Reverse the string
+  for (int i = 0; i < length; i++) {
+    str[i] = buffer[length - 1 - i];
+  }
+  str[length] = '\0'; // Null-terminate the string
+}
 // memcpy
 void reallocate(void *dest, const void *src, int n) {
   char *csrc = (char *)src;

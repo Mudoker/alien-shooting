@@ -1,4 +1,7 @@
 // 'blader', 124x128px
+#ifndef BLADER_H
+#define BLADER_H
+
 const unsigned long epd_bitmap_blader[] = {
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
     0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000,
@@ -2651,3 +2654,5 @@ const unsigned long epd_bitmap_blader[] = {
 // PROGMEM = 2064)
 const int epd_bitmap_spaceship_allArray_LEN = 1;
 const unsigned long *epd_blader[1] = {epd_bitmap_blader};
+
+#endif
