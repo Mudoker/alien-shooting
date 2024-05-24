@@ -53,15 +53,15 @@ void strcat(char *dest, const char *src) {
 }
 
 void strcpy(char *dest, const char *src) {
-    while (*src) {
-        *dest = *src;
-        dest++;
-        src++;
-    }
-    *dest = '\0';
+  while (*src) {
+    *dest = *src;
+    dest++;
+    src++;
+  }
+  *dest = '\0';
 }
 
-char* int_to_string(int num) {
+char *int_to_string(int num) {
   static char str[11];
   str[0] = '\0'; // Empty string
   int i = 0;
@@ -84,4 +84,13 @@ char* int_to_string(int num) {
   }
   str[i] = '\0';
   return str;
-} 
+}
+
+// memcpy
+void reallocate(void *dest, const void *src, int n) {
+  char *csrc = (char *)src;
+  char *cdest = (char *)dest;
+  for (int i = 0; i < n; i++) {
+    cdest[i] = csrc[i];
+  }
+}

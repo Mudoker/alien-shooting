@@ -2,6 +2,7 @@
 #define CGAME_H
 
 #include "../framebf.h"
+#include "../utils.h"
 #include "./game_struct.h"
 
 #define MAX_ALIENS 20
@@ -32,7 +33,6 @@ typedef struct GameController {
   int (*getInput)(void);
   void (*update)(void);
   void (*render)(void);
-  void (*init_spaceship)(void);
 } GameController;
 
 struct Display {
@@ -44,5 +44,10 @@ struct Display {
 // Function prototypes
 void gameCli(void);
 void init_frame(int offset_x, int offset_y);
+void init_spaceship(GameController *game_controller,
+                    const unsigned long *sprite, int width, int height, int x,
+                    int y);
+void draw_spaceship(Spaceship *spaceship);
+void draw_background(const unsigned long *sprite);
 
 #endif // CGAME_H

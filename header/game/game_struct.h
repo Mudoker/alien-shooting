@@ -25,7 +25,7 @@ typedef struct Bullet {
 // Game structs
 typedef struct Spaceship {
   char *id;                    // Unique identifier
-  char name[MAX_STR_LENGTH];   // Spaceship name
+  char *name;                  // Spaceship name
   Position position;           // Position
   Size size;                   // Size
   Bullet bullet;               // Bullet
@@ -36,7 +36,7 @@ typedef struct Spaceship {
   const unsigned long *sprite; // Sprite (Image)
 
   // Methods
-  boolean (*draw)();                         // Draw the spaceship
+  boolean (*show)();                         // Draw the spaceship
   boolean (*move)(int x, int y);             // Move the spaceship
   boolean (*shoot)(int x, int y);            // Shoot
   boolean (*equip)(struct Bullet *Bullet);   // Equip an Bullet
