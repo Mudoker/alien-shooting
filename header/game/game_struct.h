@@ -27,6 +27,7 @@ typedef struct Spaceship {
   char *id;                    // Unique identifier
   char *name;                  // Spaceship name
   Position position;           // Position
+  Position previous_position;  // Previous position
   Size size;                   // Size
   Bullet bullet;               // Bullet
   float health;                // Health

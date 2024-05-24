@@ -67,8 +67,9 @@ void init_frame(int offset_x, int offset_y);
 void init_spaceship(GameController *game_controller,
                     const unsigned long *sprite, int width, int height, int x,
                     int y);
-void draw_spaceship(Spaceship *spaceship);
+void draw_spaceship(Spaceship *spaceship, const unsigned long *epd_background);
 void draw_background(const unsigned long *sprite);
 void init_controller(GameController *game_controller);
+void move_spaceship(GameController *game_controller, int key, int step);
 
 #endif // CGAME_H

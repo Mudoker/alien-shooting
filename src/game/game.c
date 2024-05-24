@@ -10,15 +10,12 @@
 void gameCli() {
   GameController cgame;
   init_controller(&cgame);
-
-  uart_puts("Game started\n");
-  uart_puts(cgame.stages[0].name);
-
+  
   if (cgame.page == WELCOME) {
     welcome_screen(&cgame);
   } else if (cgame.page == STAGE) {
     stage_screen(&cgame);
   } else if (cgame.page == IN_GAME) {
-    // in_game_screen(&cgame);
+    in_game_screen(&cgame);
   }
 }

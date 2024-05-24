@@ -3,6 +3,7 @@
 
 #include "../../header/game/cgame.h"
 #include "../../header/timer.h"
+#include "./cgame.h"
 
 void in_game_screen(GameController *game_controller);
 void stage_screen(GameController *game_controller);

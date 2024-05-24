@@ -4,57 +4,37 @@
 #include "../../header/game/ui.h"
 
 void in_game_screen(GameController *game_controller) {
+  draw_background(epd_bitmap_background);
+  boolean is_update = True;
   while (1) {
-    draw_background(epd_bitmap_background);
-    draw_spaceship(&game_controller->spaceship);
+    if (is_update) {
+      is_update = False;
+      draw_spaceship(&game_controller->spaceship, epd_bitmap_background);
+    }
+
+    // Check if a character is received
+    char c = getUart();
+    switch (c) {
+    case 'w':
+      move_spaceship(game_controller, KEY_UP, 20);
+      is_update = True;
+      break;
+    case 's':
+      move_spaceship(game_controller, KEY_DOWN, 20);
+      is_update = True;
+      break;
+    case 'a':
+      move_spaceship(game_controller, KEY_LEFT, 20);
+      is_update = True;
+      break;
+    case 'd':
+      move_spaceship(game_controller, KEY_RIGHT, 20);
+      is_update = True;
+      break;
+    default:
+      break;
+    }
   }
-  // Initialize the spaceship object
-//   draw_background();
-  // draw_capsuleARGB32(100, 100, 200, 200, 0x00AA0000);
-  // init_spaceship(game_controller);
-  // init_bullet(game_controller);
-//   init_game(game_controller);
-
-//   draw_health_bar(game_controller);
-//   draw_spaceship(game_controller);
-
-//   // init_all_enemies(game_controller);
-//   // game_loop(game_controller);
-
-//   int bullet_timer = 0; // Variable to track time elapsed for bullet
-
-//   while (1) {
-
-//     // Check if a character is received
-//     char c = getUart();
-//     switch (c) {
-//     case 'w':
-//       move_spaceship(game_controller, 0, -1);
-//       break;
-//     case 's':
-//       move_spaceship(game_controller, 0, 1);
-//       break;
-//     case 'a':
-//       move_spaceship(game_controller, -1, 0);
-//       break;
-//     case 'd':
-//       move_spaceship(game_controller, 1, 0);
-//       break;
-//     default:
-//       break;
-//     }
-
-    // // Move the bullet
-    // move_bullet(game_controller, 0, -1);
-    // // Increment the bullet timer
-    // bullet_timer += 8000; // Assuming this is the delay between bullets
-
-    // // Check if 5 seconds have elapsed
-    // if (bullet_timer > 1000000) {   // 1 seconds
-    //   init_bullet(game_controller); // Create a new bullet after 1 second
-    //   bullet_timer = 0;             // Reset the timer
-    // }
-//   }
 }
 
 void stage_screen(GameController *game_controller) {
@@ -111,7 +91,7 @@ void welcome_screen(GameController *game_controller) {
   game_controller->spaceship.position.y =
       (SCREEN_HEIGHT - game_controller->spaceship.size.height) / 2;
 
-  draw_spaceship(&game_controller->spaceship);
+  // draw_spaceship(&game_controller->spaceship);
 
   while (1) {
     // Check if a character is received
