@@ -8,13 +8,16 @@ struct Alien;
 struct Bullet;
 struct Spaceship;
 
+#define MAX_BULLETS 1000
+
 typedef struct Bullet {
-  char *id;                         // Unique identifier
-  char name[MAX_STR_LENGTH];        // Bullet name
-  char description[MAX_STR_LENGTH]; // Bullet description
-  float damage;                     // Damage
-  const unsigned long *sprite;      // Sprite (Image)
-  Position position;                // Position
+  char *id;                    // Unique identifier
+  char *name;                  // Bullet name
+  float damage;                // Damage
+  Size size;                   // Size
+  const unsigned long *sprite; // Sprite (Image)
+  Position position;           // Position
+  Position previous_position;  // Previous position
 
   // Methods
   boolean (*draw)(int x, int y); // Spawn the Bullet
@@ -29,7 +32,7 @@ typedef struct Spaceship {
   Position position;           // Position
   Position previous_position;  // Previous position
   Size size;                   // Size
-  Bullet bullet;               // Bullet
+  Bullet bullet[MAX_BULLETS];  // Bullet
   float health;                // Health
   int speed;                   // Speed
   float damage;                // Damage

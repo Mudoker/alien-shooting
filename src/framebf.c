@@ -307,16 +307,6 @@ void update_position(int x_dir, int y_dir, int *offset_x, int *offset_y) {
   }
 }
 
-void clear_image(int x, int y, int w, int h, const unsigned long *background) {
-  for (int j = y; j < y + h; j++) {
-    for (int i = x; i < x + w; i++) {
-      unsigned long pixel = background[j * SCREEN_WIDTH + i];
-      draw_pixelARGB32(
-          i, j, pixel); // Draw the pixel using the color value from background
-    }
-  }
-}
-
 void draw_image_rect(int x, int y, int w, int h, const unsigned long *image) {
   for (int j = 0; j < h; j++) {
     for (int i = 0; i < w; i++) {

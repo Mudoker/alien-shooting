@@ -1,5 +1,6 @@
 
 #include "../../header/game/cgame.h"
+#include "../../assets/games/bullet/bullet_lv1.h"
 #include "../../assets/games/spaceship/blader.h"
 
 void init_frame(int offset_x, int offset_y) {
@@ -24,6 +25,28 @@ void init_spaceship(GameController *game_controller,
   spaceship.sprite = sprite;
 
   game_controller->spaceship = spaceship;
+}
+
+void init_bullet(GameController *game_controller, const unsigned long *sprite,
+                 int width, int height, int x, int y) {
+  Bullet bullet;
+  bullet.name = "Bullet";
+  bullet.size.width = width;
+  bullet.size.height = height;
+
+  bullet.position.x = x;
+  bullet.position.y = y;
+  bullet.previous_position = bullet.position;
+
+  bullet.sprite = sprite;
+
+  game_controller->spaceship.bullet[0] = bullet;
+  game_controller->bullet_on_screen_count = 1;
+}
+
+void draw_spaceship(Spaceship *spaceship) {
+  draw_image(spaceship->position.x, spaceship->position.y,
+             spaceship->size.width, spaceship->size.height, spaceship->sprite);
 }
 
 // Init stage
@@ -64,18 +87,14 @@ void restore_background(int x, int y, int w, int h,
   }
 }
 
-void draw_spaceship(Spaceship *spaceship, const unsigned long *epd_background) {
+void render_sprite(int current_x, int current_y, int previous_x, int previous_y,
+                   int width, int height, const unsigned long *sprite,
+                   const unsigned long *background) {
   // Restore the background at the previous position
-  restore_background(spaceship->previous_position.x,
-                     spaceship->previous_position.y, spaceship->size.width,
-                     spaceship->size.height, epd_background);
+  restore_background(previous_x, previous_y, width, height, background);
 
   // Draw the spaceship at the new position
-  draw_image(spaceship->position.x, spaceship->position.y,
-             spaceship->size.width, spaceship->size.height, spaceship->sprite);
-
-  // Update the previous position to the current position
-  spaceship->previous_position = spaceship->position;
+  draw_image(current_x, current_y, width, height, sprite);
 }
 
 // Draw the background
@@ -83,8 +102,8 @@ void draw_background(const unsigned long *sprite) {
   draw_image(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, sprite);
 }
 
-void move_spaceship(GameController *game_controller, int key, int step) {
-
+void move_spaceship(GameController *game_controller, int key, int step,
+                    const unsigned long *epd_bitmap_background) {
   Spaceship *spaceship = &game_controller->spaceship;
 
   // Calculate potential new position
@@ -115,13 +134,73 @@ void move_spaceship(GameController *game_controller, int key, int step) {
   // Clamp position to stay within boundaries
   spaceship->position.x = (newX < 0) ? 0 : (newX > maxX) ? maxX : newX;
   spaceship->position.y = (newY < 0) ? 0 : (newY > maxY) ? maxY : newY;
+
+  // Draw the spaceship at the new position
+  render_sprite(spaceship->position.x, spaceship->position.y,
+                spaceship->previous_position.x, spaceship->previous_position.y,
+                spaceship->size.width, spaceship->size.height,
+                spaceship->sprite, epd_bitmap_background);
+
+  // Update the previous position
+  spaceship->previous_position = spaceship->position;
+}
+
+// ALways go vertically up
+void move_bullet(Bullet *bullet, int step,
+                 const unsigned long *epd_bitmap_background) {
+
+  // Calculate potential new position
+  int newY = bullet->position.y - step;
+
+  // Clamp position to stay within boundaries
+  bullet->position.y = newY;
+
+  // Draw the bullet at the new position
+  render_sprite(bullet->position.x, bullet->position.y,
+                bullet->previous_position.x, bullet->previous_position.y,
+                bullet->size.width, bullet->size.height, bullet->sprite,
+                epd_bitmap_background);
+
+  // Update the previous position
+  bullet->previous_position = bullet->position;
+
+  if (bullet->position.y <= -bullet->size.height) {
+    bullet->name = NULL;
+  }
+}
+
+void add_bullet(GameController *game_controller, int x, int y) {
+  // Get the total number of bullets on the screen
+  int bullet_count = game_controller->bullet_on_screen_count;
+
+  // Add a new bullet to the screen
+  if (bullet_count < MAX_BULLETS) {
+    Bullet bullet;
+    bullet.name = "Bullet";
+    bullet.size.width = 12;
+    bullet.size.height = 48;
+
+    bullet.position.x = x;
+    bullet.position.y = y;
+    bullet.previous_position = bullet.position;
+
+    bullet.sprite = epd_bullet_lv1[0];
+
+    game_controller->spaceship.bullet[bullet_count] = bullet;
+    game_controller->bullet_on_screen_count++;
+  }
 }
 
 void init_controller(GameController *game_controller) {
   game_controller->screen = &((Display){.init_frame = &init_frame});
   game_controller->screen->init_frame(0, 0);
   game_controller->page = IN_GAME;
+  game_controller->bullet_on_screen_count = 0;
 
   init_stages(game_controller);
-  init_spaceship(game_controller, epd_blader[0], 124, 128, 0, 0);
+  init_spaceship(game_controller, epd_blader[0], 124, 128,
+                 (SCREEN_WIDTH - 124) / 2, SCREEN_HEIGHT - 128);
+  init_bullet(game_controller, epd_bullet_lv1[0], 12, 48,
+              game_controller->spaceship.position.x + 124 / 2 - 6,
+              game_controller->spaceship.position.y - 20);
 }

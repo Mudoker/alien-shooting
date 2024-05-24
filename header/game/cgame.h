@@ -45,6 +45,7 @@ typedef struct GameController {
   int alien_count;
   int stage_level;
   Display *screen;
+  int bullet_on_screen_count;
   Page page;
 
   // Methods
@@ -67,9 +68,17 @@ void init_frame(int offset_x, int offset_y);
 void init_spaceship(GameController *game_controller,
                     const unsigned long *sprite, int width, int height, int x,
                     int y);
-void draw_spaceship(Spaceship *spaceship, const unsigned long *epd_background);
+void draw_spaceship(Spaceship *spaceship);
 void draw_background(const unsigned long *sprite);
 void init_controller(GameController *game_controller);
-void move_spaceship(GameController *game_controller, int key, int step);
+void move_spaceship(GameController *game_controller, int key, int step,
+                    const unsigned long *epd_bitmap_background);
+void render_sprite(int current_x, int current_y, int previous_x, int previous_y,
+                   int width, int height, const unsigned long *sprite,
+                   const unsigned long *background);
+void move_bullet(Bullet *bullet, int step,
+                 const unsigned long *epd_bitmap_background);
+
+void add_bullet(GameController *game_controller, int x, int y);
 
 #endif // CGAME_H
