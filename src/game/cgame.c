@@ -294,21 +294,21 @@ void collision_detection(GameController *game_controller)
 void draw_lose_screen(GameController *game_controller, int seconds)
 {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_lose_screen);
-  draw_completed_time(seconds);
+  draw_completed_time(seconds, 505);
 }
 
 void draw_win_final_screen(GameController *game_controller, int seconds)
 {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_win_final_screen);
   draw_stars(seconds);
-  draw_completed_time(seconds);
+  draw_completed_time(seconds, 605);
 }
 
 void draw_win_screen(GameController *game_controller, int seconds)
 {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_win_screen);
   draw_stars(seconds);
-  draw_completed_time(seconds);
+  draw_completed_time(seconds, 476);
 }
 
 void draw_stars(int seconds)
@@ -327,13 +327,11 @@ void draw_stars(int seconds)
   }
 }
 
-void draw_completed_time(int seconds)
+void draw_completed_time(int seconds, int y)
 {
-  // TODO: handle different height in screens
-
   if (seconds < 10)
   {
-    draw_image(502, 476, 37, 37, epd_bitmap_digits_allArray[seconds]);
+    draw_image(502, y, 37, 37, epd_bitmap_digits_allArray[seconds]);
   }
   else
   {
@@ -341,10 +339,10 @@ void draw_completed_time(int seconds)
     int ones = seconds % 10;
 
     // Draw tens digit
-    draw_image(480, 476, 37, 37, epd_bitmap_digits_allArray[tens]);
+    draw_image(480, y, 37, 37, epd_bitmap_digits_allArray[tens]);
     // Draw ones digit
-    draw_image(502, 476, 37, 37, epd_bitmap_digits_allArray[ones]);
+    draw_image(502, y, 37, 37, epd_bitmap_digits_allArray[ones]);
   }
 
-  draw_image(535, 476, 97, 37, epd_bitmap_secs);
+  draw_image(535, y, 97, 37, epd_bitmap_secs);
 }
