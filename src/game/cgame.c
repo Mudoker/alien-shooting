@@ -157,7 +157,7 @@ void draw_arrows(int order)
   switch (order)
   {
   case 1:
-    clear_image(60, 400, 70, 72, arrow_left);
+    clear_image(60, 400, 70, 72, epd_bitmap_background);
     draw_image(650, 400, 70, 72, arrow_right);
     break;
   case 2:
@@ -166,7 +166,7 @@ void draw_arrows(int order)
     break;
   case 3:
     draw_image(60, 400, 70, 72, arrow_left);
-    clear_image(650, 400, 70, 72, arrow_right);
+    clear_image(650, 400, 70, 72, epd_bitmap_background);
     break;
   default:
     break;
