@@ -1,16 +1,6 @@
 #include "../../header/game/screen.h"
 #include "../../header/game/ui.h"
 
-#include "../../assets/games/background.h"
-#include "../../assets/games/ship_selection_screen/ship_selection_title.h"
-#include "../../assets/games/ship_selection_screen/ship_selection_button.h"
-#include "../../assets/games/ship_selection_screen/arrow_left.h"
-#include "../../assets/games/ship_selection_screen/arrow_right.h"
-
-#include "../../assets/games/spaceship/ship_lev1.h"
-#include "../../assets/games/spaceship/blader.h"
-#include "../../assets/games/spaceship/ship_lev3.h"
-
 void in_game_screen(GameController *game_controller)
 {
   draw_background();
@@ -133,12 +123,11 @@ void ship_selection_screen(GameController *game_controller)
 {
   int order = 1;
 
-  draw_background(epd_bitmap_background);
-  draw_image(0, 60, SCREEN_WIDTH, 186, epd_bitmap_ship_selection_title);
-  draw_image(215, 650, 350, 103, epd_bitmap_ship_selection_button);
+  draw_background();
+  draw_ship_selection_page();
 
-  draw_spaceship_option(&game_controller->spaceship); // TODO: Pass order
-  draw_arrows(epd_bitmap_arrow_left, epd_bitmap_arrow_right, order);
+  draw_spaceship_option(&game_controller->spaceship, order);
+  draw_arrows(order);
 
   while (1)
   {
@@ -150,16 +139,16 @@ void ship_selection_screen(GameController *game_controller)
       if (order > 1)
       {
         order--;
-        draw_spaceship_option(&game_controller->spaceship); // TODO: Pass order
-        draw_arrows(epd_bitmap_arrow_left, epd_bitmap_arrow_right, order);
+        draw_spaceship_option(&game_controller->spaceship, order);
+        draw_arrows(order);
       }
       break;
     case 'd':
       if (order < 3)
       {
         order++;
-        draw_spaceship_option(&game_controller->spaceship); // TODO: Pass order
-        draw_arrows(epd_bitmap_arrow_left, epd_bitmap_arrow_right, order);
+        draw_spaceship_option(&game_controller->spaceship, order);
+        draw_arrows(order);
       }
       break;
     case '\n':
@@ -170,22 +159,8 @@ void ship_selection_screen(GameController *game_controller)
                   game_controller->spaceship.size.height,
                   &game_controller->spaceship);
 
-      switch (order)
-      {
-      case 1:
-        game_controller->spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
-        break;
-      case 2:
-        game_controller->spaceship.sprite = epd_blader[0];
-        break;
-      case 3:
-        game_controller->spaceship.sprite = epd_bitmap_ship_l3_allArray[0];
-        break;
-      default:
-        break;
-      }
+      change_spaceship(game_controller, order);
 
-      draw_spaceship_option(&game_controller->spaceship);
       return;
     default:
       break;

@@ -81,8 +81,9 @@ void init_stages(GameController *game_controller);
 void init_controller(GameController *game_controller);
 
 void draw_spaceship(GameController *game_controller);
-void draw_spaceship_option(Spaceship *spaceship);
-void draw_arrows(const unsigned long *arrow_left, const unsigned long *arrow_right, int order);
+void draw_spaceship_option(Spaceship *spaceship, int order);
+void draw_ship_selection_page();
+void draw_arrows(int order);
 
 void draw_background();
 void draw_health_bar(GameController *game_controller);
@@ -94,5 +95,7 @@ void move_bullet(Bullet *bullet, int step);
 void add_bullet(GameController *game_controller, int x, int y);
 
 void deal_damage(GameController *game_controller);
+
+void change_spaceship(GameController *game_controller, int order);
 
 #endif // CGAME_H

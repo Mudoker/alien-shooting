@@ -5,6 +5,13 @@
 #include "../../assets/games/health_logo.h"
 #include "../../assets/games/welcome_screen/welcome.h"
 #include "../../assets/games/background.h"
+#include "../../assets/games/ship_selection_screen/ship_selection_title.h"
+#include "../../assets/games/ship_selection_screen/ship_selection_button.h"
+#include "../../assets/games/ship_selection_screen/arrow_left.h"
+#include "../../assets/games/ship_selection_screen/arrow_right.h"
+
+#include "../../assets/games/spaceship/ship_lev1.h"
+#include "../../assets/games/spaceship/ship_lev3.h"
 
 void init_frame(int offset_x, int offset_y)
 {
@@ -86,27 +93,52 @@ void draw_spaceship(GameController *game_controller)
              spaceship.size.width, spaceship.size.height, spaceship.sprite);
 }
 
-void draw_spaceship_option(Spaceship *spaceship)
+void draw_spaceship_option(Spaceship *spaceship, int order)
 {
-  draw_image((SCREEN_WIDTH - spaceship->size.width) / 2, (SCREEN_HEIGHT - spaceship->size.height) / 2,
-             spaceship->size.width, spaceship->size.height, spaceship->sprite);
-}
 
-void draw_arrows(const unsigned long *arrow_left, const unsigned long *arrow_right, int order)
-{
   switch (order)
   {
   case 1:
-    draw_image(60, 400, 70, 72, arrow_left);
-    clear_image(650, 400, 70, 72, arrow_right);
+    draw_image((SCREEN_WIDTH - spaceship->size.width) / 2, (SCREEN_HEIGHT - spaceship->size.height) / 2,
+               spaceship->size.width, spaceship->size.height, epd_bitmap_ship_l1_allArray[0]);
+    break;
+  case 2:
+    draw_image((SCREEN_WIDTH - spaceship->size.width) / 2, (SCREEN_HEIGHT - spaceship->size.height) / 2,
+               spaceship->size.width, spaceship->size.height, epd_blader[0]);
+    break;
+  case 3:
+    draw_image((SCREEN_WIDTH - spaceship->size.width) / 2, (SCREEN_HEIGHT - spaceship->size.height) / 2,
+               spaceship->size.width, spaceship->size.height, epd_bitmap_ship_l3_allArray[0]);
+    break;
+  default:
+    return;
+  }
+}
+
+void draw_ship_selection_page()
+{
+  draw_image(0, 60, SCREEN_WIDTH, 186, epd_bitmap_ship_selection_title);
+  draw_image(215, 650, 350, 103, epd_bitmap_ship_selection_button);
+}
+
+void draw_arrows(int order)
+{
+  const unsigned long *arrow_left = epd_bitmap_arrow_left;
+  const unsigned long *arrow_right = epd_bitmap_arrow_right;
+
+  switch (order)
+  {
+  case 1:
+    clear_image(60, 400, 70, 72, arrow_left);
+    draw_image(650, 400, 70, 72, arrow_right);
     break;
   case 2:
     draw_image(60, 400, 70, 72, arrow_left);
     draw_image(650, 400, 70, 72, arrow_right);
     break;
   case 3:
-    clear_image(60, 400, 70, 72, arrow_left);
-    draw_image(650, 400, 70, 72, arrow_right);
+    draw_image(60, 400, 70, 72, arrow_left);
+    clear_image(650, 400, 70, 72, arrow_right);
     break;
   default:
     break;
@@ -217,4 +249,23 @@ void deal_damage(GameController *game_controller)
   game_controller->spaceship.health -= 10;
   clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
   draw_health_bar(game_controller);
+}
+
+void change_spaceship(GameController *game_controller, int order)
+{
+
+  switch (order)
+  {
+  case 1:
+    game_controller->spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
+    break;
+  case 2:
+    game_controller->spaceship.sprite = epd_blader[0];
+    break;
+  case 3:
+    game_controller->spaceship.sprite = epd_bitmap_ship_l3_allArray[0];
+    break;
+  default:
+    break;
+  }
 }
