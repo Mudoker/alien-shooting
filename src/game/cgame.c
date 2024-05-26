@@ -96,19 +96,19 @@ void draw_spaceship(GameController *game_controller)
 void draw_spaceship_option(Spaceship *spaceship, int order)
 {
 
+  int x = (SCREEN_WIDTH - spaceship->size.width) / 2;
+  int y = (SCREEN_HEIGHT - spaceship->size.height) / 2;
+
   switch (order)
   {
   case 1:
-    draw_image((SCREEN_WIDTH - spaceship->size.width) / 2, (SCREEN_HEIGHT - spaceship->size.height) / 2,
-               spaceship->size.width, spaceship->size.height, epd_bitmap_ship_l1_allArray[0]);
+    draw_image(x, y, spaceship->size.width, spaceship->size.height, epd_bitmap_ship_l1_allArray[0]);
     break;
   case 2:
-    draw_image((SCREEN_WIDTH - spaceship->size.width) / 2, (SCREEN_HEIGHT - spaceship->size.height) / 2,
-               spaceship->size.width, spaceship->size.height, epd_blader[0]);
+    draw_image(x, y, spaceship->size.width, spaceship->size.height, epd_blader[0]);
     break;
   case 3:
-    draw_image((SCREEN_WIDTH - spaceship->size.width) / 2, (SCREEN_HEIGHT - spaceship->size.height) / 2,
-               135, 112, epd_bitmap_ship_l3_allArray[0]);
+    draw_image(x, y, 135, 112, epd_bitmap_ship_l3_allArray[0]);
     break;
   default:
     return;

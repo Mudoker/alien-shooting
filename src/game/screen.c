@@ -153,6 +153,7 @@ void ship_selection_screen(GameController *game_controller)
       break;
     case '\n':
       change_spaceship(game_controller, order);
+      welcome_screen(game_controller);
       return;
     default:
       break;
