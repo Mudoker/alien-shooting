@@ -48,7 +48,7 @@ typedef struct Spaceship {
 
 typedef struct Alien {
   char *id;                  // Unique identifier
-  char name[MAX_STR_LENGTH]; // Alien name
+  char *name; // Alien name
   Position position;         // Position
   Position target;
   int reached_target;
@@ -56,7 +56,7 @@ typedef struct Alien {
   float health;          // Health
   int speed;             // Speed
   float damage;          // Damage
-  unsigned long *sprite; // Sprite (Image)
+  const unsigned long *sprite; // Sprite (Image)
 
   // Methods
   boolean (*draw)();              // Draw the alien

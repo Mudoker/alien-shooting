@@ -5,6 +5,7 @@
 #include "../../assets/games/health_logo.h"
 #include "../../assets/games/welcome_screen/welcome.h"
 #include "../../assets/games/background.h"
+#include "../../assets/games/alient/alient_1.h"
 
 void init_frame(int offset_x, int offset_y) {
   // Initialize buffer
@@ -24,6 +25,7 @@ void init_controller(GameController *game_controller) {
   init_bullet(game_controller, epd_bullet_lv1[0], 12, 48,
               game_controller->spaceship.position.x + 124 / 2 - 6,
               game_controller->spaceship.position.y - 20);
+  init_alien(game_controller, epd_bitmap_alient_1_resize, 130, 109, (SCREEN_WIDTH - 130) / 2, 10);
 }
 
 // Initialize the spaceship object
@@ -72,7 +74,25 @@ void init_stages(GameController *game_controller) {
   game_controller->stage_level = 1;
 }
 
+void init_alien(GameController *game_controller, const unsigned long *sprite,
+                int width, int height, int x, int y) {
+  Alien alien;
+  alien.name = "Alien";
+  alien.size.width = width;
+  alien.size.height = height;
 
+  alien.position.x = x;
+  alien.position.y = y;
+  alien.health = 100;
+
+  alien.sprite = sprite;
+
+  game_controller->alien = alien;
+}
+
+void deinit_alien(GameController *game_controller) {
+  game_controller->alien.name = NULL;
+}
 // Draw spaceship
 void draw_spaceship(GameController *game_controller) {
   Spaceship spaceship = game_controller->spaceship;
@@ -98,6 +118,11 @@ void draw_welcome_screen() {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_welcome);
 }
 
+// Draw alien
+void draw_alien(GameController *game_controller) {
+  draw_image(game_controller->alien.position.x, game_controller->alien.position.y,
+             game_controller->alien.size.width, game_controller->alien.size.height, game_controller->alien.sprite);
+}
 
 void move_spaceship(GameController *game_controller, int key, int step) {
   Spaceship *spaceship = &game_controller->spaceship;
@@ -136,7 +161,9 @@ void move_spaceship(GameController *game_controller, int key, int step) {
 }
 
 // ALways go vertically up
-void move_bullet(Bullet *bullet, int step) {
+void move_bullet(GameController *game_controller, int index, int step) {
+  Bullet *bullet = &game_controller->spaceship.bullet[index];
+  Alien *alien = &game_controller->alien;
 
   clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
   // Calculate potential new position
@@ -148,6 +175,23 @@ void move_bullet(Bullet *bullet, int step) {
   if (bullet->position.y <= -bullet->size.height) {
     bullet->name = NULL;
   }
+
+  if (alien->name != NULL) {
+
+    if (bullet->position.x >= alien->position.x &&
+            bullet->position.x <= alien->position.x + alien->size.width &&
+            bullet->position.y >= alien->position.y &&
+            bullet->position.y <= alien->position.y + alien->size.height) {
+          // Clear the bullet
+          deal_damage(game_controller);
+          clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
+          bullet->name = NULL;
+            }
+  }
+
+        // Clear the alien
+        // clear_image(alien->position.x, alien->position.y, alien->size.width, alien->size.height, epd_bitmap_background);
+        // alien->name = NULL;
 }
 
 
@@ -172,9 +216,47 @@ void add_bullet(GameController *game_controller, int x, int y) {
   }
 }
 
-// Deal damage to the spaceship
-void deal_damage(GameController *game_controller) {
+// Receive damage from enemies
+void receive_damage(GameController *game_controller) {
   game_controller->spaceship.health -= 10;
   clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
   draw_health_bar(game_controller);
+}
+
+void deal_damage(GameController *game_controller) {
+  game_controller->alien.health -= 10;
+  uart_dec(game_controller->alien.health);
+  if (game_controller->alien.health <= 0) {
+    clear_image(game_controller->alien.position.x, game_controller->alien.position.y, game_controller->alien.size.width, game_controller->alien.size.height, epd_bitmap_background);
+    game_controller->alien.name = NULL;
+  }
+}
+
+// Collision detection (should check at the alien)
+void collision_detection(GameController *game_controller) {
+  // Alien *alien = &game_controller->alien;
+  // if (alien->name == NULL) {
+  //   return;
+  // }
+  // Spaceship *spaceship = &game_controller->spaceship;
+  // Bullet *bullets = spaceship->bullet;
+  
+
+  // for (int i = 0; i < MAX_BULLETS; i++) {
+  //   if (bullets[i].name != NULL) {
+  //     if (bullets[i].position.x >= alien->position.x &&
+  //         bullets[i].position.x <= alien->position.x + alien->size.width &&
+  //         bullets[i].position.y >= alien->position.y &&
+  //         bullets[i].position.y <= alien->position.y + alien->size.height) {
+  //       // Clear the bullet
+  //       deal_damage(game_controller);
+  //       clear_image(bullets[i].position.x, bullets[i].position.y, bullets[i].size.width, bullets[i].size.height, epd_bitmap_background);
+  //       bullets[i].name = NULL;
+
+  //       // Clear the alien
+  //       // clear_image(alien->position.x, alien->position.y, alien->size.width, alien->size.height, epd_bitmap_background);
+  //       // alien->name = NULL;
+  //     }
+  //   }
+  // }
 }
