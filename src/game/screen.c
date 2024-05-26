@@ -9,6 +9,7 @@ void in_game_screen(GameController *game_controller)
   game_controller->spaceship.position.y = SCREEN_HEIGHT - game_controller->spaceship.size.height;
   draw_spaceship(game_controller);
   draw_health_bar(game_controller);
+  draw_alien(game_controller);
 
   int bullet_timer = 0;
   int fire_timer = 0;
@@ -16,12 +17,13 @@ void in_game_screen(GameController *game_controller)
   while (1)
   {
     // Check if a character is received
+    // collision_detection(game_controller);
     char c = getUart();
     switch (c)
     {
     case 'w':
       move_spaceship(game_controller, KEY_UP, 10);
-      deal_damage(game_controller);
+      // deal_damage(game_controller);
       break;
     case 's':
       move_spaceship(game_controller, KEY_DOWN, 10);
@@ -56,7 +58,7 @@ void in_game_screen(GameController *game_controller)
       {
         if (game_controller->spaceship.bullet[i].name != NULL)
         {
-          move_bullet(&game_controller->spaceship.bullet[i], 20);
+          move_bullet(game_controller, i, 20);
         }
       }
       fire_timer++;

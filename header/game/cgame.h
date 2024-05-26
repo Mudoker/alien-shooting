@@ -80,6 +80,8 @@ void init_bullet(GameController *game_controller, const unsigned long *sprite,
                  int width, int height, int x, int y);
 void init_stages(GameController *game_controller);
 void init_controller(GameController *game_controller);
+void init_alien(GameController *game_controller, const unsigned long *sprite,
+                int width, int height, int x, int y);
 
 void draw_spaceship(GameController *game_controller);
 void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option);
@@ -89,9 +91,12 @@ void draw_arrows(int order);
 void draw_background();
 void draw_health_bar(GameController *game_controller);
 void draw_welcome_screen();
+void draw_alien(GameController *game_controller);
+
+void collision_detection(GameController *game_controller);
 
 void move_spaceship(GameController *game_controller, int key, int step);
-void move_bullet(Bullet *bullet, int step);
+void move_bullet(GameController *game_controller, int index, int step);
 
 void add_bullet(GameController *game_controller, int x, int y);
 
