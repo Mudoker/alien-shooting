@@ -102,12 +102,15 @@ void draw_spaceship_option(Spaceship *spaceship, int order)
   switch (order)
   {
   case 1:
+    clear_image(x, y, spaceship->size.width, spaceship->size.height, epd_blader[0]);
     draw_image(x, y, spaceship->size.width, spaceship->size.height, epd_bitmap_ship_l1_allArray[0]);
     break;
   case 2:
+    clear_image(x, y, spaceship->size.width, spaceship->size.height, epd_bitmap_ship_l1_allArray[0]);
     draw_image(x, y, spaceship->size.width, spaceship->size.height, epd_blader[0]);
     break;
   case 3:
+    clear_image(x, y, spaceship->size.width, spaceship->size.height, epd_blader[0]);
     draw_image(x, y, 135, 112, epd_bitmap_ship_l3_allArray[0]);
     break;
   default:
