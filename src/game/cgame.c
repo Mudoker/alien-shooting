@@ -372,7 +372,6 @@ void collision_detection(GameController *game_controller)
 
 void change_spaceship(GameController *game_controller, int order)
 {
-
   switch (order)
   {
   case 1:
