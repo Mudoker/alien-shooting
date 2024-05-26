@@ -130,8 +130,8 @@ void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship
     current_ship_option->sprite = epd_blader[0];
     break;
   case 3:
-    current_ship_option->size.width = 135;
-    current_ship_option->size.height = 112;
+    current_ship_option->size.width = 124;
+    current_ship_option->size.height = 127;
     current_ship_option->sprite = epd_bitmap_ship_l3_allArray[0];
     break;
   default:
@@ -296,8 +296,8 @@ void change_spaceship(GameController *game_controller, int order)
     break;
   case 3:
     game_controller->spaceship.sprite = epd_bitmap_ship_l3_allArray[0];
-    game_controller->spaceship.size.width = 135;
-    game_controller->spaceship.size.height = 112;
+    game_controller->spaceship.size.width = 124;
+    game_controller->spaceship.size.height = 127;
     break;
   default:
     break;
