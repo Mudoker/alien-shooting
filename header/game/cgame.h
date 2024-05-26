@@ -75,13 +75,14 @@ void init_frame(int offset_x, int offset_y);
 void init_spaceship(GameController *game_controller,
                     const unsigned long *sprite, int width, int height, int x,
                     int y);
+Spaceship init_current_ship_option();
 void init_bullet(GameController *game_controller, const unsigned long *sprite,
                  int width, int height, int x, int y);
 void init_stages(GameController *game_controller);
 void init_controller(GameController *game_controller);
 
 void draw_spaceship(GameController *game_controller);
-void draw_spaceship_option(Spaceship *spaceship, int order);
+void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option);
 void draw_ship_selection_page();
 void draw_arrows(int order);
 

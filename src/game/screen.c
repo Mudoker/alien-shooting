@@ -123,10 +123,12 @@ void ship_selection_screen(GameController *game_controller)
 {
   int order = 1;
 
+  Spaceship current_ship_option = init_current_ship_option();
+
   draw_background();
   draw_ship_selection_page();
 
-  draw_spaceship_option(&game_controller->spaceship, order);
+  draw_spaceship_option(&game_controller->spaceship, order, 0, &current_ship_option);
   draw_arrows(order);
 
   while (1)
@@ -139,7 +141,7 @@ void ship_selection_screen(GameController *game_controller)
       if (order > 1)
       {
         order--;
-        draw_spaceship_option(&game_controller->spaceship, order);
+        draw_spaceship_option(&game_controller->spaceship, order, 1, &current_ship_option);
         draw_arrows(order);
       }
       break;
@@ -147,7 +149,7 @@ void ship_selection_screen(GameController *game_controller)
       if (order < 3)
       {
         order++;
-        draw_spaceship_option(&game_controller->spaceship, order);
+        draw_spaceship_option(&game_controller->spaceship, order, 1, &current_ship_option);
         draw_arrows(order);
       }
       break;
