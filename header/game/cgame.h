@@ -10,14 +10,16 @@
 #define MAX_ALIENS 20
 #define MAX_STAGES 9
 
-typedef enum {
+typedef enum
+{
   KEY_UP = 0,
   KEY_DOWN,
   KEY_LEFT,
   KEY_RIGHT,
 } Key;
 
-typedef enum {
+typedef enum
+{
   STAGE_1 = 0,
   STAGE_2,
   STAGE_3,
@@ -30,7 +32,8 @@ typedef enum {
 } StageLevel;
 
 // Current page
-typedef enum {
+typedef enum
+{
   WELCOME = 0,
   STAGE,
   IN_GAME,
@@ -38,7 +41,8 @@ typedef enum {
 
 typedef struct Display Display;
 
-typedef struct GameController {
+typedef struct GameController
+{
   // Attributes
   Stage stages[MAX_STAGES];
   Spaceship spaceship;
@@ -49,6 +53,7 @@ typedef struct GameController {
   Display *screen;
   int bullet_on_screen_count;
   Page page;
+  int score;
 
   // Methods
   void (*init)(void);
@@ -58,7 +63,8 @@ typedef struct GameController {
   void (*render)(void);
 } GameController;
 
-struct Display {
+struct Display
+{
   void (*init_frame)(int offset_x, int offset_y);
   void (*draw_sprite)(int x, int y, int width, int height,
                       const unsigned long *sprite);
@@ -85,12 +91,15 @@ void draw_alien(GameController *game_controller);
 
 void collision_detection(GameController *game_controller);
 
-
 void move_spaceship(GameController *game_controller, int key, int step);
 void move_bullet(GameController *game_controller, int index, int step);
 
 void add_bullet(GameController *game_controller, int x, int y);
 
 void deal_damage(GameController *game_controller);
+
+void draw_lose_screen(GameController *game_controller, int seconds);
+void draw_win_final_screen(GameController *game_controller, int seconds);
+void draw_win_screen(GameController *game_controller, int seconds);
 
 #endif // CGAME_H
