@@ -123,7 +123,7 @@ void stage_screen(GameController *game_controller)
 void result_screen(GameController *game_controller)
 {
   // int score = game_controller->score;
-  int score = 150;
+  int score = 150;  // TODO: comment this out and replace it with the previous line
   int seconds = 40; // TODO: make it dynamic from the timer
 
   if (seconds == 60 || score < 100)
@@ -151,7 +151,7 @@ void lose_screen(GameController *game_controller, int seconds)
     switch (c)
     {
     case 'y':
-      // TODO: play again
+      in_game_screen(game_controller);
       break;
     case 'n':
       welcome_screen(game_controller);
@@ -190,7 +190,8 @@ void win_screen(GameController *game_controller, int seconds)
     switch (c)
     {
     case 'y':
-      // TODO: next stage
+      game_controller->stage_level++;
+      in_game_screen(game_controller);
       break;
     case 'n':
       welcome_screen(game_controller);
