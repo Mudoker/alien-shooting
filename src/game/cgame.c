@@ -114,7 +114,7 @@ void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship
 
   if (clear)
   {
-    clear_image(current_ship_option->position.x, current_ship_option->position.y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
+    clear_image(current_ship_option->position.x, current_ship_option->position.y, current_ship_option->size.width, current_ship_option->size.height, epd_bitmap_background);
   }
 
   switch (order)
