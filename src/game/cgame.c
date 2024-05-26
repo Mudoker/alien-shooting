@@ -108,7 +108,7 @@ void draw_spaceship_option(Spaceship *spaceship, int order)
     break;
   case 3:
     draw_image((SCREEN_WIDTH - spaceship->size.width) / 2, (SCREEN_HEIGHT - spaceship->size.height) / 2,
-               spaceship->size.width, spaceship->size.height, epd_bitmap_ship_l3_allArray[0]);
+               135, 112, epd_bitmap_ship_l3_allArray[0]);
     break;
   default:
     return;

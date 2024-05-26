@@ -152,15 +152,7 @@ void ship_selection_screen(GameController *game_controller)
       }
       break;
     case '\n':
-      // clear the current spaceship option
-      clear_image((SCREEN_WIDTH - game_controller->spaceship.size.width) / 2,
-                  (SCREEN_HEIGHT - game_controller->spaceship.size.height) / 2,
-                  game_controller->spaceship.size.width,
-                  game_controller->spaceship.size.height,
-                  &game_controller->spaceship);
-
       change_spaceship(game_controller, order);
-
       return;
     default:
       break;
