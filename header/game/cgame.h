@@ -1,9 +1,11 @@
 #ifndef CGAME_H
 #define CGAME_H
 
+#include "game_struct.h"
+#include "../global.h"
 #include "../framebf.h"
-#include "../utils.h"
-#include "./game_struct.h"
+#include "../timer.h"
+#include "ui.h"
 
 #define MAX_ALIENS 20
 #define MAX_STAGES 9
@@ -63,22 +65,28 @@ struct Display {
 };
 
 // Function prototypes
-void gameCli(void);
+void gameCli();
 void init_frame(int offset_x, int offset_y);
 void init_spaceship(GameController *game_controller,
                     const unsigned long *sprite, int width, int height, int x,
                     int y);
-void draw_spaceship(Spaceship *spaceship);
-void draw_background(const unsigned long *sprite);
+void init_bullet(GameController *game_controller, const unsigned long *sprite,
+                 int width, int height, int x, int y);
+void init_stages(GameController *game_controller);
 void init_controller(GameController *game_controller);
-void move_spaceship(GameController *game_controller, int key, int step,
-                    const unsigned long *epd_bitmap_background);
-void render_sprite(int current_x, int current_y, int previous_x, int previous_y,
-                   int width, int height, const unsigned long *sprite,
-                   const unsigned long *background);
-void move_bullet(Bullet *bullet, int step,
-                 const unsigned long *epd_bitmap_background);
+
+void draw_spaceship(GameController *game_controller);
+void draw_background();
+void draw_health_bar(GameController *game_controller);
+void draw_welcome_screen();
+
+
+
+void move_spaceship(GameController *game_controller, int key, int step);
+void move_bullet(Bullet *bullet, int step);
 
 void add_bullet(GameController *game_controller, int x, int y);
+
+void deal_damage(GameController *game_controller);
 
 #endif // CGAME_H

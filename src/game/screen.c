@@ -1,11 +1,13 @@
 #include "../../header/game/screen.h"
-#include "../../assets/games/background.h"
-#include "../../assets/games/welcome_screen/welcome.h"
 #include "../../header/game/ui.h"
 
 void in_game_screen(GameController *game_controller) {
-  draw_background(epd_bitmap_background);
-  draw_spaceship(&game_controller->spaceship);
+  draw_background();
+  
+  game_controller->spaceship.position.x = (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
+  game_controller->spaceship.position.y = SCREEN_HEIGHT - game_controller->spaceship.size.height;
+  draw_spaceship(game_controller);
+  draw_health_bar(game_controller);
 
   int bullet_timer = 0;
   int fire_timer = 0;
@@ -15,16 +17,17 @@ void in_game_screen(GameController *game_controller) {
     char c = getUart();
     switch (c) {
     case 'w':
-      move_spaceship(game_controller, KEY_UP, 20, epd_bitmap_background);
+      move_spaceship(game_controller, KEY_UP, 10);
+      deal_damage(game_controller);
       break;
     case 's':
-      move_spaceship(game_controller, KEY_DOWN, 20, epd_bitmap_background);
+      move_spaceship(game_controller, KEY_DOWN, 10);
       break;
     case 'a':
-      move_spaceship(game_controller, KEY_LEFT, 20, epd_bitmap_background);
+      move_spaceship(game_controller, KEY_LEFT, 10);
       break;
     case 'd':
-      move_spaceship(game_controller, KEY_RIGHT, 20, epd_bitmap_background);
+      move_spaceship(game_controller, KEY_RIGHT, 10);
       break;
     default:
       break;
@@ -33,7 +36,7 @@ void in_game_screen(GameController *game_controller) {
     // Increment the bullet timer
     bullet_timer += 30;
 
-    if (fire_timer == 10) {
+    if (fire_timer == 5) {
       add_bullet(game_controller,
                  game_controller->spaceship.position.x +
                      game_controller->spaceship.size.width / 2 - 6,
@@ -46,8 +49,7 @@ void in_game_screen(GameController *game_controller) {
     if (bullet_timer >= 10000000) { // 1 second for smoother bullet movement
       for (int i = 0; i < MAX_BULLETS; i++) {
         if (game_controller->spaceship.bullet[i].name != NULL) {
-          move_bullet(&game_controller->spaceship.bullet[i], 15,
-                      epd_bitmap_background);
+          move_bullet(&game_controller->spaceship.bullet[i], 20);
         }
       }
       fire_timer++;
@@ -57,7 +59,7 @@ void in_game_screen(GameController *game_controller) {
 }
 
 void stage_screen(GameController *game_controller) {
-  draw_background(epd_bitmap_background);
+  draw_background();
   boolean is_update = True;
   while (1) {
     if (is_update) {
@@ -103,14 +105,14 @@ void stage_screen(GameController *game_controller) {
 }
 
 void welcome_screen(GameController *game_controller) {
-  draw_background(epd_bitmap_welcome);
+  draw_welcome_screen();
 
   game_controller->spaceship.position.x =
       (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
   game_controller->spaceship.position.y =
       (SCREEN_HEIGHT - game_controller->spaceship.size.height) / 2;
 
-  draw_spaceship(&game_controller->spaceship);
+  draw_spaceship(game_controller);
 
   while (1) {
     // Check if a character is received

@@ -17,7 +17,6 @@ typedef struct Bullet {
   Size size;                   // Size
   const unsigned long *sprite; // Sprite (Image)
   Position position;           // Position
-  Position previous_position;  // Previous position
 
   // Methods
   boolean (*draw)(int x, int y); // Spawn the Bullet
@@ -30,7 +29,6 @@ typedef struct Spaceship {
   char *id;                    // Unique identifier
   char *name;                  // Spaceship name
   Position position;           // Position
-  Position previous_position;  // Previous position
   Size size;                   // Size
   Bullet bullet[MAX_BULLETS];  // Bullet
   float health;                // Health
@@ -68,7 +66,7 @@ typedef struct Alien {
 } Alien;
 
 typedef struct Stage {
-  char *name; // Stage name
+  char name[MAX_STR_LENGTH]; // Stage name
   int level;
 } Stage;
 

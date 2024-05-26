@@ -222,51 +222,32 @@ int is_inside_circle(int x, int y, int x0, int y0, int radius) {
   return (x - x0) * (x - x0) + (y - y0) * (y - y0) < radius * radius;
 }
 
-void draw_capsuleARGB32(int x, int y, int w, int h, unsigned int attr, int fill,
-                        float percentage) {
-  drawLineARGB32(x + h / 2, y, x + w - h / 2, y, 0xFFFFFFFF);
-  drawLineARGB32(x + h / 2, y + h, x + w - h / 2, y + h, 0xFFFFFFFF);
-  draw_left_half_circleARGB32(x + h / 2, y + h / 2, h / 2, 0xFFFFFFFF, 0);
+void draw_capsuleARGB32(int x, int y, int w, int h, unsigned int attr, int fill, float percentage) {
+  drawLineARGB32(x, y, x + w - h / 2, y, 0xFFFFFFFF);
+  drawLineARGB32(x, y + h, x + w - h / 2, y + h, 0xFFFFFFFF);
+  // draw_left_half_circleARGB32(x + h / 2, y + h / 2, h / 2, 0xFFFFFFFF, 0);
   draw_right_half_circleARGB32(x + w - h / 2, y + h / 2, h / 2, 0xFFFFFFFF, 0);
 
-  int center_half_left_circle_x = x + h / 2;
-  int center_half_circle_y = y + h / 2;
+  // int center_half_left_circle_x = x + h / 2;
+  int center_half_circle_y = y + h / 2; 
   int center_half_right_circle_x = x + w - h / 2;
-  int filled_width = (int)w * percentage;
+  int filled_width = (int) w*percentage;
 
   // Draw the filled part of the capsule
   for (int i = x + 1; i < x + filled_width; i++) {
-    for (int j = y + 1; j < y + h; j++) {
-      if (i < center_half_left_circle_x) {
-        // Inside left semicircle
-        if (is_inside_circle(i, j, center_half_left_circle_x,
-                             center_half_circle_y, h / 2) &&
-            is_inside_circle(i, j + 1, center_half_left_circle_x,
-                             center_half_circle_y, h / 2) &&
-            is_inside_circle(i, j - 1, center_half_left_circle_x,
-                             center_half_circle_y, h / 2) &&
-            is_inside_circle(i + 1, j + 1, center_half_left_circle_x,
-                             center_half_circle_y, h / 2)) {
-          draw_pixelARGB32(i, j, 0xFFFF0000);
+        for (int j = y + 1; j < y + h; j++) {
+            if (i >= center_half_right_circle_x) {
+                // Inside right semicircle
+                if (is_inside_circle(i, j, center_half_right_circle_x, center_half_circle_y, h / 2)) {
+                    draw_pixelARGB32(i, j, 0xFFFF0000);
+                }
+            } else {
+                // Inside rectangle part
+                draw_pixelARGB32(i, j, 0xFFFF0000);
+            }
         }
-      } else if (i >= center_half_right_circle_x) {
-        // Inside right semicircle
-        if (is_inside_circle(i, j, center_half_right_circle_x,
-                             center_half_circle_y, h / 2) &&
-            is_inside_circle(i, j + 1, center_half_right_circle_x,
-                             center_half_circle_y, h / 2) &&
-            is_inside_circle(i, j - 1, center_half_right_circle_x,
-                             center_half_circle_y, h / 2) &&
-            is_inside_circle(i - 1, j + 1, center_half_right_circle_x,
-                             center_half_circle_y, h / 2)) {
-          draw_pixelARGB32(i, j, 0xFFFF0000);
-        }
-      } else {
-        // Inside rectangle part
-        draw_pixelARGB32(i, j, 0xFFFF0000);
-      }
     }
-  }
+
 }
 
 void draw_boxed_stringARGB32(int x, int y, const char *str, unsigned int attr) {
@@ -336,4 +317,13 @@ void draw_image(int x, int y, int w, int h, const unsigned long *image) {
       draw_pixelARGB32(x + i, y + j, pixel);
     }
   }
+}
+
+void clear_image(int x, int y, int w, int h, const unsigned long *background) {
+    for (int j = y; j < y + h; j++) {
+        for (int i = x; i < x + w; i++) {
+            unsigned long pixel = background[j * SCREEN_WIDTH + i];
+            draw_pixelARGB32(i, j, pixel); // Draw the pixel using the color value from background
+        }
+    }
 }
