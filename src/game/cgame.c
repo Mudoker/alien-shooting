@@ -317,7 +317,7 @@ void draw_stars(int seconds)
   {
     draw_image(195, 100, 390, 100, epd_bitmap_stars_5);
   }
-  else if (20 < seconds <= 40)
+  else if (seconds <= 40)
   {
     draw_image(195, 100, 390, 100, epd_bitmap_stars_3);
   }
