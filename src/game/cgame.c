@@ -114,9 +114,6 @@ void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship
   int current_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
   int current_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
 
-  int new_x = 0;
-  int new_y = 0;
-
   if (clear)
   {
     clear_image(current_x, current_y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
@@ -128,35 +125,26 @@ void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship
     current_ship_option->size.width = 124;
     current_ship_option->size.height = 188;
     current_ship_option->sprite = epd_bitmap_ship_l1_allArray[0];
-
-    new_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
-    new_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
-
-    draw_image(new_x, new_y, 124, 188, epd_bitmap_ship_l1_allArray[0]);
     break;
   case 2:
     current_ship_option->size.width = 124;
     current_ship_option->size.height = 128;
     current_ship_option->sprite = epd_blader[0];
 
-    new_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
-    new_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
-
-    draw_image(new_x, new_y, 124, 128, epd_blader[0]);
     break;
   case 3:
     current_ship_option->size.width = 135;
     current_ship_option->size.height = 112;
     current_ship_option->sprite = epd_bitmap_ship_l3_allArray[0];
-
-    new_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
-    new_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
-
-    draw_image(new_x, new_y, 135, 112, epd_bitmap_ship_l3_allArray[0]);
     break;
   default:
     return;
   }
+
+  int new_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
+  int new_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
+
+  draw_image(new_x, new_y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
 }
 
 void draw_ship_selection_page()
