@@ -59,10 +59,10 @@ Spaceship init_current_ship_option()
   Spaceship spaceship;
   spaceship.name = "Blader";
   spaceship.size.width = 124;
-  spaceship.size.height = 128;
+  spaceship.size.height = 188;
 
   spaceship.position.x = (SCREEN_WIDTH - 124) / 2;
-  spaceship.position.y = SCREEN_HEIGHT - 128;
+  spaceship.position.y = (SCREEN_HEIGHT - 188) / 2;
   spaceship.health = 100;
 
   spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
@@ -111,12 +111,10 @@ void draw_spaceship(GameController *game_controller)
 
 void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option)
 {
-  int current_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
-  int current_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
 
   if (clear)
   {
-    clear_image(current_x, current_y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
+    clear_image(current_ship_option->position.x, current_ship_option->position.y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
   }
 
   switch (order)
@@ -130,7 +128,6 @@ void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship
     current_ship_option->size.width = 124;
     current_ship_option->size.height = 128;
     current_ship_option->sprite = epd_blader[0];
-
     break;
   case 3:
     current_ship_option->size.width = 135;
@@ -141,10 +138,9 @@ void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship
     return;
   }
 
-  int new_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
-  int new_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
-
-  draw_image(new_x, new_y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
+  current_ship_option->position.x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
+  current_ship_option->position.y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
+  draw_image(current_ship_option->position.x, current_ship_option->position.y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
 }
 
 void draw_ship_selection_page()
