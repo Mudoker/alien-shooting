@@ -1,7 +1,9 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "../../header/game/game_controller.h"
+#include "../../header/game/cgame.h"
+#include "../../header/timer.h"
+#include "./cgame.h"
 
 void in_game_screen(GameController *game_controller);
 void stage_screen(GameController *game_controller);

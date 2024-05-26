@@ -21,3 +21,11 @@ typedef struct Size {
   int width;  // Width
   int height; // Height
 } Size;
+
+typedef struct Button {
+  int x;      // X coordinate
+  int y;      // Y coordinate
+  int width;  // Width
+  int height; // Height
+  char *text; // Text
+} Button;

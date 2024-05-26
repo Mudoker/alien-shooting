@@ -7,7 +7,7 @@ void load_image() {
   int offset_x = 0, offset_y = 0;
   const unsigned long *image = epd_bitmap_allArray[0];
   framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT,
-               IMAGE_WIDTH * (epd_bitmap_allArray_LEN), IMAGE_HEIGHT, offset_x,
+               IMAGE_WIDTH, IMAGE_HEIGHT, offset_x,
                offset_y);
   draw_image_rect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT, image);
 

@@ -8,14 +8,15 @@ struct Alien;
 struct Bullet;
 struct Spaceship;
 
-typedef struct Bullet
-{
-  char *id;                         // Unique identifier
-  char name[MAX_STR_LENGTH];        // Bullet name
-  char description[MAX_STR_LENGTH]; // Bullet description
-  float damage;                 // Damage
-  const unsigned long *sprite;           // Sprite (Image)
-  Position position;                // Position
+#define MAX_BULLETS 1000
+
+typedef struct Bullet {
+  char *id;                    // Unique identifier
+  char *name;                  // Bullet name
+  float damage;                // Damage
+  Size size;                   // Size
+  const unsigned long *sprite; // Sprite (Image)
+  Position position;           // Position
 
   // Methods
   boolean (*draw)(int x, int y); // Spawn the Bullet
@@ -24,41 +25,38 @@ typedef struct Bullet
 } Bullet;
 
 // Game structs
-typedef struct Spaceship
-{
-  char *id;                  // Unique identifier
-  char name[MAX_STR_LENGTH]; // Spaceship name
-  Position position;                // Position
-  Size size;                       // Size
-  Bullet bullet;             // Bullet
-  float health;              // Health
-  int speed;                  // Speed
-  float damage;               // Damage
+typedef struct Spaceship {
+  char *id;                    // Unique identifier
+  char *name;                  // Spaceship name
+  Position position;           // Position
+  Size size;                   // Size
+  Bullet bullet[MAX_BULLETS];  // Bullet
+  float health;                // Health
+  int speed;                   // Speed
+  float damage;                // Damage
   float mana;                  // Mana
-  const unsigned long *sprite;          // Sprite (Image)
-  //char Bullets[MAX_BulletS]; // Bullets
+  const unsigned long *sprite; // Sprite (Image)
 
   // Methods
-  boolean (*draw)();                               // Draw the spaceship
-  boolean (*move)(int x, int y);                   // Move the spaceship
-  boolean (*shoot)(int x, int y);                  // Shoot
+  boolean (*show)();                         // Draw the spaceship
+  boolean (*move)(int x, int y);             // Move the spaceship
+  boolean (*shoot)(int x, int y);            // Shoot
   boolean (*equip)(struct Bullet *Bullet);   // Equip an Bullet
   boolean (*unequip)(struct Bullet *Bullet); // Unequip an Bullet
-  boolean (*powerup)(int x, int y);                // Powerup (use mana)
+  boolean (*powerup)(int x, int y);          // Powerup (use mana)
 } Spaceship;
 
-typedef struct Alien
-{
+typedef struct Alien {
   char *id;                  // Unique identifier
-  char name[MAX_STR_LENGTH]; // Alien name
+  char *name; // Alien name
   Position position;         // Position
   Position target;
   int reached_target;
-  Size size;                 // Size
-  float health;        // Health
-  int speed;            // Speed
-  float damage;         // Damage
-  unsigned long *sprite;    // Sprite (Image)
+  Size size;             // Size
+  float health;          // Health
+  int speed;             // Speed
+  float damage;          // Damage
+  const unsigned long *sprite; // Sprite (Image)
 
   // Methods
   boolean (*draw)();              // Draw the alien
@@ -67,11 +65,9 @@ typedef struct Alien
   boolean (*die)();               // Die
 } Alien;
 
-typedef struct Stage
-{
+typedef struct Stage {
   char name[MAX_STR_LENGTH]; // Stage name
   int level;
-  // description[MAX_STR_LENGTH]; // Stage description
 } Stage;
 
 #endif
