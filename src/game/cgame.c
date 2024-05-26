@@ -12,6 +12,8 @@
 #include "../../assets/games/result_screens/stars/stars_1.h"
 #include "../../assets/games/result_screens/stars/stars_3.h"
 #include "../../assets/games/result_screens/stars/stars_5.h"
+#include "../../assets/games/result_screens/digits/secs.h"
+#include "../../assets/games/result_screens/digits/digits.h"
 
 void init_frame(int offset_x, int offset_y)
 {
@@ -327,5 +329,22 @@ void draw_stars(int seconds)
 
 void draw_completed_time(int seconds)
 {
-  // TODO: display the time
+  // TODO: handle different height in screens
+
+  if (seconds < 10)
+  {
+    draw_image(502, 476, 37, 37, epd_bitmap_digits_allArray[seconds]);
+  }
+  else
+  {
+    int tens = seconds / 10;
+    int ones = seconds % 10;
+
+    // Draw tens digit
+    draw_image(480, 476, 37, 37, epd_bitmap_digits_allArray[tens]);
+    // Draw ones digit
+    draw_image(502, 476, 37, 37, epd_bitmap_digits_allArray[ones]);
+  }
+
+  draw_image(535, 476, 97, 37, epd_bitmap_secs);
 }
