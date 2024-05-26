@@ -111,38 +111,48 @@ void draw_spaceship(GameController *game_controller)
 
 void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option)
 {
+  int current_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
+  int current_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
 
-  int x = (SCREEN_WIDTH - spaceship->size.width) / 2;
-  int y = (SCREEN_HEIGHT - spaceship->size.height) / 2;
+  int new_x = 0;
+  int new_y = 0;
+
+  if (clear)
+  {
+    clear_image(current_x, current_y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
+  }
 
   switch (order)
   {
   case 1:
-    if (clear)
-    {
-      clear_image(x, y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
-    }
-    draw_image(x, y, 124, 128, epd_bitmap_ship_l1_allArray[0]);
     current_ship_option->size.width = 124;
-    current_ship_option->size.height = 128;
+    current_ship_option->size.height = 188;
     current_ship_option->sprite = epd_bitmap_ship_l1_allArray[0];
+
+    new_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
+    new_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
+
+    draw_image(new_x, new_y, 124, 188, epd_bitmap_ship_l1_allArray[0]);
     break;
   case 2:
-    clear_image(x, y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
-    draw_image(x, y, 124, 128, epd_blader[0]);
     current_ship_option->size.width = 124;
     current_ship_option->size.height = 128;
     current_ship_option->sprite = epd_blader[0];
+
+    new_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
+    new_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
+
+    draw_image(new_x, new_y, 124, 128, epd_blader[0]);
     break;
   case 3:
-    if (clear)
-    {
-      clear_image(x, y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
-    }
-    draw_image(x, y, 135, 112, epd_bitmap_ship_l3_allArray[0]);
-    current_ship_option->size.width = 124;
-    current_ship_option->size.height = 128;
+    current_ship_option->size.width = 135;
+    current_ship_option->size.height = 112;
     current_ship_option->sprite = epd_bitmap_ship_l3_allArray[0];
+
+    new_x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
+    new_y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
+
+    draw_image(new_x, new_y, 135, 112, epd_bitmap_ship_l3_allArray[0]);
     break;
   default:
     return;
@@ -293,7 +303,7 @@ void change_spaceship(GameController *game_controller, int order)
   case 1:
     game_controller->spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
     game_controller->spaceship.size.width = 124;
-    game_controller->spaceship.size.height = 128;
+    game_controller->spaceship.size.height = 188;
     break;
   case 2:
     game_controller->spaceship.sprite = epd_blader[0];
