@@ -1,10 +1,10 @@
 #ifndef CGAME_H
 #define CGAME_H
 
-#include "game_struct.h"
-#include "../global.h"
 #include "../framebf.h"
+#include "../global.h"
 #include "../timer.h"
+#include "game_struct.h"
 #include "ui.h"
 
 #define MAX_ALIENS 20
@@ -71,7 +71,7 @@ void init_spaceship(GameController *game_controller,
                     const unsigned long *sprite, int width, int height, int x,
                     int y);
 void init_bullet(GameController *game_controller, const unsigned long *sprite,
-                 int width, int height, int x, int y);
+                 int width, int height, int x, int y, int index);
 void init_stages(GameController *game_controller);
 void init_controller(GameController *game_controller);
 void init_alien(GameController *game_controller, const unsigned long *sprite,
@@ -85,11 +85,10 @@ void draw_alien(GameController *game_controller);
 
 void collision_detection(GameController *game_controller);
 
-
 void move_spaceship(GameController *game_controller, int key, int step);
 void move_bullet(GameController *game_controller, int index, int step);
 
-void add_bullet(GameController *game_controller, int x, int y);
+void add_bullet(GameController *game_controller);
 
 void deal_damage(GameController *game_controller);
 

@@ -26,16 +26,17 @@ typedef struct Bullet {
 
 // Game structs
 typedef struct Spaceship {
-  char *id;                    // Unique identifier
-  char *name;                  // Spaceship name
-  Position position;           // Position
-  Size size;                   // Size
-  Bullet bullet[MAX_BULLETS];  // Bullet
-  float health;                // Health
-  int speed;                   // Speed
-  float damage;                // Damage
-  float mana;                  // Mana
-  const unsigned long *sprite; // Sprite (Image)
+  char *id;                      // Unique identifier
+  char *name;                    // Spaceship name
+  Position position;             // Position
+  Size size;                     // Size
+  Bullet bullet[MAX_BULLETS][5]; // Bullet
+  float health;                  // Health
+  int speed;                     // Speed
+  float damage;                  // Damage
+  float mana;                    // Mana
+  int bullet_bonus;              // Bullet bonus
+  const unsigned long *sprite;   // Sprite (Image)
 
   // Methods
   boolean (*show)();                         // Draw the spaceship
@@ -47,15 +48,15 @@ typedef struct Spaceship {
 } Spaceship;
 
 typedef struct Alien {
-  char *id;                  // Unique identifier
-  char *name; // Alien name
-  Position position;         // Position
+  char *id;          // Unique identifier
+  char *name;        // Alien name
+  Position position; // Position
   Position target;
   int reached_target;
-  Size size;             // Size
-  float health;          // Health
-  int speed;             // Speed
-  float damage;          // Damage
+  Size size;                   // Size
+  float health;                // Health
+  int speed;                   // Speed
+  float damage;                // Damage
   const unsigned long *sprite; // Sprite (Image)
 
   // Methods
