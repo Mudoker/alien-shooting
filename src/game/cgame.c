@@ -4,6 +4,7 @@
 #include "../../assets/games/background.h"
 #include "../../assets/games/bullet/bullet_lv1.h"
 #include "../../assets/games/health_logo.h"
+#include "../../assets/games/powers_up/badge/bonus_bullets.h"
 #include "../../assets/games/spaceship/blader.h"
 #include "../../assets/games/welcome_screen/welcome.h"
 
@@ -22,7 +23,7 @@ void init_frame(int offset_x, int offset_y) {
 void init_controller(GameController *game_controller) {
   game_controller->screen = &((Display){.init_frame = &init_frame});
   game_controller->screen->init_frame(0, 0);
-  game_controller->page = IN_GAME;
+  game_controller->page = WELCOME;
   game_controller->bullet_on_screen_count = 0;
 
   int positions[5][2]; // Maximum of MAX_BULLETS positions
@@ -352,4 +353,37 @@ void collision_detection(GameController *game_controller) {
   //     }
   //   }
   // }
+}
+
+void draw_badge(int badge) {
+  // Badge Constants
+  const int BONUS_WIDTH = 210;
+  const int BONUS_HEIGHT = 226;
+  const int POS_X = (SCREEN_WIDTH - BONUS_WIDTH) / 2;
+  const int POS_Y = (SCREEN_HEIGHT - BONUS_HEIGHT) / 2;
+
+  // Badge Animation Constants
+  float badge_opacity = 1.0f;             // Initial opacity
+  int fade_duration = 100;                // Fade duration in frames
+  unsigned int animation_duration = 1000; // Animation duration in milliseconds
+
+  if (badge == BULLET_BONUS) {
+    // Gradually decrease opacity over fade duration
+    for (int frame = 0; frame < fade_duration; frame++) {
+      // Draw the badge with current opacity
+      draw_image_with_opacity(POS_X, POS_Y, BONUS_WIDTH, BONUS_HEIGHT,
+                              epd_bullet_bonus_badge[0], epd_bitmap_background,
+                              badge_opacity);
+
+      // Wait for a specific amount of time
+      unsigned int frame_duration = animation_duration / fade_duration;
+      wait_msec(frame_duration);
+
+      // Decrease opacity gradually
+      badge_opacity -= 1.0f / fade_duration;
+      if (badge_opacity < 0.0f) {
+        badge_opacity = 0.0f;
+      }
+    }
+  }
 }

@@ -36,6 +36,12 @@ typedef enum {
   IN_GAME,
 } Page;
 
+typedef enum {
+  BULLET_BONUS = 0,
+  HEALTH_BONUS,
+  SHIELD_BONUS,
+} Badge;
+
 typedef struct Display Display;
 
 typedef struct GameController {
@@ -91,5 +97,7 @@ void move_bullet(GameController *game_controller, int index, int step);
 void add_bullet(GameController *game_controller);
 
 void deal_damage(GameController *game_controller);
+
+void draw_badge(int badge);
 
 #endif // CGAME_H

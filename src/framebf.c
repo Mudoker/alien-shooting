@@ -222,32 +222,33 @@ int is_inside_circle(int x, int y, int x0, int y0, int radius) {
   return (x - x0) * (x - x0) + (y - y0) * (y - y0) < radius * radius;
 }
 
-void draw_capsuleARGB32(int x, int y, int w, int h, unsigned int attr, int fill, float percentage) {
+void draw_capsuleARGB32(int x, int y, int w, int h, unsigned int attr, int fill,
+                        float percentage) {
   drawLineARGB32(x, y, x + w - h / 2, y, 0xFFFFFFFF);
   drawLineARGB32(x, y + h, x + w - h / 2, y + h, 0xFFFFFFFF);
   // draw_left_half_circleARGB32(x + h / 2, y + h / 2, h / 2, 0xFFFFFFFF, 0);
   draw_right_half_circleARGB32(x + w - h / 2, y + h / 2, h / 2, 0xFFFFFFFF, 0);
 
   // int center_half_left_circle_x = x + h / 2;
-  int center_half_circle_y = y + h / 2; 
+  int center_half_circle_y = y + h / 2;
   int center_half_right_circle_x = x + w - h / 2;
-  int filled_width = (int) w*percentage;
+  int filled_width = (int)w * percentage;
 
   // Draw the filled part of the capsule
   for (int i = x + 1; i < x + filled_width; i++) {
-        for (int j = y + 1; j < y + h; j++) {
-            if (i >= center_half_right_circle_x) {
-                // Inside right semicircle
-                if (is_inside_circle(i, j, center_half_right_circle_x, center_half_circle_y, h / 2)) {
-                    draw_pixelARGB32(i, j, 0xFFFF0000);
-                }
-            } else {
-                // Inside rectangle part
-                draw_pixelARGB32(i, j, 0xFFFF0000);
-            }
+    for (int j = y + 1; j < y + h; j++) {
+      if (i >= center_half_right_circle_x) {
+        // Inside right semicircle
+        if (is_inside_circle(i, j, center_half_right_circle_x,
+                             center_half_circle_y, h / 2)) {
+          draw_pixelARGB32(i, j, 0xFFFF0000);
         }
+      } else {
+        // Inside rectangle part
+        draw_pixelARGB32(i, j, 0xFFFF0000);
+      }
     }
-
+  }
 }
 
 void draw_boxed_stringARGB32(int x, int y, const char *str, unsigned int attr) {
@@ -320,10 +321,65 @@ void draw_image(int x, int y, int w, int h, const unsigned long *image) {
 }
 
 void clear_image(int x, int y, int w, int h, const unsigned long *background) {
-    for (int j = y; j < y + h; j++) {
-        for (int i = x; i < x + w; i++) {
-            unsigned long pixel = background[j * SCREEN_WIDTH + i];
-            draw_pixelARGB32(i, j, pixel); // Draw the pixel using the color value from background
-        }
+  for (int j = y; j < y + h; j++) {
+    for (int i = x; i < x + w; i++) {
+      unsigned long pixel = background[j * SCREEN_WIDTH + i];
+      draw_pixelARGB32(
+          i, j, pixel); // Draw the pixel using the color value from background
     }
+  }
+}
+
+void draw_image_with_opacity(int x, int y, int w, int h,
+                             const unsigned long *image,
+                             const unsigned long *background, float opacity) {
+  // Clamp opacity between 0.0 and 1.0
+  if (opacity < 0.0f)
+    opacity = 0.0f;
+  if (opacity > 1.0f)
+    opacity = 1.0f;
+
+  // Precompute inverse opacity
+  float inv_opacity = 1.0f - opacity;
+
+  for (int j = 0; j < h; j++) {
+    int bg_row_start = (y + j) * SCREEN_WIDTH + x;
+    int img_row_start = j * w;
+
+    for (int i = 0; i < w; i++) {
+      int img_index = img_row_start + i;
+      int bg_index = bg_row_start + i;
+
+      unsigned long img_pixel = image[img_index];
+      unsigned long bg_pixel = background[bg_index];
+
+      unsigned char img_r = (img_pixel >> 16) & 0xFF;
+      unsigned char img_g = (img_pixel >> 8) & 0xFF;
+      unsigned char img_b = img_pixel & 0xFF;
+
+      // If the pixel color from the image is black, skip blending
+      if (img_r == 0 && img_g == 0 && img_b == 0) {
+        continue;
+      }
+
+      unsigned char bg_r = (bg_pixel >> 16) & 0xFF;
+      unsigned char bg_g = (bg_pixel >> 8) & 0xFF;
+      unsigned char bg_b = bg_pixel & 0xFF;
+
+      // Blend the colors
+      unsigned char blended_r =
+          (unsigned char)((img_r * opacity) + (bg_r * inv_opacity));
+      unsigned char blended_g =
+          (unsigned char)((img_g * opacity) + (bg_g * inv_opacity));
+      unsigned char blended_b =
+          (unsigned char)((img_b * opacity) + (bg_b * inv_opacity));
+
+      // Construct the blended pixel with full opacity
+      unsigned long blended_pixel =
+          (0xFF << 24) | (blended_r << 16) | (blended_g << 8) | blended_b;
+
+      // Draw the blended pixel
+      draw_pixelARGB32(x + i, y + j, blended_pixel);
+    }
+  }
 }
