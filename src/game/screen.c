@@ -31,6 +31,7 @@ void in_game_screen(GameController *game_controller) {
   draw_spaceship(game_controller);
   draw_health_bar(game_controller);
   draw_alien(game_controller);
+
   // draw_health_PU(game_controller);
   // draw_shield_PU(game_controller);
 
@@ -69,7 +70,7 @@ void in_game_screen(GameController *game_controller) {
     }
 
     // Increment the bullet timer
-    bullet_timer += 30;
+    bullet_timer += 100;
     alien_move_timer += 30;
 
     if (fire_timer == 5) {
@@ -90,10 +91,13 @@ void in_game_screen(GameController *game_controller) {
       bullet_timer = 0;
     }
 
-    // Alien movement
-    if (alien_move_timer >= 10000000) { // 1 second for smoother alien movement
-      move_aliens(game_controller, alien_move_step);
-      alien_move_timer = 0;
+    // Alien movement (Non-boss stages)
+    if (game_controller->stage_level != 4 &&
+        game_controller->stage_level != 2) {
+      if (alien_move_timer >= 10000000) {
+        move_aliens(game_controller, alien_move_step);
+        alien_move_timer = 0;
+      }
     }
   }
   // game_loop(game_controller);

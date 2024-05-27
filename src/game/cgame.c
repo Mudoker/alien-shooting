@@ -2,6 +2,7 @@
 #include "../../header/game/cgame.h"
 #include "../../assets/games/alient/alient_1.h"
 #include "../../assets/games/background.h"
+#include "../../assets/games/boss/big_boss.h"
 #include "../../assets/games/bullet/alien_bullet.h"
 #include "../../assets/games/bullet/bullet_lv1.h"
 #include "../../assets/games/health_logo.h"
@@ -69,11 +70,10 @@ void init_spaceship(GameController *game_controller,
   spaceship.name = "Blader";
   spaceship.size.width = width;
   spaceship.size.height = height;
-  spaceship.bullet_bonus = 0;
+  spaceship.bullet_bonus = 4;
   spaceship.position.x = x;
   spaceship.position.y = y;
   spaceship.health = 100;
-
   spaceship.sprite = sprite;
 
   game_controller->spaceship = spaceship;
@@ -116,15 +116,16 @@ void init_stages(GameController *game_controller) {
 }
 
 void init_alien(Alien *alien, const unsigned long *sprite, int width,
-                int height, int x, int y) {
+                int height, int x, int y, int health, int damage) {
   alien->name = "Alien";
   alien->size.width = width;
   alien->size.height = height;
   alien->position.x = x;
   alien->position.y = y;
   alien->direction = 1;
-  alien->health = 100;
+  alien->health = health;
   alien->sprite = sprite;
+  alien->damage = damage;
 
   for (int i = 0; i < 5; i++) {
     Bullet bullet = {
@@ -140,20 +141,49 @@ void init_alien(Alien *alien, const unsigned long *sprite, int width,
   }
 }
 
-// Init wave
 void init_wave(GameController *gc) {
-  Wave *wave =
-      &gc->stages[0].waves[gc->current_wave]; // Initialize the first wave of
-                                              // the given stage
+  Wave *wave = &gc->stages[0].waves[gc->current_wave];
   wave->level = gc->current_wave + 1;
 
   int count = 0;
-  for (int j = 0; j < 3; j++) {   // Rows of the map
-    for (int k = 0; k < 5; k++) { // Columns of the map
-      if (map_1[gc->current_wave][j][k] == 1) {
-        init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130, 109,
-                   130 * k, 109 * j);
-        count++;
+
+  // Determine which map to use based on the stage level
+  const unsigned int(*current_map)[3][5];
+  if (gc->stage_level == 2) {
+    current_map = map_2;
+  } else if (gc->stage_level == 3) {
+    current_map = map_3;
+  } else {
+    current_map = map_1;
+  }
+
+  // Handle boss round (Stage 3)
+  if (gc->stage_level == 3) {
+    // If it's the first wave of Stage 3, initialize normal aliens
+    if (gc->current_wave == 0) {
+      for (int j = 0; j < 3; j++) {
+        for (int k = 0; k < 5; k++) {
+          if (current_map[gc->current_wave][j][k] == 1) {
+            init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130,
+                       109, 130 * k, 109 * j, 100, 10); // Damage set to 10
+            count++;
+          }
+        }
+      }
+    } else if (gc->current_wave == 2) { // Third wave of Stage 3: Boss
+      init_alien(&wave->aliens[count], epd_bitmap_big_boss[0], 598, 417,
+                 (SCREEN_WIDTH - 467) / 2, 0, 10000, 50); // Damage set to 50
+      count++;
+    }
+  } else {
+    // Regular alien initialization for other stages
+    for (int j = 0; j < 3; j++) {   // Rows of the map
+      for (int k = 0; k < 5; k++) { // Columns of the map
+        if (current_map[gc->current_wave][j][k] == 1) {
+          init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130, 109,
+                     130 * k, 109 * j, 100, 10); // Damage set to 10
+          count++;
+        }
       }
     }
   }
@@ -166,7 +196,7 @@ Spaceship *init_current_ship_option() {
   spaceship.name = "Lev1";
   spaceship.size.width = 124;
   spaceship.size.height = 188;
-  spaceship.bullet_bonus = 4;
+  spaceship.bullet_bonus = 0;
 
   spaceship.position.x = (SCREEN_WIDTH - spaceship.size.width) / 2;
   spaceship.position.y = (SCREEN_HEIGHT - spaceship.size.height) / 2;
@@ -270,19 +300,19 @@ void draw_welcome_screen() {
 
 // Draw alien
 void draw_alien(GameController *game_controller) {
-  for (int i = 0; i < game_controller->stages[0]
-                          .waves[game_controller->current_wave]
-                          .alien_count;
-       i++) {
-    Alien alien = game_controller->stages[0]
-                      .waves[game_controller->current_wave]
-                      .aliens[i];
-    if (game_controller->stages[0]
-            .waves[game_controller->current_wave]
-            .aliens[i]
-            .name != NULL) {
-      draw_image(alien.position.x, alien.position.y, alien.size.width,
-                 alien.size.height, alien.sprite);
+  // Ensure current_wave is within valid range
+  if (game_controller->current_wave >= 3) {
+    return;
+  }
+
+  Wave *current_wave =
+      &game_controller->stages[0].waves[game_controller->current_wave];
+
+  for (int i = 0; i < current_wave->alien_count; i++) {
+    Alien *alien = &current_wave->aliens[i];
+    if (alien->name != NULL) {
+      draw_image(alien->position.x, alien->position.y, alien->size.width,
+                 alien->size.height, alien->sprite);
     }
   }
 }
@@ -327,7 +357,7 @@ void move_spaceship(GameController *game_controller, int key, int step) {
 
 void move_alien_bullet(GameController *game_controller, int step) {
   // Adjust step size
-  step = step / 2;
+  step = step / 12;
 
   // Iterate over aliens in the current wave
   for (int i = 0; i < game_controller->stages[0]
@@ -418,7 +448,6 @@ void move_bullet(GameController *game_controller, int index, int step) {
       continue; // Skip to the next bullet, do not return
     }
 
-    // Check for collision with aliens in the current wave
     Wave *current_wave =
         &game_controller->stages[0].waves[game_controller->current_wave];
     for (int j = 0; j < current_wave->alien_count; j++) {
@@ -563,7 +592,10 @@ void add_bullet(GameController *game_controller) {
 
 // Receive damage from enemies
 void receive_damage(GameController *game_controller) {
-  game_controller->spaceship.health -= 10;
+  game_controller->spaceship.health -= game_controller->stages[0]
+                                           .waves[game_controller->current_wave]
+                                           .aliens[0]
+                                           .damage;
   clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
   draw_health_bar(game_controller);
 }
@@ -603,6 +635,13 @@ void clear_wave(GameController *game_controller) {
   if (defeat_count == current_wave->alien_count) {
     wait_msec(1000000);
     game_controller->current_wave++;
+    // If current_wave exceeds the number of waves, stop the game
+    if (game_controller->current_wave >= 3) {
+      // Transition to result screen
+      // result_screen(game_controller);
+      uart_puts("Game over!\n");
+      return;
+    }
     init_wave(game_controller);
 
     draw_alien(game_controller);

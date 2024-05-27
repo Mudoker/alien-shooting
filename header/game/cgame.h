@@ -86,7 +86,7 @@ void init_bullet(GameController *game_controller, const unsigned long *sprite,
                  int width, int height, int x, int y, int index);
 void init_stages(GameController *game_controller);
 void init_alien(Alien *alien, const unsigned long *sprite, int width,
-                int height, int x, int y);
+                int height, int x, int y, int health, int damage);
 void init_wave(GameController *gc);
 Spaceship *init_current_ship_option();
 
