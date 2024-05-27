@@ -457,6 +457,20 @@ void draw_shield_PU(GameController *game_controller)
   draw_image_object(780 / 2, 450, 90, 90, epd_bitmap_shield_allArray[0], epd_bitmap_background);
 }
 
+// void game_loop(GameController *game_controller)
+// {
+//   while (1)
+//   {
+//     init_power_up(game_controller);
+
+//     while (!pu_reach_target(game_controller))
+//     {
+//       move_PU_to_position(game_controller);
+//       wait_msec(8000);
+//     }
+//   }
+// }
+
 void add_bullet(GameController *game_controller)
 {
   int num_positions;

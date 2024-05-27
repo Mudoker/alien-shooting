@@ -34,3 +34,11 @@ void set_wait_timer(int set, unsigned int msVal)
         } while (r < expiredTime);
     }
 }
+
+
+volatile unsigned long system_millis = 0;
+
+// Function to get the current time in milliseconds
+unsigned long get_time_ms() {
+    return system_millis;
+}

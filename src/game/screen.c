@@ -1,5 +1,6 @@
 #include "../../header/game/screen.h"
 #include "../../header/game/ui.h"
+#include "../../header/timer.h"
 
 void in_game_screen(GameController *game_controller)
 {
@@ -20,15 +21,56 @@ void in_game_screen(GameController *game_controller)
   // draw_health_PU(game_controller);
   // draw_shield_PU(game_controller);
   // explosion();
-  game_loop(game_controller);
-
+  int last_powerup_update = 0; // Add this variable to track the time
   int bullet_timer = 0;
   int fire_timer = 0;
   int alien_move_timer = 0;
   int alien_move_step = 10;
+  int powerup_active = 0;
+  int next_powerup_time = 8000; // Initial delay for the first power-up
 
   while (1)
   {
+    
+     int current_time = get_time_ms();
+
+    // Spawn a new power-up
+    if (current_time - last_powerup_update >= next_powerup_time && !powerup_active) {
+        init_power_up(game_controller);
+        powerup_active = 1;
+        last_powerup_update = current_time;
+        next_powerup_time = 5000 + (randomNum() % 5001); // Randomize the next power-up time (5 to 10 seconds)
+    }
+    // // Power-up movement
+    // int current_time = get_time_ms(); // Assuming you have a function to get time in milliseconds
+    // if (current_time - last_powerup_update >= 8000)
+    // { // Update power-up position every 8 seconds
+    //   // move_PU_to_position(game_controller);
+    //   // last_powerup_update = current_time;
+    //   uart_puts("Moving power-up\n"); // Add debugging output
+    //   move_PU_to_position(game_controller);
+    //   uart_puts("Power-up position: x=");
+    //   uart_puts(itoa(game_controller->powerup.position.x)); 
+    //   uart_puts(", y=");
+    //   uart_puts(itoa(game_controller->powerup.position.y));
+    //   uart_puts("\n");
+    //   last_powerup_update = current_time;
+    // }
+
+    if (powerup_active) {
+      if (current_time - last_powerup_update >= 100) { // Update every 100 ms
+        move_PU_to_position(game_controller);
+        uart_puts("Power-up position: x=");
+        uart_puts(itoa(game_controller->powerup.position.x)); 
+        uart_puts(", y=");
+        uart_puts(itoa(game_controller->powerup.position.y));
+        uart_puts("\n");
+        // ... (Add logic to check if the power-up is off-screen or collected)
+        // If off-screen or collected:
+        //   powerup_active = 0;
+      }
+    }
+
     // Check if a character is received
     clear_wave(game_controller);
     char c = getUart();
