@@ -2,6 +2,9 @@
 #include "../../header/game/ui.h"
 
 void in_game_screen(GameController *game_controller) {
+  game_controller->current_wave = 0;
+  init_wave(game_controller);
+
   draw_background();
   game_controller->spaceship.position.x = (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
   game_controller->spaceship.position.y = SCREEN_HEIGHT - game_controller->spaceship.size.height;
@@ -14,12 +17,11 @@ void in_game_screen(GameController *game_controller) {
 
   while (1) {
     // Check if a character is received
-    // collision_detection(game_controller);
+    clear_wave(game_controller);
     char c = getUart();
     switch (c) {
     case 'w':
       move_spaceship(game_controller, KEY_UP, 10);
-      // deal_damage(game_controller);
       break;
     case 's':
       move_spaceship(game_controller, KEY_DOWN, 10);
@@ -51,12 +53,14 @@ void in_game_screen(GameController *game_controller) {
     if (bullet_timer >= 10000000) { // 1 second for smoother bullet movement
       for (int i = 0; i < MAX_BULLETS; i++) {
         if (game_controller->spaceship.bullet[i].name != NULL) {
-          move_bullet(game_controller, i, 15);
+          move_bullet(game_controller, i, 20);
+          
         }
       }
       fire_timer++;
       bullet_timer = 0;
     }
+
   }
 }
 

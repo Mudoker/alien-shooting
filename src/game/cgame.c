@@ -28,7 +28,6 @@ void init_controller(GameController *game_controller)
   init_bullet(game_controller, epd_bullet_lv1[0], 12, 48,
               game_controller->spaceship.position.x + 124 / 2 - 6,
               game_controller->spaceship.position.y - 20);
-  init_wave(game_controller);
 }
 
 // Initialize the spaceship object
@@ -104,17 +103,13 @@ void init_alien(Alien *alien, const unsigned long *sprite, int width, int height
 // Init wave
 void init_wave(GameController *gc)
 {
-  gc->current_wave = 0;
-
-  // for (int i = 0; i < 3; i++)
-  // {
-    Wave *wave = &gc->stages[0].waves[0]; // Initialize the first wave of the given stage
-    wave->level = 0 + 1;
+    Wave *wave = &gc->stages[0].waves[gc->current_wave]; // Initialize the first wave of the given stage
+    wave->level = gc->current_wave + 1;
     
     int count = 0;
     for (int j = 0; j < 3; j++) {  // Rows of the map
         for (int k = 0; k < 5; k++) {  // Columns of the map
-            if (map_1[0][j][k] == 1) {
+            if (map_1[gc->current_wave][j][k] == 1) {
                 init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130, 109, 130 * k, 109 * j);
                 count++;
             }
@@ -156,8 +151,8 @@ void draw_welcome_screen()
 void draw_alien(GameController *game_controller)
 {
   for (int i = 0; i < game_controller->stages[0].waves[game_controller->current_wave].alien_count; i++) {
-    Alien alien = game_controller->stages[0].waves[0].aliens[i];
-    if (game_controller->stages[0].waves[0].aliens[i].name != NULL) {
+    Alien alien = game_controller->stages[0].waves[game_controller->current_wave].aliens[i];
+    if (game_controller->stages[0].waves[game_controller->current_wave].aliens[i].name != NULL) {
       draw_image(alien.position.x, alien.position.y, alien.size.width, alien.size.height, alien.sprite);
     }
   }
@@ -217,6 +212,7 @@ void move_bullet(GameController *game_controller, int index, int step)
     // Check if the bullet is out of the screen
     if (bullet->position.y <= -bullet->size.height) {
         bullet->name = NULL;
+        // game_controller->bullet_on_screen_count--;
         return; // No need to continue if the bullet is out of the screen
     }
     
@@ -231,14 +227,15 @@ void move_bullet(GameController *game_controller, int index, int step)
         if (alien->name != NULL) {
             if (bullet->position.x >= alien->position.x &&
                 bullet->position.x <= alien->position.x + alien->size.width &&
-                bullet->position.y - 15 >= alien->position.y &&
-                bullet->position.y - 15 <= alien->position.y + alien->size.height) {
+                bullet->position.y - 20 >= alien->position.y &&
+                bullet->position.y - 20 <= alien->position.y + alien->size.height) {
                 
                 // Deal damage to the alien
                 deal_damage(game_controller, i);
                 
                 // Clear the bullet
                 clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
+                // 
                 bullet->name = NULL;
                 
                 
@@ -247,6 +244,7 @@ void move_bullet(GameController *game_controller, int index, int step)
         }
     }
 }
+
 
 void add_bullet(GameController *game_controller, int x, int y)
 {
@@ -283,7 +281,6 @@ void deal_damage(GameController *game_controller, int index)
 {
   Wave *current_wave = &game_controller->stages[0].waves[game_controller->current_wave];
   Alien *alien = &current_wave->aliens[index];
-  uart_dec(alien->health);
   alien->health -= 10;
   if (alien->health <= 0)
   {
@@ -292,6 +289,38 @@ void deal_damage(GameController *game_controller, int index)
   }
 }
 
+void clear_wave(GameController *game_controller) {
+  int defeat_count = 0;
+  Wave *current_wave = &game_controller->stages[0].waves[game_controller->current_wave];
+  for (int i = 0; i < current_wave->alien_count; i++) {
+    Alien *alien = &current_wave->aliens[i];
+    if (alien->name == NULL) {
+      defeat_count++;
+    }
+  }
+
+  if (defeat_count == current_wave->alien_count) {
+    wait_msec(1000000);
+    game_controller->current_wave++;
+    init_wave(game_controller);
+    
+    draw_alien(game_controller);
+  }
+}
+
+void move_alien(GameController *game_controller, int step)
+{
+  // Update position of the alien
+  Wave *current_wave = &game_controller->stages[0].waves[game_controller->current_wave];
+  for (int i = 0; i < current_wave->alien_count; i++) {
+    Alien *alien = &current_wave->aliens[i];
+    if (alien->name != NULL) {
+      clear_image(alien->position.x, alien->position.y, alien->size.width, alien->size.height, epd_bitmap_background);
+      alien->position.x += step;
+      draw_image(alien->position.x, alien->position.y, alien->size.width, alien->size.height, alien->sprite);
+    }
+  }
+}
 
 // Collision detection (should check at the alien)
 void collision_detection(GameController *game_controller)

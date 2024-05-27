@@ -84,6 +84,8 @@ void draw_welcome_screen();
 void draw_alien(GameController *game_controller);
 
 void collision_detection(GameController *game_controller);
+void clear_wave(GameController *game_controller);
+void move_alien(GameController *game_controller, int step);
 
 
 void move_spaceship(GameController *game_controller, int key, int step);
