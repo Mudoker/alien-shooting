@@ -63,7 +63,7 @@ void in_game_screen(GameController *game_controller) {
     }
   }
 
-  game_loop(game_controller);
+game_loop(game_controller);
 
 }
 

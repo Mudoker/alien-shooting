@@ -40,7 +40,8 @@ void init_controller(GameController *game_controller)
 
   calculate_bullet_positions(game_controller, positions, &num_positions);
 
-  for (int i = 0; i < num_positions; i++) {
+  for (int i = 0; i < num_positions; i++)
+  {
     init_bullet(game_controller, epd_bullet_lv1[0], BUlLET_WIDTH, BULLET_HEIGHT,
                 positions[i][0], positions[i][1], i);
   }
@@ -68,7 +69,8 @@ void init_spaceship(GameController *game_controller,
 }
 
 void init_bullet(GameController *game_controller, const unsigned long *sprite,
-                 int width, int height, int x, int y, int index) {
+                 int width, int height, int x, int y, int index)
+{
   Bullet bullet;
   bullet.name = "Bullet";
   bullet.size.width = width;
@@ -84,8 +86,10 @@ void init_bullet(GameController *game_controller, const unsigned long *sprite,
 }
 
 // Init stage
-void init_stages(GameController *game_controller) {
-  for (int i = 0; i < 9; i++) {
+void init_stages(GameController *game_controller)
+{
+  for (int i = 0; i < 9; i++)
+  {
     Stage stage;
     stage.level = i + 1;
     strcpy(stage.name, "STAGE ");
@@ -125,12 +129,14 @@ void draw_spaceship(GameController *game_controller)
 }
 
 // Draw the background
-void draw_background() {
+void draw_background()
+{
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background);
 }
 
 // Draw health bar
-void draw_health_bar(GameController *game_controller) {
+void draw_health_bar(GameController *game_controller)
+{
   float healthPercentage = (float)game_controller->spaceship.health / 100.0;
   draw_capsuleARGB32(59, SCREEN_HEIGHT - 45, 250, 10, 0x00FF0000, 1,
                      healthPercentage);
@@ -144,7 +150,8 @@ void draw_welcome_screen()
 }
 
 // Draw alien
-void draw_alien(GameController *game_controller) {
+void draw_alien(GameController *game_controller)
+{
   draw_image(game_controller->alien.position.x,
              game_controller->alien.position.y,
              game_controller->alien.size.width,
@@ -161,7 +168,8 @@ void move_spaceship(GameController *game_controller, int key, int step)
   int newX = spaceship->position.x;
   int newY = spaceship->position.y;
 
-  switch (key) {
+  switch (key)
+  {
   case KEY_RIGHT:
     newX += step;
     break;
@@ -192,13 +200,16 @@ void move_spaceship(GameController *game_controller, int key, int step)
   draw_spaceship(game_controller);
 }
 
-void move_bullet(GameController *game_controller, int index, int step) {
+void move_bullet(GameController *game_controller, int index, int step)
+{
   // Get all bullets at all indexes based on the bonus
-  for (int i = 0; i < game_controller->spaceship.bullet_bonus + 1; i++) {
+  for (int i = 0; i < game_controller->spaceship.bullet_bonus + 1; i++)
+  {
     Bullet *bullet = &game_controller->spaceship.bullet[index][i];
     Alien *alien = &game_controller->alien;
 
-    if (bullet->name != NULL) {
+    if (bullet->name != NULL)
+    {
       clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
                   bullet->size.height, epd_bitmap_background);
       // Calculate potential new position
@@ -207,15 +218,18 @@ void move_bullet(GameController *game_controller, int index, int step) {
       draw_image(bullet->position.x, bullet->position.y, bullet->size.width,
                  bullet->size.height, bullet->sprite);
 
-      if (bullet->position.y <= -bullet->size.height) {
+      if (bullet->position.y <= -bullet->size.height)
+      {
         bullet->name = NULL;
       }
 
-      if (alien->name != NULL) {
+      if (alien->name != NULL)
+      {
         if (bullet->position.x >= alien->position.x &&
             bullet->position.x <= alien->position.x + alien->size.width &&
             bullet->position.y >= alien->position.y &&
-            bullet->position.y <= alien->position.y + alien->size.height) {
+            bullet->position.y <= alien->position.y + alien->size.height)
+        {
           // Clear the bullet
           deal_damage(game_controller);
           clear_image(bullet->position.x, bullet->position.y,
@@ -320,17 +334,16 @@ int pu_reach_target(GameController *game_controller)
 
 void game_loop(GameController *game_controller)
 {
+  // while (1)
+  // {
+  //   init_power_up(game_controller);
 
-  while (1)
-  {
-    init_power_up(game_controller);
-
-    while (!pu_reach_target(game_controller))
-    {
-      move_PU_to_position(game_controller);
-      wait_msec(8000);
-    }
-  }
+  //   while (!pu_reach_target(game_controller))
+  //   {
+  //     move_PU_to_position(game_controller);
+  //     wait_msec(8000);
+  //   }
+  // }
 }
 
 void draw_health_PU(GameController *game_controller)
@@ -366,18 +379,26 @@ void move_alien(GameController *game_controller, int step)
   draw_alien(game_controller);
 }
 
-void add_bullet(GameController *game_controller, int x, int y)
+void add_bullet(GameController *game_controller)
 {
-  // Get the total number of bullets on the screen
-  int bullet_count = game_controller->bullet_on_screen_count;
+  int num_positions;
+  int positions[MAX_BULLETS][2]; // Maximum of MAX_BULLETS positions
 
-  // Add a new bullet to the screen
-  if (bullet_count < MAX_BULLETS)
+  // Calculate bullet positions
+  calculate_bullet_positions(game_controller, positions, &num_positions);
+
+  // Add new bullets to the screen
+  for (int i = 0; i < num_positions; i++)
   {
-    Bullet bullet;
-    bullet.name = "Bullet";
-    bullet.size.width = 12;
-    bullet.size.height = 48;
+    if (game_controller->bullet_on_screen_count < MAX_BULLETS)
+    {
+      Bullet bullet;
+      bullet.name = "Bullet";
+      bullet.size.width = BUlLET_WIDTH;
+      bullet.size.height = BULLET_HEIGHT;
+      bullet.position.x = positions[i][0];
+      bullet.position.y = positions[i][1];
+      bullet.sprite = epd_bullet_lv1[0];
 
       // Add bullet to the spaceship's bullet array
       game_controller->spaceship
@@ -385,7 +406,7 @@ void add_bullet(GameController *game_controller, int x, int y)
       game_controller->bullet_on_screen_count++;
     }
   }
-
+}
 
 // Receive damage from enemies
 void receive_damage(GameController *game_controller)
@@ -399,7 +420,8 @@ void deal_damage(GameController *game_controller)
 {
   game_controller->alien.health -= 10;
   uart_dec(game_controller->alien.health);
-  if (game_controller->alien.health <= 0) {
+  if (game_controller->alien.health <= 0)
+  {
     clear_image(game_controller->alien.position.x,
                 game_controller->alien.position.y,
                 game_controller->alien.size.width,
@@ -409,32 +431,39 @@ void deal_damage(GameController *game_controller)
 }
 
 void calculate_bullet_positions(GameController *game_controller,
-                                int positions[][2], int *num_positions) {
+                                int positions[][2], int *num_positions)
+{
   int bonus = game_controller->spaceship.bullet_bonus;
   int spaceship_center_x = game_controller->spaceship.position.x +
                            game_controller->spaceship.size.width / 2 - 6;
   int spaceship_center_y = game_controller->spaceship.position.y +
                            game_controller->spaceship.size.height / 2 - 120;
 
-  if (bonus > 4) {
+  if (bonus > 4)
+  {
     *num_positions = 0;
     return;
   }
 
   *num_positions = bonus + 1;
 
-  if (*num_positions == 1) {
+  if (*num_positions == 1)
+  {
     // Special pattern for one bullet
     positions[0][0] = spaceship_center_x;
     positions[0][1] = spaceship_center_y + 24;
-  } else if (*num_positions == 2) {
+  }
+  else if (*num_positions == 2)
+  {
     // Special pattern for two bullets
     int spacing = 24;
     positions[0][0] = spaceship_center_x - spacing / 2;
     positions[0][1] = spaceship_center_y + 24;
     positions[1][0] = spaceship_center_x + spacing / 2;
     positions[1][1] = spaceship_center_y + 24;
-  } else if (*num_positions == 3) {
+  }
+  else if (*num_positions == 3)
+  {
     // Special pattern for three bullets
     positions[0][0] = spaceship_center_x - 24;
     positions[0][1] = spaceship_center_y + 6;
@@ -442,7 +471,9 @@ void calculate_bullet_positions(GameController *game_controller,
     positions[1][1] = spaceship_center_y - 24;
     positions[2][0] = spaceship_center_x + 24;
     positions[2][1] = spaceship_center_y + 6;
-  } else if (*num_positions == 4) {
+  }
+  else if (*num_positions == 4)
+  {
     // Special pattern for four bullets
     positions[0][0] = spaceship_center_x - 36;
     positions[0][1] = spaceship_center_y + 6;
@@ -452,7 +483,9 @@ void calculate_bullet_positions(GameController *game_controller,
     positions[2][1] = spaceship_center_y - 24;
     positions[3][0] = spaceship_center_x + 36;
     positions[3][1] = spaceship_center_y + 6;
-  } else if (*num_positions == 5) {
+  }
+  else if (*num_positions == 5)
+  {
     // Special pattern for five bullets
     positions[0][0] = spaceship_center_x - 48;
     positions[0][1] = spaceship_center_y + 12;
@@ -464,7 +497,9 @@ void calculate_bullet_positions(GameController *game_controller,
     positions[3][1] = spaceship_center_y - 12;
     positions[4][0] = spaceship_center_x + 48;
     positions[4][1] = spaceship_center_y + 12;
-  } else {
+  }
+  else
+  {
     *num_positions = 0;
   }
 }
@@ -552,7 +587,8 @@ char *itoa(int num)
 
   return str;
 }
-void draw_badge(int badge) {
+void draw_badge(int badge)
+{
   // Badge Constants
   const int BONUS_WIDTH = 210;
   const int BONUS_HEIGHT = 226;
@@ -564,9 +600,11 @@ void draw_badge(int badge) {
   int fade_duration = 100;                // Fade duration in frames
   unsigned int animation_duration = 1000; // Animation duration in milliseconds
 
-  if (badge == BULLET_BONUS) {
+  if (badge == BULLET_BONUS)
+  {
     // Gradually decrease opacity over fade duration
-    for (int frame = 0; frame < fade_duration; frame++) {
+    for (int frame = 0; frame < fade_duration; frame++)
+    {
       // Draw the badge with current opacity
       draw_image_with_opacity(POS_X, POS_Y, BONUS_WIDTH, BONUS_HEIGHT,
                               epd_bullet_bonus_badge[0], epd_bitmap_background,
@@ -578,7 +616,8 @@ void draw_badge(int badge) {
 
       // Decrease opacity gradually
       badge_opacity -= 1.0f / fade_duration;
-      if (badge_opacity < 0.0f) {
+      if (badge_opacity < 0.0f)
+      {
         badge_opacity = 0.0f;
       }
     }
