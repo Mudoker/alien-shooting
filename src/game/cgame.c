@@ -2,7 +2,7 @@
 #include "../../header/game/cgame.h"
 #include "../../assets/games/alient/alient_1.h"
 #include "../../assets/games/background.h"
-#include "../../assets/games/boss/big_boss.h"
+#include "../../assets/games/boss/boss.h"
 #include "../../assets/games/bullet/alien_bullet.h"
 #include "../../assets/games/bullet/bullet_boss.h"
 #include "../../assets/games/bullet/bullet_lv1.h"
@@ -182,7 +182,7 @@ void init_wave(GameController *gc) {
         }
       }
     } else { // Third wave of Stage 3: Boss
-      init_alien(&wave->aliens[count], epd_bitmap_big_boss[0], 598, 417,
+      init_alien(&wave->aliens[count], epd_bitmap_big_boss[0], 502, 350,
                  (SCREEN_WIDTH - 467) / 2, 0, 10000, 50,
                  epd_bitmap_bullet_big_boss[0]); // Damage set to 50
       count++;
@@ -417,8 +417,10 @@ void move_alien_bullet(GameController *game_controller, int step) {
                       game_controller->spaceship.size.height) {
 
             uart_puts("Alien bullet hit the spaceship!\n");
+
             // Deal damage to the spaceship
             receive_damage(game_controller);
+
             // Clear the bullet
             bullet->name = NULL;
           } else if (bullet->position.y >= SCREEN_HEIGHT) {
