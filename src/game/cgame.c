@@ -44,8 +44,6 @@ void init_controller(GameController *game_controller)
     init_bullet(game_controller, epd_bullet_lv1[0], BUlLET_WIDTH, BULLET_HEIGHT,
                 positions[i][0], positions[i][1], i);
   }
-  init_alien(game_controller, epd_bitmap_alient_1_resize, 130, 109,
-             (SCREEN_WIDTH - 130) / 2, 10);
 }
 
 // Initialize the spaceship object
