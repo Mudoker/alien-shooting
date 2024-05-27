@@ -13,4 +13,13 @@
 #define TIMER_C2 (*(volatile unsigned int *)(TIMER_BASE + 0x14))
 #define TIMER_C3 (*(volatile unsigned int *)(TIMER_BASE + 0x18))
 
+#define TIMER_CS_M1    (1 << 1)
+#define TIMER_CS_M3    (1 << 3)
+#define TIMER_CLOCK    1000000
+
+void init_timer1();
+void init_timer3();
+void handle_timer1();
+void handle_timer3();
+
 #endif

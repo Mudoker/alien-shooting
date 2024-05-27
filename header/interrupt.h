@@ -95,11 +95,24 @@
 #define SWIRQ_SET     (*(volatile unsigned int *)(INTERRUPT_BASE + 0x3F0))
 #define SWIRQ_CLEAR   (*(volatile unsigned int *)(INTERRUPT_BASE + 0x3F4))
 
-// Reserve system timer 0 and 2
+#define SYS_TIMER_0_IRQ     (1 << 0)
 #define SYS_TIMER_1_IRQ     (1 << 1)
+#define SYS_TIMER_2_IRQ     (1 << 2)
 #define SYS_TIMER_3_IRQ     (1 << 3)
+#define UART0_IRQ           (1 << 25)
 
+// Assembly functions
+void irq_init(void);
+void irq_enable(void);
+void irq_disable(void);
 
+void enable_system_timer1_irq();
+void disable_system_timer1_irq();
+void enable_system_timer3_irq();
+void disable_system_timer3_irq();
+void enable_uart0_irq();
+void disable_uart0_irq();
+void handle_irq_elx();
 
 
 
