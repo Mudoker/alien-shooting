@@ -2,8 +2,22 @@
 #include "../../header/game/ui.h"
 #include "../../header/timer.h"
 
-void in_game_screen(GameController *game_controller)
-{
+void in_game_screen(GameController *game_controller);
+void stage_screen(GameController *game_controller);
+void ship_selection_screen(GameController *game_controller);
+void result_screen(GameController *game_controller);
+void lose_screen(GameController *game_controller, int seconds);
+void win_final_screen(GameController *game_controller, int seconds);
+void win_screen(GameController *game_controller, int seconds);
+void welcome_screen(GameController *game_controller);
+void init_wave(GameController *game_controller); // Forward declaration
+
+void manage_command(GameController *game_controller, char *log) {
+  game_controller->command_count++;
+  uart_logs(game_controller->command_count, log);
+}
+
+void in_game_screen(GameController *game_controller) {
   game_controller->current_wave = 0;
   init_wave(game_controller);
 
@@ -26,66 +40,35 @@ void in_game_screen(GameController *game_controller)
   int fire_timer = 0;
   int alien_move_timer = 0;
   int alien_move_step = 10;
+  int power_up_timer = 0;
   int powerup_active = 0;
   int next_powerup_time = 8000; // Initial delay for the first power-up
+  // lighting();
 
   while (1)
   {
-    
-     int current_time = get_time_ms();
-
-    // Spawn a new power-up
-    if (current_time - last_powerup_update >= next_powerup_time && !powerup_active) {
-        init_power_up(game_controller);
-        powerup_active = 1;
-        last_powerup_update = current_time;
-        next_powerup_time = 5000 + (randomNum() % 5001); // Randomize the next power-up time (5 to 10 seconds)
-    }
-    // // Power-up movement
-    // int current_time = get_time_ms(); // Assuming you have a function to get time in milliseconds
-    // if (current_time - last_powerup_update >= 8000)
-    // { // Update power-up position every 8 seconds
-    //   // move_PU_to_position(game_controller);
-    //   // last_powerup_update = current_time;
-    //   uart_puts("Moving power-up\n"); // Add debugging output
-    //   move_PU_to_position(game_controller);
-    //   uart_puts("Power-up position: x=");
-    //   uart_puts(itoa(game_controller->powerup.position.x)); 
-    //   uart_puts(", y=");
-    //   uart_puts(itoa(game_controller->powerup.position.y));
-    //   uart_puts("\n");
-    //   last_powerup_update = current_time;
-    // }
-
-    if (powerup_active) {
-      if (current_time - last_powerup_update >= 100) { // Update every 100 ms
-        move_PU_to_position(game_controller);
-        uart_puts("Power-up position: x=");
-        uart_puts(itoa(game_controller->powerup.position.x)); 
-        uart_puts(", y=");
-        uart_puts(itoa(game_controller->powerup.position.y));
-        uart_puts("\n");
-        // ... (Add logic to check if the power-up is off-screen or collected)
-        // If off-screen or collected:
-        //   powerup_active = 0;
-      }
-    }
-
     // Check if a character is received
     clear_wave(game_controller);
     char c = getUart();
-    switch (c)
-    {
+    switch (c) {
     case 'w':
+      manage_command(game_controller, "Moved spaceship to up");
+
       move_spaceship(game_controller, KEY_UP, 10);
       break;
     case 's':
+      manage_command(game_controller, "Moved spaceship to down");
+
       move_spaceship(game_controller, KEY_DOWN, 10);
       break;
     case 'a':
+      manage_command(game_controller, "Moved spaceship to left");
+
       move_spaceship(game_controller, KEY_LEFT, 10);
       break;
     case 'd':
+      manage_command(game_controller, "Moved spaceship to right");
+
       move_spaceship(game_controller, KEY_RIGHT, 10);
       break;
     default:
@@ -95,22 +78,18 @@ void in_game_screen(GameController *game_controller)
     // Increment the bullet timer
     bullet_timer += 30;
     alien_move_timer += 30;
+    power_up_timer += 30;
 
-    if (fire_timer == 5)
-    {
+    if (fire_timer == 5) {
       add_bullet(game_controller);
       fire_timer = 0;
     }
 
     // Bullet movement
-    if (bullet_timer >= 10000000)
-    { // 1 second for smoother bullet movement
-      for (int i = 0; i < game_controller->bullet_on_screen_count; i++)
-      {
-        for (int j = 0; j < game_controller->spaceship.bullet_bonus + 1; j++)
-        {
-          if (game_controller->spaceship.bullet[i][j].name != NULL)
-          {
+    if (bullet_timer >= 10000000) { // 1 second for smoother bullet movement
+      for (int i = 0; i < game_controller->bullet_on_screen_count; i++) {
+        for (int j = 0; j < game_controller->spaceship.bullet_bonus + 1; j++) {
+          if (game_controller->spaceship.bullets[i][j].name != NULL) {
             move_bullet(game_controller, i, 20);
           }
         }
@@ -119,11 +98,9 @@ void in_game_screen(GameController *game_controller)
       bullet_timer = 0;
     }
 
-    int explosion_timer = 0;
-
+    
     // Alien movement
-    if (alien_move_timer >= 10000000)
-    { // 1 second for smoother alien movement
+    if (alien_move_timer >= 10000000) { // 1 second for smoother alien movement
       move_aliens(game_controller, alien_move_step);
       // int explosion_completed = animate_explosion(game_controller, explosion_timer);
 
@@ -135,31 +112,31 @@ void in_game_screen(GameController *game_controller)
       //   explosion_timer++;
       // }
     }
+    if (power_up_timer >= 10000000 ) {
+      move_PU_to_position(game_controller);
+
+      power_up_timer = 0;
+    }
   }
+
+  // game_loop(game_controller);
 }
 
-void stage_screen(GameController *game_controller)
-{
+void stage_screen(GameController *game_controller) {
   draw_background();
   boolean is_update = True;
-  while (1)
-  {
-    if (is_update)
-    {
-      if (game_controller->stage_level < 1)
-      {
+  while (1) {
+    if (is_update) {
+      if (game_controller->stage_level < 1) {
         game_controller->stage_level = 1;
-      }
-      else if (game_controller->stage_level > MAX_STAGES)
-      {
+      } else if (game_controller->stage_level > MAX_STAGES) {
         game_controller->stage_level = MAX_STAGES;
       }
 
       is_update = False;
 
       int yOffset = 40; // Start with the offset for the active stage
-      for (int i = 0; i < MAX_STAGES; i++)
-      {
+      for (int i = 0; i < MAX_STAGES; i++) {
         int buttonState = (game_controller->stage_level ==
                            i + 1); // 1 for current, 0 for inactive
 
@@ -173,17 +150,23 @@ void stage_screen(GameController *game_controller)
 
     // Check if a character is received
     char c = getUart();
-    switch (c)
-    {
+    switch (c) {
     case 'w':
       game_controller->stage_level--;
       is_update = True;
+
+      manage_command(game_controller, "Moved up to select another stage level");
       break;
     case 's':
       game_controller->stage_level++;
       is_update = True;
+
+      manage_command(game_controller,
+                     "Moved down to select another stage level");
       break;
     case '\n':
+      manage_command(game_controller, "Selected a stage level to play");
+
       in_game_screen(game_controller);
       break;
     default:
@@ -192,8 +175,7 @@ void stage_screen(GameController *game_controller)
   }
 }
 
-void ship_selection_screen(GameController *game_controller)
-{
+void ship_selection_screen(GameController *game_controller) {
   int order = 1;
 
   Spaceship *current_ship_option = init_current_ship_option();
@@ -201,32 +183,38 @@ void ship_selection_screen(GameController *game_controller)
   draw_background();
   draw_ship_selection_page();
 
-  draw_spaceship_option(&game_controller->spaceship, order, 0, &current_ship_option);
+  draw_spaceship_option(&game_controller->spaceship, order, 0,
+                        current_ship_option);
   draw_arrows(order);
 
-  while (1)
-  {
+  while (1) {
     // Check if a character is received
     char c = getUart();
-    switch (c)
-    {
+    switch (c) {
     case 'a':
-      if (order > 1)
-      {
+      manage_command(game_controller, "Moved left to select another spaceship");
+
+      if (order > 1) {
         order--;
-        draw_spaceship_option(&game_controller->spaceship, order, 1, &current_ship_option);
+        draw_spaceship_option(&game_controller->spaceship, order, 1,
+                              current_ship_option);
         draw_arrows(order);
       }
       break;
     case 'd':
-      if (order < 3)
-      {
+      manage_command(game_controller,
+                     "Moved right to select another spaceship");
+
+      if (order < 3) {
         order++;
-        draw_spaceship_option(&game_controller->spaceship, order, 1, &current_ship_option);
+        draw_spaceship_option(&game_controller->spaceship, order, 1,
+                              current_ship_option);
         draw_arrows(order);
       }
       break;
     case '\n':
+      manage_command(game_controller, "Selected a spaceship");
+
       change_spaceship(game_controller, order);
       welcome_screen(game_controller);
       return;
@@ -234,40 +222,40 @@ void ship_selection_screen(GameController *game_controller)
   }
 }
 
-void result_screen(GameController *game_controller)
-{
+void result_screen(GameController *game_controller) {
   // int score = game_controller->score;
-  int score = 150;  // TODO: comment this out and replace it with the previous line
+  int score =
+      150; // TODO: comment this out and replace it with the previous line
   int seconds = 20; // TODO: make it dynamic from the timer
 
-  if (seconds == 60 || score < 100)
-  {
+  if (seconds == 60 || score < 100) {
     lose_screen(game_controller, seconds);
   }
 
-  if (game_controller->stage_level == MAX_STAGES)
-  {
+  if (game_controller->stage_level == MAX_STAGES) {
     win_final_screen(game_controller, seconds);
-  }
-  else
-  {
+  } else {
     win_screen(game_controller, seconds);
   }
 }
 
-void lose_screen(GameController *game_controller, int seconds)
-{
+void lose_screen(GameController *game_controller, int seconds) {
   draw_lose_screen(game_controller, seconds);
 
-  while (1)
-  {
+  while (1) {
     char c = getUart();
-    switch (c)
-    {
+    switch (c) {
     case 'y':
+      manage_command(game_controller,
+                     "Redirected to the game screen from lose result screen");
+
       in_game_screen(game_controller);
       break;
     case 'n':
+      manage_command(
+          game_controller,
+          "Redirected to the welcome screen from lose result screen");
+
       welcome_screen(game_controller);
       break;
     default:
@@ -276,16 +264,17 @@ void lose_screen(GameController *game_controller, int seconds)
   }
 }
 
-void win_final_screen(GameController *game_controller, int seconds)
-{
+void win_final_screen(GameController *game_controller, int seconds) {
   draw_win_final_screen(game_controller, seconds);
 
-  while (1)
-  {
+  while (1) {
     char c = getUart();
-    switch (c)
-    {
+    switch (c) {
     case 'n':
+      manage_command(
+          game_controller,
+          "Redirected to the welcome screen from win final result screen");
+
       welcome_screen(game_controller);
       break;
     default:
@@ -294,20 +283,24 @@ void win_final_screen(GameController *game_controller, int seconds)
   }
 }
 
-void win_screen(GameController *game_controller, int seconds)
-{
+void win_screen(GameController *game_controller, int seconds) {
   draw_win_screen(game_controller, seconds);
 
-  while (1)
-  {
+  while (1) {
     char c = getUart();
-    switch (c)
-    {
+    switch (c) {
     case 'y':
+      manage_command(
+          game_controller,
+          "Redirected to the next stage's game screen from win result screen");
+
       game_controller->stage_level++;
       in_game_screen(game_controller);
       break;
     case 'n':
+      manage_command(game_controller,
+                     "Redirected to the welcome screen from win result screen");
+
       welcome_screen(game_controller);
       break;
     default:
@@ -316,10 +309,8 @@ void win_screen(GameController *game_controller, int seconds)
   }
 }
 
-void welcome_screen(GameController *game_controller)
-{
+void welcome_screen(GameController *game_controller) {
   draw_welcome_screen();
-
   game_controller->spaceship.position.x =
       (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
   game_controller->spaceship.position.y =
@@ -327,23 +318,23 @@ void welcome_screen(GameController *game_controller)
 
   draw_spaceship(game_controller);
 
-  while (1)
-  {
+  while (1) {
     // Check if a character is received
     char c = getUart();
-    switch (c)
-    {
+    switch (c) {
     case '1':
+      manage_command(game_controller,
+                     "Redirected to the stage screen from welcome screen");
+
       stage_screen(game_controller);
       break;
     case '2':
-      // result_screen(game_controller);
+      manage_command(
+          game_controller,
+          "Redirected to the spaceship selection screen from welcome screen");
+
       ship_selection_screen(game_controller);
       break;
-    // case '3':
-    //   in_game_screen(game_controller);
-
-    //   break;
     default:
       break;
     }

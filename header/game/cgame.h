@@ -128,10 +128,13 @@ void clear_wave(GameController *game_controller);
 void move_aliens(GameController *game_controller, int step);
 void calculate_bullet_positions(GameController *game_controller,
                                 int positions[][2], int *num_positions);
+void move_PU_to_position(GameController *game_controller);
 void collision_detection(GameController *game_controller);
 void draw_lose_screen(GameController *game_controller, int seconds);
 void draw_win_final_screen(GameController *game_controller, int seconds);
 void draw_win_screen(GameController *game_controller, int seconds);
+void lighting();
+void display_lighting(int x, int y, int w, int h, int num_frames, const unsigned long **video);
 void draw_stars(int seconds);
 void draw_completed_time(int seconds, int y);
 char *itoa(int num);
