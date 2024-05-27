@@ -75,7 +75,7 @@ void init_spaceship(GameController *game_controller,
   spaceship.name = "Blader";
   spaceship.size.width = width;
   spaceship.size.height = height;
-  spaceship.bullet_bonus = 0;
+  spaceship.bullet_bonus = 4;
   spaceship.position.x = x;
   spaceship.position.y = y;
   spaceship.health = 100;
@@ -491,7 +491,7 @@ void move_bullet(GameController *game_controller, int index, int step)
           uart_puts("Bullet hit an alien!\n");
 
           // Deal damage to the alien
-          deal_damage(game_controller, j);
+          deal_damage(game_controller, i, alien->position.x, alien->position.y);
 
           // Clear the bullet
           clear_image(bullet->position.x, bullet->position.y,
@@ -678,7 +678,7 @@ void add_bullet(GameController *game_controller)
   }
 }
 
-// Receive damage from enemies
+// Receive damage from enemie
 void receive_damage(GameController *game_controller)
 {
   game_controller->spaceship.health -= 10;
@@ -686,7 +686,7 @@ void receive_damage(GameController *game_controller)
   draw_health_bar(game_controller);
 }
 
-void deal_damage(GameController *game_controller, int index)
+void deal_damage(GameController *game_controller, int index, int posX, int posY)
 {
   Wave *current_wave =
       &game_controller->stages[0].waves[game_controller->current_wave];
@@ -701,6 +701,7 @@ void deal_damage(GameController *game_controller, int index)
       {
         clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
                     bullet->size.height, epd_bitmap_background);
+        explosion(posX, posY);
         bullet->name = NULL;
       }
     }

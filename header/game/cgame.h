@@ -123,7 +123,7 @@ void draw_shield_PU(GameController *game_controller);
 void clear_all_bullets(GameController *game_controller);
 void add_bullet(GameController *game_controller);
 void receive_damage(GameController *game_controller);
-void deal_damage(GameController *game_controller, int index);
+void deal_damage(GameController *game_controller, int index, int posX, int posY);
 void clear_wave(GameController *game_controller);
 void move_aliens(GameController *game_controller, int step);
 void calculate_bullet_positions(GameController *game_controller,

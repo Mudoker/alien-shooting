@@ -34,7 +34,8 @@ void in_game_screen(GameController *game_controller) {
   draw_alien(game_controller);
   // draw_health_PU(game_controller);
   // draw_shield_PU(game_controller);
-  // explosion();
+  explosion();
+  
   int last_powerup_update = 0; // Add this variable to track the time
   int bullet_timer = 0;
   int fire_timer = 0;
@@ -102,15 +103,7 @@ void in_game_screen(GameController *game_controller) {
     // Alien movement
     if (alien_move_timer >= 10000000) { // 1 second for smoother alien movement
       move_aliens(game_controller, alien_move_step);
-      // int explosion_completed = animate_explosion(game_controller, explosion_timer);
-
       alien_move_timer = 0;
-      // if (explosion_completed)
-      // {
-      //   explosion_timer = 0;
-      // } else {
-      //   explosion_timer++;
-      // }
     }
     if (power_up_timer >= 10000000 ) {
       move_PU_to_position(game_controller);
@@ -119,7 +112,6 @@ void in_game_screen(GameController *game_controller) {
     }
   }
 
-  // game_loop(game_controller);
 }
 
 void stage_screen(GameController *game_controller) {
