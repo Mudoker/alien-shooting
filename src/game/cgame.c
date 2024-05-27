@@ -328,6 +328,8 @@ void move_alien_bullet(GameController *game_controller, int step) {
   Wave *current_wave =
       &game_controller->stages[0].waves[game_controller->current_wave];
 
+  step = step / 10;
+
   for (int i = 0; i < current_wave->alien_count; i++) {
     Alien *alien = &current_wave->aliens[i];
 
@@ -355,7 +357,8 @@ void move_alien_bullet(GameController *game_controller, int step) {
           }
         } else {
           // If bullet is inactive (name == NULL), try to fire a new one
-          if (randomNum() % 100 < 2) { // 2% chance to fire a bullet each frame
+          if (randomNum() % 100 < 0.1) {
+            // 0.1% chance to fire a bullet each frame
             bullet->name = "Alien Bullet";
             bullet->position.x = alien->position.x + alien->size.width / 2 -
                                  bullet->size.width / 2;
@@ -558,6 +561,15 @@ void deal_damage(GameController *game_controller, int index) {
   Alien *alien = &current_wave->aliens[index];
   alien->health -= 10;
   if (alien->health <= 0) {
+    for (int j = 0; j < 5; j++) {
+      Bullet *bullet = &alien->bullets[j];
+      if (bullet->name != NULL) {
+        clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
+                    bullet->size.height, epd_bitmap_background);
+        bullet->name = NULL;
+      }
+    }
+
     clear_image(alien->position.x, alien->position.y, alien->size.width,
                 alien->size.height, epd_bitmap_background);
     alien->name = NULL;
