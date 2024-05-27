@@ -561,13 +561,14 @@ void move_bullet(GameController *game_controller, int index, int step)
           uart_puts("ALERT: BULLET HIT AN ALIEN!\n");
 
           // Deal damage to the alien
-          deal_damage(game_controller, i, alien->position.x, alien->position.y);
+          deal_damage(game_controller, j, alien->position.x, alien->position.y);
 
           // Clear the bullet
           clear_image(bullet->position.x, bullet->position.y,
                       bullet->size.width, bullet->size.height,
                       epd_bitmap_background);
-
+          
+          
           bullet->name = NULL;
         }
       }
@@ -758,6 +759,8 @@ void deal_damage(GameController *game_controller, int index, int posX, int posY)
 
   alien->health -= game_controller->spaceship.damage;
 
+uart_puts("Health: ");
+  uart_puts(itoa(alien->health));
   if (alien->health <= 0)
   {
     for (int j = 0; j < 5; j++)
@@ -767,6 +770,7 @@ void deal_damage(GameController *game_controller, int index, int posX, int posY)
       {
         clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
                     bullet->size.height, epd_bitmap_background);
+
         // explosion(posX, posY);
         bullet->name = NULL;
       }
@@ -774,6 +778,7 @@ void deal_damage(GameController *game_controller, int index, int posX, int posY)
 
     clear_image(alien->position.x, alien->position.y, alien->size.width,
                 alien->size.height, epd_bitmap_background);
+    explosion(posX, posY);
     alien->name = NULL;
   }
 }
