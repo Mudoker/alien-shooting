@@ -2,7 +2,9 @@
 #include "../../header/game/cgame.h"
 #include "../../assets/games/alient/alient_1.h"
 #include "../../assets/games/background.h"
+#include "../../assets/games/boss/boss.h"
 #include "../../assets/games/bullet/alien_bullet.h"
+#include "../../assets/games/bullet/bullet_boss.h"
 #include "../../assets/games/bullet/bullet_lv1.h"
 #include "../../assets/games/health_logo.h"
 #include "../../assets/games/power_up/health.h"
@@ -34,6 +36,8 @@
 #define BULLET_HEIGHT 52
 #define ALIEN_BULLET_WIDTH 12
 #define ALIEN_BULLET_HEIGHT 48
+#define BOSS_BULLET_WIDTH 68
+#define BOSS_BULLET_HEIGHT 116
 
 void init_frame(int offset_x, int offset_y)
 {
@@ -79,8 +83,8 @@ void init_spaceship(GameController *game_controller,
   spaceship.position.x = x;
   spaceship.position.y = y;
   spaceship.health = 100;
-
   spaceship.sprite = sprite;
+  spaceship.damage = 50;
 
   game_controller->spaceship = spaceship;
 }
@@ -126,53 +130,107 @@ void init_stages(GameController *game_controller)
 }
 
 void init_alien(Alien *alien, const unsigned long *sprite, int width,
-                int height, int x, int y)
+                int height, int x, int y, int health, int damage,
+                const unsigned long *bullet_sprite)
 {
-  alien->name = "Alien";
+  alien->name =
+      bullet_sprite == epd_bitmap_bullet_big_boss[0] ? "Boss" : "Alien";
   alien->size.width = width;
   alien->size.height = height;
   alien->position.x = x;
   alien->position.y = y;
   alien->direction = 1;
-  alien->health = 100;
+  alien->health = health;
   alien->sprite = sprite;
+  alien->damage = damage;
 
   for (int i = 0; i < 5; i++)
   {
     Bullet bullet = {
         .name = NULL,
-        .size.width = ALIEN_BULLET_WIDTH,
-        .size.height = ALIEN_BULLET_HEIGHT,
+        .size.width = bullet_sprite == epd_bitmap_bullet_big_boss[0]
+                          ? BOSS_BULLET_WIDTH
+                          : ALIEN_BULLET_WIDTH,
+        .size.height = bullet_sprite == epd_bitmap_bullet_big_boss[0]
+                           ? BOSS_BULLET_HEIGHT
+                           : ALIEN_BULLET_HEIGHT,
         .position.x = alien->position.x + alien->size.width / 2,
         .position.y = alien->position.y + alien->size.height,
-        .sprite = epd_bitmap_alien_bullet,
+        .sprite = bullet_sprite,
     };
 
     alien->bullets[i] = bullet;
   }
 }
 
-// Init wave
 void init_wave(GameController *gc)
 {
-  Wave *wave =
-      &gc->stages[0].waves[gc->current_wave]; // Initialize the first wave of
-                                              // the given stage
+  Wave *wave = &gc->stages[0].waves[gc->current_wave];
   wave->level = gc->current_wave + 1;
 
   int count = 0;
-  for (int j = 0; j < 3; j++)
-  { // Rows of the map
-    for (int k = 0; k < 5; k++)
-    { // Columns of the map
-      if (map_1[gc->current_wave][j][k] == 1)
+
+  // Determine which map to use based on the stage level
+  const unsigned int(*current_map)[3][5];
+  if (gc->stage_level == 2)
+  {
+    current_map = map_2;
+  }
+  else if (gc->stage_level == 3)
+  {
+    current_map = map_3;
+  }
+  else
+  {
+    current_map = map_1;
+  }
+
+  // Handle boss round (Stage 3)
+  if (gc->stage_level == 3)
+  {
+    // If it's the first wave of Stage 3, initialize normal aliens
+    if (gc->current_wave < 2)
+    {
+      for (int j = 0; j < 3; j++)
       {
-        init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130, 109,
-                   130 * k, 109 * j);
-        count++;
+        for (int k = 0; k < 5; k++)
+        {
+          if (current_map[gc->current_wave][j][k] == 1)
+          {
+            init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130,
+                       109, 130 * k, 109 * j, 100, 10,
+                       epd_bitmap_alien_bullet); // Damage set to 10
+            count++;
+          }
+        }
+      }
+    }
+    else
+    { // Third wave of Stage 3: Boss
+      init_alien(&wave->aliens[count], epd_bitmap_big_boss[0], 502, 350,
+                 (SCREEN_WIDTH - 467) / 2, 0, 10000, 50,
+                 epd_bitmap_bullet_big_boss[0]); // Damage set to 50
+      count++;
+    }
+  }
+  else
+  {
+    // Regular alien initialization for other stages
+    for (int j = 0; j < 3; j++)
+    { // Rows of the map
+      for (int k = 0; k < 5; k++)
+      { // Columns of the map
+        if (current_map[gc->current_wave][j][k] == 1)
+        {
+          init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130, 109,
+                     130 * k, 109 * j, 100, 10,
+                     epd_bitmap_alien_bullet); // Damage set to 10
+          count++;
+        }
       }
     }
   }
+
   wave->alien_count = count;
 }
 
@@ -183,7 +241,7 @@ Spaceship *init_current_ship_option()
   spaceship.name = "Lev1";
   spaceship.size.width = 124;
   spaceship.size.height = 188;
-  spaceship.bullet_bonus = 4;
+  spaceship.bullet_bonus = 0;
 
   spaceship.position.x = (SCREEN_WIDTH - spaceship.size.width) / 2;
   spaceship.position.y = (SCREEN_HEIGHT - spaceship.size.height) / 2;
@@ -303,21 +361,22 @@ void draw_welcome_screen()
 // Draw alien
 void draw_alien(GameController *game_controller)
 {
-  for (int i = 0; i < game_controller->stages[0]
-                          .waves[game_controller->current_wave]
-                          .alien_count;
-       i++)
+  // Ensure current_wave is within valid range
+  if (game_controller->current_wave >= 3)
   {
-    Alien alien = game_controller->stages[0]
-                      .waves[game_controller->current_wave]
-                      .aliens[i];
-    if (game_controller->stages[0]
-            .waves[game_controller->current_wave]
-            .aliens[i]
-            .name != NULL)
+    return;
+  }
+
+  Wave *current_wave =
+      &game_controller->stages[0].waves[game_controller->current_wave];
+
+  for (int i = 0; i < current_wave->alien_count; i++)
+  {
+    Alien *alien = &current_wave->aliens[i];
+    if (alien->name != NULL)
     {
-      draw_image(alien.position.x, alien.position.y, alien.size.width,
-                 alien.size.height, alien.sprite);
+      draw_image(alien->position.x, alien->position.y, alien->size.width,
+                 alien->size.height, alien->sprite);
     }
   }
 }
@@ -367,7 +426,7 @@ void move_spaceship(GameController *game_controller, int key, int step)
 void move_alien_bullet(GameController *game_controller, int step)
 {
   // Adjust step size
-  step = step / 2;
+  step = step / 20;
 
   // Iterate over aliens in the current wave
   for (int i = 0; i < game_controller->stages[0]
@@ -397,20 +456,31 @@ void move_alien_bullet(GameController *game_controller, int step)
 
           // Calculate new position
           bullet->position.y += step;
+          int offset_y =
+              alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 100
+                                                                        : 50;
+          int offset_x =
+              alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 45
+                                                                        : 0;
 
           // Check for collision with the spaceship
-          if (bullet->position.x >= game_controller->spaceship.position.x &&
+          if (bullet->position.x >=
+                  game_controller->spaceship.position.x - offset_x &&
               bullet->position.x <= game_controller->spaceship.position.x +
-                                        game_controller->spaceship.size.width &&
+                                        game_controller->spaceship.size.width +
+                                        offset_x &&
               bullet->position.y >=
-                  game_controller->spaceship.position.y - 50 &&
+                  game_controller->spaceship.position.y - offset_y &&
               bullet->position.y <=
                   game_controller->spaceship.position.y +
                       game_controller->spaceship.size.height)
           {
-            uart_puts("Alien bullet hit the spaceship!\n");
+
+            uart_puts("ALERT: ALIEN BULLET HIT THE SPACESHIP!\n");
+
             // Deal damage to the spaceship
             receive_damage(game_controller);
+
             // Clear the bullet
             bullet->name = NULL;
           }
@@ -424,15 +494,16 @@ void move_alien_bullet(GameController *game_controller, int step)
             // Draw the bullet
             draw_image(bullet->position.x, bullet->position.y,
                        bullet->size.width, bullet->size.height, bullet->sprite);
+
             draw_health_bar(game_controller);
           }
         }
         else
         {
           // If bullet is inactive, try to fire a new one
-          if (randomNum() % 100 < 0.1)
+          if (randomNum() % 1000 < 1)
           {
-            // 0.1% chance to fire a bullet each frame
+            // 0.01% chance to fire a bullet each frame
             bullet->name = "Alien Bullet";
             bullet->position.x = alien->position.x + alien->size.width / 2 -
                                  bullet->size.width / 2;
@@ -474,7 +545,6 @@ void move_bullet(GameController *game_controller, int index, int step)
       continue; // Skip to the next bullet, do not return
     }
 
-    // Check for collision with aliens in the current wave
     Wave *current_wave =
         &game_controller->stages[0].waves[game_controller->current_wave];
     for (int j = 0; j < current_wave->alien_count; j++)
@@ -488,7 +558,7 @@ void move_bullet(GameController *game_controller, int index, int step)
             bullet->position.y >= alien->position.y &&
             bullet->position.y <= alien->position.y + alien->size.height)
         {
-          uart_puts("Bullet hit an alien!\n");
+          uart_puts("ALERT: BULLET HIT AN ALIEN!\n");
 
           // Deal damage to the alien
           deal_damage(game_controller, i, alien->position.x, alien->position.y);
@@ -615,16 +685,6 @@ void draw_shield_PU(GameController *game_controller)
                     epd_bitmap_background);
 }
 
-void game_loop(GameController *game_controller)
-{
-    // init_power_up(game_controller);
-    // while (!pu_reach_target(game_controller))
-    // {
-    //   move_PU_to_position(game_controller);
-    //   wait_msec(8000);
-    // }
-}
-
 void clear_all_bullets(GameController *game_controller)
 {
   for (int i = 0; i < MAX_BULLETS; i++)
@@ -678,10 +738,13 @@ void add_bullet(GameController *game_controller)
   }
 }
 
-// Receive damage from enemie
+// Receive damage from enemies
 void receive_damage(GameController *game_controller)
 {
-  game_controller->spaceship.health -= 10;
+  game_controller->spaceship.health -= game_controller->stages[0]
+                                           .waves[game_controller->current_wave]
+                                           .aliens[0]
+                                           .damage;
   clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
   draw_health_bar(game_controller);
 }
@@ -690,8 +753,11 @@ void deal_damage(GameController *game_controller, int index, int posX, int posY)
 {
   Wave *current_wave =
       &game_controller->stages[0].waves[game_controller->current_wave];
+
   Alien *alien = &current_wave->aliens[index];
-  alien->health -= 10;
+
+  alien->health -= game_controller->spaceship.damage;
+
   if (alien->health <= 0)
   {
     for (int j = 0; j < 5; j++)
@@ -701,7 +767,7 @@ void deal_damage(GameController *game_controller, int index, int posX, int posY)
       {
         clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
                     bullet->size.height, epd_bitmap_background);
-        explosion(posX, posY);
+        // explosion(posX, posY);
         bullet->name = NULL;
       }
     }
@@ -728,8 +794,17 @@ void clear_wave(GameController *game_controller)
 
   if (defeat_count == current_wave->alien_count)
   {
-    wait_msec(1000000);
+    wait_msec(500000);
     game_controller->current_wave++;
+    // If current_wave exceeds the number of waves, stop the game
+    if (game_controller->current_wave >= 3)
+    {
+
+      uart_puts("ALERT: GAME OVER!\n");
+
+      result_screen(game_controller);
+      return;
+    }
     init_wave(game_controller);
 
     draw_alien(game_controller);

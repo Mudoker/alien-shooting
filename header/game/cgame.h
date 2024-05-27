@@ -10,14 +10,16 @@
 #define MAX_ALIENS 20
 #define MAX_STAGES 9
 
-typedef enum {
+typedef enum
+{
   KEY_UP = 0,
   KEY_DOWN,
   KEY_LEFT,
   KEY_RIGHT,
 } Key;
 
-typedef enum {
+typedef enum
+{
   STAGE_1 = 0,
   STAGE_2,
   STAGE_3,
@@ -30,13 +32,15 @@ typedef enum {
 } StageLevel;
 
 // Current page
-typedef enum {
+typedef enum
+{
   WELCOME = 0,
   STAGE,
   IN_GAME,
 } Page;
 
-typedef enum {
+typedef enum
+{
   BULLET_BONUS = 0,
   HEALTH_BONUS,
   SHIELD_BONUS,
@@ -44,11 +48,11 @@ typedef enum {
 
 typedef struct Display Display;
 
-typedef struct GameController {
+typedef struct GameController
+{
   // Attributes
   Stage stages[MAX_STAGES];
   Spaceship spaceship;
-  // Alien alien;
   Alien *aliens;
   int alien_count;
   int stage_level;
@@ -56,7 +60,6 @@ typedef struct GameController {
   Display *screen;
   unsigned long long bullet_on_screen_count;
   Page page;
-  int score;
   PowerUp powerup;
   int command_count;
 
@@ -68,7 +71,8 @@ typedef struct GameController {
   void (*render)(void);
 } GameController;
 
-struct Display {
+struct Display
+{
   void (*init_frame)(int offset_x, int offset_y);
   void (*draw_sprite)(int x, int y, int width, int height,
                       const unsigned long *sprite);
@@ -86,7 +90,8 @@ void init_bullet(GameController *game_controller, const unsigned long *sprite,
                  int width, int height, int x, int y, int index);
 void init_stages(GameController *game_controller);
 void init_alien(Alien *alien, const unsigned long *sprite, int width,
-                int height, int x, int y);
+                int height, int x, int y, int health, int damage,
+                const unsigned long *bullet_sprite);
 void init_wave(GameController *gc);
 Spaceship *init_current_ship_option();
 
