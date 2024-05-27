@@ -192,35 +192,20 @@ void uart_show_info()
 {
 	uart_show_log_management_title();
 
-	uart_puts("UART CONFIGURATION\n");
-
-	// Baud rate
-	uart_puts("Approximate baud rate: ");
-	int baud_rate = calculate_baud_rate();
-	uart_dec(baud_rate);
-
-	// TODO: Data bits
-
-	// TODO: Stop bits
-
-	// TODO: Parity
-
-	// TODO: Handshaking mode
+	uart_puts(
+		"UART CONFIGURATION\n"
+		"===============================\n"
+		"| Setting            | Value   |\n"
+		"-------------------------------\n"
+		"| UART Port          | UART0   |\n"
+		"| Baud rate          | 115200  |\n"
+		"| Data bits          | 8       |\n"
+		"| Stop bits          | 1       |\n"
+		"| Parity             | None    |\n"
+		"| Handshaking mode   | On      |\n"
+		"===============================\n\n");
 
 	// TODO: Timer Interrupt
-
-	uart_puts("\n\n");
-}
-
-int calculate_baud_rate()
-{
-	// Reconstruct the baud rate divisor
-	float baud_divisor = UART0_IBRD + (UART0_FBRD / 64.0f);
-
-	// Calculate the baud rate
-	int baud_rate = (int)(UART_CLK / (16.0f * baud_divisor));
-
-	return baud_rate;
 }
 
 void uart_show_log_management_title()
