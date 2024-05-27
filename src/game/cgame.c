@@ -4,6 +4,7 @@
 #include "../../assets/games/background.h"
 #include "../../assets/games/boss/big_boss.h"
 #include "../../assets/games/bullet/alien_bullet.h"
+#include "../../assets/games/bullet/bullet_boss.h"
 #include "../../assets/games/bullet/bullet_lv1.h"
 #include "../../assets/games/health_logo.h"
 #include "../../assets/games/power_up/health.h"
@@ -33,6 +34,8 @@
 #define BULLET_HEIGHT 52
 #define ALIEN_BULLET_WIDTH 12
 #define ALIEN_BULLET_HEIGHT 48
+#define BOSS_BULLET_WIDTH 68
+#define BOSS_BULLET_HEIGHT 116
 
 void init_frame(int offset_x, int offset_y) {
   // Initialize buffer
@@ -75,6 +78,7 @@ void init_spaceship(GameController *game_controller,
   spaceship.position.y = y;
   spaceship.health = 100;
   spaceship.sprite = sprite;
+  spaceship.damage = 50;
 
   game_controller->spaceship = spaceship;
 }
@@ -116,8 +120,10 @@ void init_stages(GameController *game_controller) {
 }
 
 void init_alien(Alien *alien, const unsigned long *sprite, int width,
-                int height, int x, int y, int health, int damage) {
-  alien->name = "Alien";
+                int height, int x, int y, int health, int damage,
+                const unsigned long *bullet_sprite) {
+  alien->name =
+      bullet_sprite == epd_bitmap_bullet_big_boss[0] ? "Boss" : "Alien";
   alien->size.width = width;
   alien->size.height = height;
   alien->position.x = x;
@@ -130,11 +136,15 @@ void init_alien(Alien *alien, const unsigned long *sprite, int width,
   for (int i = 0; i < 5; i++) {
     Bullet bullet = {
         .name = NULL,
-        .size.width = ALIEN_BULLET_WIDTH,
-        .size.height = ALIEN_BULLET_HEIGHT,
+        .size.width = bullet_sprite == epd_bitmap_bullet_big_boss[0]
+                          ? BOSS_BULLET_WIDTH
+                          : ALIEN_BULLET_WIDTH,
+        .size.height = bullet_sprite == epd_bitmap_bullet_big_boss[0]
+                           ? BOSS_BULLET_HEIGHT
+                           : ALIEN_BULLET_HEIGHT,
         .position.x = alien->position.x + alien->size.width / 2,
         .position.y = alien->position.y + alien->size.height,
-        .sprite = epd_bitmap_alien_bullet,
+        .sprite = bullet_sprite,
     };
 
     alien->bullets[i] = bullet;
@@ -160,19 +170,21 @@ void init_wave(GameController *gc) {
   // Handle boss round (Stage 3)
   if (gc->stage_level == 3) {
     // If it's the first wave of Stage 3, initialize normal aliens
-    if (gc->current_wave == 0) {
+    if (gc->current_wave < 2) {
       for (int j = 0; j < 3; j++) {
         for (int k = 0; k < 5; k++) {
           if (current_map[gc->current_wave][j][k] == 1) {
             init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130,
-                       109, 130 * k, 109 * j, 100, 10); // Damage set to 10
+                       109, 130 * k, 109 * j, 100, 10,
+                       epd_bitmap_alien_bullet); // Damage set to 10
             count++;
           }
         }
       }
-    } else if (gc->current_wave == 2) { // Third wave of Stage 3: Boss
+    } else { // Third wave of Stage 3: Boss
       init_alien(&wave->aliens[count], epd_bitmap_big_boss[0], 598, 417,
-                 (SCREEN_WIDTH - 467) / 2, 0, 10000, 50); // Damage set to 50
+                 (SCREEN_WIDTH - 467) / 2, 0, 10000, 50,
+                 epd_bitmap_bullet_big_boss[0]); // Damage set to 50
       count++;
     }
   } else {
@@ -181,12 +193,14 @@ void init_wave(GameController *gc) {
       for (int k = 0; k < 5; k++) { // Columns of the map
         if (current_map[gc->current_wave][j][k] == 1) {
           init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130, 109,
-                     130 * k, 109 * j, 100, 10); // Damage set to 10
+                     130 * k, 109 * j, 100, 10,
+                     epd_bitmap_alien_bullet); // Damage set to 10
           count++;
         }
       }
     }
   }
+
   wave->alien_count = count;
 }
 
@@ -357,7 +371,7 @@ void move_spaceship(GameController *game_controller, int key, int step) {
 
 void move_alien_bullet(GameController *game_controller, int step) {
   // Adjust step size
-  step = step / 12;
+  step = step / 20;
 
   // Iterate over aliens in the current wave
   for (int i = 0; i < game_controller->stages[0]
@@ -383,16 +397,25 @@ void move_alien_bullet(GameController *game_controller, int step) {
 
           // Calculate new position
           bullet->position.y += step;
+          int offset_y =
+              alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 100
+                                                                        : 50;
+          int offset_x =
+              alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 45
+                                                                        : 0;
 
           // Check for collision with the spaceship
-          if (bullet->position.x >= game_controller->spaceship.position.x &&
+          if (bullet->position.x >=
+                  game_controller->spaceship.position.x - offset_x &&
               bullet->position.x <= game_controller->spaceship.position.x +
-                                        game_controller->spaceship.size.width &&
+                                        game_controller->spaceship.size.width +
+                                        offset_x &&
               bullet->position.y >=
-                  game_controller->spaceship.position.y - 50 &&
+                  game_controller->spaceship.position.y - offset_y &&
               bullet->position.y <=
                   game_controller->spaceship.position.y +
                       game_controller->spaceship.size.height) {
+
             uart_puts("Alien bullet hit the spaceship!\n");
             // Deal damage to the spaceship
             receive_damage(game_controller);
@@ -405,12 +428,13 @@ void move_alien_bullet(GameController *game_controller, int step) {
             // Draw the bullet
             draw_image(bullet->position.x, bullet->position.y,
                        bullet->size.width, bullet->size.height, bullet->sprite);
+
             draw_health_bar(game_controller);
           }
         } else {
           // If bullet is inactive, try to fire a new one
-          if (randomNum() % 100 < 0.1) {
-            // 0.1% chance to fire a bullet each frame
+          if (randomNum() % 1000 < 1) {
+            // 0.01% chance to fire a bullet each frame
             bullet->name = "Alien Bullet";
             bullet->position.x = alien->position.x + alien->size.width / 2 -
                                  bullet->size.width / 2;
@@ -603,8 +627,11 @@ void receive_damage(GameController *game_controller) {
 void deal_damage(GameController *game_controller, int index) {
   Wave *current_wave =
       &game_controller->stages[0].waves[game_controller->current_wave];
+
   Alien *alien = &current_wave->aliens[index];
-  alien->health -= 10;
+
+  alien->health -= game_controller->spaceship.damage;
+
   if (alien->health <= 0) {
     for (int j = 0; j < 5; j++) {
       Bullet *bullet = &alien->bullets[j];
@@ -633,7 +660,7 @@ void clear_wave(GameController *game_controller) {
   }
 
   if (defeat_count == current_wave->alien_count) {
-    wait_msec(1000000);
+    wait_msec(500000);
     game_controller->current_wave++;
     // If current_wave exceeds the number of waves, stop the game
     if (game_controller->current_wave >= 3) {

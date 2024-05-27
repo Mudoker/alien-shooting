@@ -48,7 +48,6 @@ typedef struct GameController {
   // Attributes
   Stage stages[MAX_STAGES];
   Spaceship spaceship;
-  // Alien alien;
   Alien *aliens;
   int alien_count;
   int stage_level;
@@ -86,7 +85,8 @@ void init_bullet(GameController *game_controller, const unsigned long *sprite,
                  int width, int height, int x, int y, int index);
 void init_stages(GameController *game_controller);
 void init_alien(Alien *alien, const unsigned long *sprite, int width,
-                int height, int x, int y, int health, int damage);
+                int height, int x, int y, int health, int damage,
+                const unsigned long *bullet_sprite);
 void init_wave(GameController *gc);
 Spaceship *init_current_ship_option();
 
