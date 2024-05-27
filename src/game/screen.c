@@ -207,9 +207,9 @@ void welcome_screen(GameController *game_controller)
     case '2':
       ship_selection_screen(game_controller);
       break;
-    case '3':
-      in_game_screen(game_controller);
-      break;
+    // case '3':
+    //   in_game_screen(game_controller);
+    //   break;
     default:
       break;
     }
