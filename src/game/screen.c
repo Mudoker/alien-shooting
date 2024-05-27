@@ -3,26 +3,37 @@
 
 void in_game_screen(GameController *game_controller)
 {
+  game_controller->current_wave = 0;
+  init_wave(game_controller);
+
   draw_background();
-  game_controller->spaceship.position.x = (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
-  game_controller->spaceship.position.y = SCREEN_HEIGHT - game_controller->spaceship.size.height;
+
+  // Reset spaceship position
+  game_controller->spaceship.position.x =
+      (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
+  game_controller->spaceship.position.y =
+      (SCREEN_HEIGHT - game_controller->spaceship.size.height);
+
   draw_spaceship(game_controller);
   draw_health_bar(game_controller);
   draw_alien(game_controller);
+  // draw_health_PU(game_controller);
+  // draw_shield_PU(game_controller);
 
   int bullet_timer = 0;
   int fire_timer = 0;
+  int alien_move_timer = 0;
+  int alien_move_step = 10;
 
   while (1)
   {
     // Check if a character is received
-    // collision_detection(game_controller);
+    clear_wave(game_controller);
     char c = getUart();
     switch (c)
     {
     case 'w':
       move_spaceship(game_controller, KEY_UP, 10);
-      // deal_damage(game_controller);
       break;
     case 's':
       move_spaceship(game_controller, KEY_DOWN, 10);
@@ -39,31 +50,40 @@ void in_game_screen(GameController *game_controller)
 
     // Increment the bullet timer
     bullet_timer += 30;
+    alien_move_timer += 30;
 
     if (fire_timer == 5)
     {
-      add_bullet(game_controller,
-                 game_controller->spaceship.position.x +
-                     game_controller->spaceship.size.width / 2 - 6,
-                 game_controller->spaceship.position.y -
-                     game_controller->spaceship.size.height / 2);
+      add_bullet(game_controller);
       fire_timer = 0;
     }
 
     // Bullet movement
     if (bullet_timer >= 10000000)
     { // 1 second for smoother bullet movement
-      for (int i = 0; i < MAX_BULLETS; i++)
+      for (int i = 0; i < game_controller->bullet_on_screen_count; i++)
       {
-        if (game_controller->spaceship.bullet[i].name != NULL)
+        for (int j = 0; j < game_controller->spaceship.bullet_bonus + 1; j++)
         {
-          move_bullet(game_controller, i, 20);
+          if (game_controller->spaceship.bullet[i][j].name != NULL)
+          {
+            move_bullet(game_controller, i, 20);
+          }
         }
       }
       fire_timer++;
       bullet_timer = 0;
     }
+
+    // Alien movement
+    if (alien_move_timer >= 10000000)
+    { // 1 second for smoother alien movement
+      move_aliens(game_controller, alien_move_step);
+      alien_move_timer = 0;
+    }
   }
+
+  game_loop(game_controller);
 }
 
 void stage_screen(GameController *game_controller)
