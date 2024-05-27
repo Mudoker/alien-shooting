@@ -55,7 +55,7 @@ void init_controller(GameController *game_controller) {
 
   init_stages(game_controller);
   init_spaceship(game_controller, epd_blader[0], 124, 128,
-                 (SCREEN_WIDTH - 124) / 2, SCREEN_HEIGHT - 128);
+                 (SCREEN_WIDTH - 124) / 2, SCREEN_HEIGHT - 128, "Blader", 50, 100);
 
   calculate_bullet_positions(game_controller, positions, &num_positions);
 
@@ -68,17 +68,17 @@ void init_controller(GameController *game_controller) {
 // Initialize the spaceship object
 void init_spaceship(GameController *game_controller,
                     const unsigned long *sprite, int width, int height, int x,
-                    int y) {
+                    int y, char *name, int damage, int health) {
   Spaceship spaceship;
-  spaceship.name = "Blader";
+  spaceship.name = name;
   spaceship.size.width = width;
   spaceship.size.height = height;
-  spaceship.bullet_bonus = 4;
+  spaceship.bullet_bonus = 0;
   spaceship.position.x = x;
   spaceship.position.y = y;
-  spaceship.health = 100;
+  spaceship.health = health;
   spaceship.sprite = sprite;
-  spaceship.damage = 50;
+  spaceship.damage = damage;
 
   game_controller->spaceship = spaceship;
 }
@@ -183,7 +183,7 @@ void init_wave(GameController *gc) {
       }
     } else { // Third wave of Stage 3: Boss
       init_alien(&wave->aliens[count], epd_bitmap_big_boss[0], 502, 350,
-                 (SCREEN_WIDTH - 467) / 2, 0, 10000, 50,
+                 (SCREEN_WIDTH - 467) / 2, 0, 10000, 30,
                  epd_bitmap_bullet_big_boss[0]); // Damage set to 50
       count++;
     }
@@ -382,6 +382,10 @@ void move_alien_bullet(GameController *game_controller, int step) {
                         .waves[game_controller->current_wave]
                         .aliens[i];
 
+    if (alien->sprite == epd_bitmap_big_boss[0]) {
+      // step = step / 1.5;
+    }
+
     // Check if the alien is active
     if (alien->name != NULL) {
       // Iterate through each alien's bullets
@@ -397,8 +401,9 @@ void move_alien_bullet(GameController *game_controller, int step) {
 
           // Calculate new position
           bullet->position.y += step;
+
           int offset_y =
-              alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 100
+              alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 80
                                                                         : 50;
           int offset_x =
               alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 45

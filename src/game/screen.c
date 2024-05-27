@@ -48,22 +48,22 @@ void in_game_screen(GameController *game_controller) {
     case 'w':
       manage_command(game_controller, "Moved spaceship to up");
 
-      move_spaceship(game_controller, KEY_UP, 10);
+      move_spaceship(game_controller, KEY_UP, 18);
       break;
     case 's':
       manage_command(game_controller, "Moved spaceship to down");
 
-      move_spaceship(game_controller, KEY_DOWN, 10);
+      move_spaceship(game_controller, KEY_DOWN, 18);
       break;
     case 'a':
       manage_command(game_controller, "Moved spaceship to left");
 
-      move_spaceship(game_controller, KEY_LEFT, 10);
+      move_spaceship(game_controller, KEY_LEFT, 18);
       break;
     case 'd':
       manage_command(game_controller, "Moved spaceship to right");
 
-      move_spaceship(game_controller, KEY_RIGHT, 10);
+      move_spaceship(game_controller, KEY_RIGHT, 18);
       break;
     default:
       break;
