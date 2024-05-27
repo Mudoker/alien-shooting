@@ -51,7 +51,7 @@ void in_game_screen(GameController *game_controller) {
     if (bullet_timer >= 10000000) { // 1 second for smoother bullet movement
       for (int i = 0; i < MAX_BULLETS; i++) {
         if (game_controller->spaceship.bullet[i].name != NULL) {
-          move_bullet(game_controller, i, 20);
+          move_bullet(game_controller, i, 15);
         }
       }
       fire_timer++;

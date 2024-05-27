@@ -7,6 +7,8 @@
 struct Alien;
 struct Bullet;
 struct Spaceship;
+struct Stage;
+struct Wave;
 
 #define MAX_BULLETS 1000
 
@@ -65,9 +67,17 @@ typedef struct Alien {
   boolean (*die)();               // Die
 } Alien;
 
+typedef struct Wave {
+  int level;                 // Wave level
+  int alien_count;           // Alien count
+  Alien aliens[5];  // Aliens
+} Wave;
+
 typedef struct Stage {
   char name[MAX_STR_LENGTH]; // Stage name
-  int level;
+  int level;                 // Stage level
+  Wave waves[3];             // Waves
 } Stage;
+
 
 #endif

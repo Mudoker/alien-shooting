@@ -42,10 +42,11 @@ typedef struct GameController {
   // Attributes
   Stage stages[MAX_STAGES];
   Spaceship spaceship;
-  Alien alien;
-  Alien aliens[MAX_ALIENS];
+  // Alien alien;
+  Alien *aliens;
   int alien_count;
   int stage_level;
+  int current_wave;
   Display *screen;
   int bullet_on_screen_count;
   Page page;
@@ -74,9 +75,8 @@ void init_bullet(GameController *game_controller, const unsigned long *sprite,
                  int width, int height, int x, int y);
 void init_stages(GameController *game_controller);
 void init_controller(GameController *game_controller);
-void init_alien(GameController *game_controller, const unsigned long *sprite,
-                int width, int height, int x, int y);
-
+void init_alien(Alien *Alien, const unsigned long *sprite, int width, int height, int x, int y);
+void init_wave(GameController *game_controller);
 void draw_spaceship(GameController *game_controller);
 void draw_background();
 void draw_health_bar(GameController *game_controller);
@@ -91,6 +91,6 @@ void move_bullet(GameController *game_controller, int index, int step);
 
 void add_bullet(GameController *game_controller, int x, int y);
 
-void deal_damage(GameController *game_controller);
+void deal_damage(GameController *game_controller, int index);
 
 #endif // CGAME_H

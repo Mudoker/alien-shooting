@@ -30,7 +30,6 @@ void load_image() {
     default:
       break;
     }
-
     framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT,
                  IMAGE_WIDTH * (epd_bitmap_allArray_LEN), IMAGE_HEIGHT,
                  offset_x, offset_y);
