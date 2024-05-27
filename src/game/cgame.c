@@ -45,6 +45,7 @@ void init_controller(GameController *game_controller)
   game_controller->screen->init_frame(0, 0);
   game_controller->page = WELCOME;
   game_controller->bullet_on_screen_count = 0;
+  game_controller->command_count = 0;
 
   int positions[5][2]; // Maximum of MAX_BULLETS positions
   int num_positions;
@@ -154,21 +155,22 @@ void init_wave(GameController *gc)
   wave->alien_count = count;
 }
 
-Spaceship* init_current_ship_option() {
-    static Spaceship spaceship; 
-    
-    spaceship.name = "Lev1";
-    spaceship.size.width = 124;
-    spaceship.size.height = 188;
-    spaceship.bullet_bonus = 4;
+Spaceship *init_current_ship_option()
+{
+  static Spaceship spaceship;
 
-    spaceship.position.x = (SCREEN_WIDTH - spaceship.size.width) / 2;
-    spaceship.position.y = (SCREEN_HEIGHT - spaceship.size.height) / 2;
-    spaceship.health = 100;
+  spaceship.name = "Lev1";
+  spaceship.size.width = 124;
+  spaceship.size.height = 188;
+  spaceship.bullet_bonus = 4;
 
-    spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
+  spaceship.position.x = (SCREEN_WIDTH - spaceship.size.width) / 2;
+  spaceship.position.y = (SCREEN_HEIGHT - spaceship.size.height) / 2;
+  spaceship.health = 100;
 
-    return &spaceship;
+  spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
+
+  return &spaceship;
 }
 
 void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option)

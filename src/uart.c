@@ -7,7 +7,7 @@
  */
 void uart_init()
 {
-    unsigned int r;
+	unsigned int r;
 
 	/* Turn off UART0 */
 	UART0_CR = 0x0;
@@ -16,23 +16,30 @@ void uart_init()
 
 	/* Set GPIO14 and GPIO15 to be pl011 TX/RX which is ALT0	*/
 	r = GPFSEL1;
-	r &=  ~((7 << 12) | (7 << 15)); //clear bits 17-12 (FSEL15, FSEL14)
-	r |= (0b100 << 12)|(0b100 << 15);   //Set value 0b100 (select ALT0: TXD0/RXD0)
+	r &= ~((7 << 12) | (7 << 15));		// clear bits 17-12 (FSEL15, FSEL14)
+	r |= (0b100 << 12) | (0b100 << 15); // Set value 0b100 (select ALT0: TXD0/RXD0)
 	GPFSEL1 = r;
-	
 
 	/* enable GPIO 14, 15 */
-#ifdef RPI3 //RPI3
-	GPPUD = 0;            //No pull up/down control
-	//Toogle clock to flush GPIO setup
-	r = 150; while(r--) { asm volatile("nop"); } //waiting 150 cycles
-	GPPUDCLK0 = (1 << 14)|(1 << 15); //enable clock for GPIO 14, 15
-	r = 150; while(r--) { asm volatile("nop"); } //waiting 150 cycles
-	GPPUDCLK0 = 0;        // flush GPIO setup
+#ifdef RPI3	   // RPI3
+	GPPUD = 0; // No pull up/down control
+	// Toogle clock to flush GPIO setup
+	r = 150;
+	while (r--)
+	{
+		asm volatile("nop");
+	} // waiting 150 cycles
+	GPPUDCLK0 = (1 << 14) | (1 << 15); // enable clock for GPIO 14, 15
+	r = 150;
+	while (r--)
+	{
+		asm volatile("nop");
+	} // waiting 150 cycles
+	GPPUDCLK0 = 0; // flush GPIO setup
 
-#else //RPI4
+#else // RPI4
 	r = GPIO_PUP_PDN_CNTRL_REG0;
-	r &= ~((3 << 28) | (3 << 30)); //No resistor is selected for GPIO 14, 15
+	r &= ~((3 << 28) | (3 << 30)); // No resistor is selected for GPIO 14, 15
 	GPIO_PUP_PDN_CNTRL_REG0 = r;
 #endif
 
@@ -43,13 +50,13 @@ void uart_init()
 	UART0_ICR = 0x7FF;
 
 	/* Set integer & fractional part of Baud rate
-	Divider = UART_CLOCK/(16 * Baud)            
-	Default UART_CLOCK = 48MHz (old firmware it was 3MHz); 
-	Integer part register UART0_IBRD  = integer part of Divider 
+	Divider = UART_CLOCK/(16 * Baud)
+	Default UART_CLOCK = 48MHz (old firmware it was 3MHz);
+	Integer part register UART0_IBRD  = integer part of Divider
 	Fraction part register UART0_FBRD = (Fractional part * 64) + 0.5 */
 
-	//115200 baud
-	UART0_IBRD = 26;       
+	// 115200 baud
+	UART0_IBRD = 26;
 	UART0_FBRD = 3;
 
 	/* Set up the Line Control Register */
@@ -59,57 +66,69 @@ void uart_init()
 	UART0_LCRH = UART0_LCRH_FEN | UART0_LCRH_WLEN_8BIT;
 
 	/* Enable UART0, receive, and transmit */
-	UART0_CR = 0x301;     // enable Tx, Rx, FIFO
+	UART0_CR = 0x301; // enable Tx, Rx, FIFO
 }
-
-
 
 /**
  * Send a character
  */
-void uart_sendc(char c) {
+void uart_sendc(char c)
+{
 
-    /* Check Flags Register */
+	/* Check Flags Register */
 	/* And wait until transmitter is not full */
-	do {
+	do
+	{
 		asm volatile("nop");
 	} while (UART0_FR & UART0_FR_TXFF);
 
 	/* Write our data byte out to the data register */
-	UART0_DR = c ;
+	UART0_DR = c;
 }
 
 /**
  * Receive a character
  */
-char uart_getc() {
-    char c = 0;
+char uart_getc()
+{
+	char c = 0;
 
-    /* Check Flags Register */
-    /* Wait until Receiver is not empty
-     * (at least one byte data in receive fifo)*/
-	do {
+	/* Check Flags Register */
+	/* Wait until Receiver is not empty
+	 * (at least one byte data in receive fifo)*/
+	do
+	{
 		asm volatile("nop");
-    } while ( UART0_FR & UART0_FR_RXFE );
+	} while (UART0_FR & UART0_FR_RXFE);
 
-    /* read it and return */
-    c = (unsigned char) (UART0_DR);
+	/* read it and return */
+	c = (unsigned char)(UART0_DR);
 
-    /* convert carriage return to newline */
-    return (c == '\r' ? '\n' : c);
+	/* convert carriage return to newline */
+	return (c == '\r' ? '\n' : c);
 }
-
 
 /**
  * Display a string
  */
-void uart_puts(char *s) {
-    while (*s) {
-        /* convert newline to carriage return + newline */
-        if (*s == '\n')
-            uart_sendc('\r');
-        uart_sendc(*s++);
-    }
+void uart_puts(char *s)
+{
+	while (*s)
+	{
+		/* convert newline to carriage return + newline */
+		if (*s == '\n')
+			uart_sendc('\r');
+		uart_sendc(*s++);
+	}
+}
+
+void uart_logs(int command_index, char *log)
+{
+	uart_puts("Command ");
+	uart_dec(command_index);
+	uart_puts(": ");
+	uart_puts(log);
+	uart_puts("\n");
 }
 
 /**
@@ -168,4 +187,3 @@ unsigned char getUart()
 		ch = uart_getc();
 	return ch;
 }
-
