@@ -49,6 +49,7 @@ typedef struct GameController {
   Display *screen;
   int bullet_on_screen_count;
   Page page;
+  PowerUp powerup;
 
   // Methods
   void (*init)(void);
@@ -82,6 +83,9 @@ void draw_background();
 void draw_health_bar(GameController *game_controller);
 void draw_welcome_screen();
 void draw_alien(GameController *game_controller);
+void draw_health_PU(GameController *game_controller);
+void draw_shield_PU(GameController *game_controller);
+char *itoa(int num);
 
 void collision_detection(GameController *game_controller);
 

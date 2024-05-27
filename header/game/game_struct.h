@@ -70,4 +70,18 @@ typedef struct Stage {
   int level;
 } Stage;
 
+typedef struct PowerUp {
+  char *id;                    // Unique identifier
+  char *name;                  // PowerUp name
+  int type;
+  Position position;   
+  Position target;
+  int reach_target;        // Position
+  Size size;                   // Size
+  const unsigned long *sprite; // Sprite (Image)
+
+  // Methods
+  boolean (*draw)(); // Draw the PowerUp
+  boolean (*use)();  // Use the PowerUp
+} PowerUp;
 #endif
