@@ -30,7 +30,7 @@
 // Constants
 #define BUlLET_WIDTH 17
 #define BULLET_HEIGHT 52
-#define ALIEN_BULLET_WIDTH 16
+#define ALIEN_BULLET_WIDTH 12
 #define ALIEN_BULLET_HEIGHT 48
 
 void init_frame(int offset_x, int offset_y) {
@@ -68,7 +68,7 @@ void init_spaceship(GameController *game_controller,
   spaceship.name = "Blader";
   spaceship.size.width = width;
   spaceship.size.height = height;
-  spaceship.bullet_bonus = 4;
+  spaceship.bullet_bonus = 0;
   spaceship.position.x = x;
   spaceship.position.y = y;
   spaceship.health = 100;
@@ -124,6 +124,19 @@ void init_alien(Alien *alien, const unsigned long *sprite, int width,
   alien->direction = 1;
   alien->health = 100;
   alien->sprite = sprite;
+
+  for (int i = 0; i < 5; i++) {
+    Bullet bullet = {
+        .name = NULL,
+        .size.width = ALIEN_BULLET_WIDTH,
+        .size.height = ALIEN_BULLET_HEIGHT,
+        .position.x = alien->position.x + alien->size.width / 2,
+        .position.y = alien->position.y + alien->size.height,
+        .sprite = epd_bitmap_alien_bullet,
+    };
+
+    alien->bullets[i] = bullet;
+  }
 }
 
 // Init wave
@@ -311,7 +324,54 @@ void move_spaceship(GameController *game_controller, int key, int step) {
   draw_spaceship(game_controller);
 }
 
+void move_alien_bullet(GameController *game_controller, int step) {
+  Wave *current_wave =
+      &game_controller->stages[0].waves[game_controller->current_wave];
+
+  for (int i = 0; i < current_wave->alien_count; i++) {
+    Alien *alien = &current_wave->aliens[i];
+
+    if (alien->name != NULL) {
+      // Iterate through each alien's bullets
+      for (int j = 0; j < 5; j++) {
+        Bullet *bullet = &alien->bullets[j];
+
+        if (bullet->name != NULL) {
+          // Clear the bullet at the previous position
+          clear_image(bullet->position.x, bullet->position.y,
+                      bullet->size.width, bullet->size.height,
+                      epd_bitmap_background);
+
+          // Calculate potential new position
+          bullet->position.y += step;
+
+          // Check if the bullet is out of the screen
+          if (bullet->position.y >= SCREEN_HEIGHT) {
+            bullet->name = NULL;
+          } else {
+            // Draw the bullet at the new position
+            draw_image(bullet->position.x, bullet->position.y,
+                       bullet->size.width, bullet->size.height, bullet->sprite);
+          }
+        } else {
+          // If bullet is inactive (name == NULL), try to fire a new one
+          if (randomNum() % 100 < 2) { // 2% chance to fire a bullet each frame
+            bullet->name = "Alien Bullet";
+            bullet->position.x = alien->position.x + alien->size.width / 2 -
+                                 bullet->size.width / 2;
+            bullet->position.y = alien->position.y + alien->size.height;
+          }
+        }
+      }
+    }
+  }
+}
+
 void move_bullet(GameController *game_controller, int index, int step) {
+  // handle aliens' bullet movement
+  move_alien_bullet(game_controller, step);
+
+  // handle player bullet movement
   for (int i = 0; i < game_controller->spaceship.bullet_bonus + 1; i++) {
     Bullet *bullet = &game_controller->spaceship.bullets[index][i];
 

@@ -55,13 +55,13 @@ typedef struct Alien {
   Position position; // Position
   Position target;
   int reached_target;
-  Bullet bullets[5]; // Bullet
-  Size size;                      // Size
-  float health;                   // Health
-  int speed;                      // Speed
-  float damage;                   // Damage
-  const unsigned long *sprite;    // Sprite (Image)
-  int direction;                  // Direction
+  Bullet bullets[5];           // Bullet
+  Size size;                   // Size
+  float health;                // Health
+  int speed;                   // Speed
+  float damage;                // Damage
+  const unsigned long *sprite; // Sprite (Image)
+  int direction;               // Direction
 
   // Methods
   boolean (*draw)();              // Draw the alien
