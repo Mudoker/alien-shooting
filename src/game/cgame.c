@@ -5,6 +5,7 @@
 #include "../../assets/games/power_up/health.h"
 #include "../../assets/games/power_up/shield.h"
 #include "../utils/randomNum.h"
+#include "../../assets/games/bullet/alien_bullet.h"
 #include "../../assets/games/background.h"
 #include "../../assets/games/bullet/bullet_lv1.h"
 #include "../../assets/games/health_logo.h"
@@ -14,9 +15,6 @@
 
 #define BUlLET_WIDTH 17
 #define BULLET_HEIGHT 52
-
-void calculate_bullet_positions(GameController *game_controller,
-                                int positions[][2], int *num_positions);
 
 void init_frame(int offset_x, int offset_y)
 {
@@ -223,12 +221,18 @@ void move_spaceship(GameController *game_controller, int key, int step)
   draw_spaceship(game_controller);
 }
 
-// ALways go vertically up
 void move_bullet(GameController *game_controller, int index, int step)
 {
+  uart_dec(game_controller->bullet_on_screen_count);
   for (int i = 0; i < game_controller->spaceship.bullet_bonus + 1; i++)
   {
     Bullet *bullet = &game_controller->spaceship.bullet[index][i];
+
+    // If the bullet is already inactive, skip it
+    if (bullet->name == NULL)
+    {
+      continue;
+    }
 
     // Clear the bullet at the previous position
     clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
@@ -240,41 +244,85 @@ void move_bullet(GameController *game_controller, int index, int step)
     if (bullet->position.y <= -bullet->size.height)
     {
       bullet->name = NULL;
-      // game_controller->bullet_on_screen_count--;
-      return; // No need to continue if the bullet is out of the screen
+      continue; // Skip to the next bullet, do not return
     }
-
-    // Draw the bullet at the new position
-    draw_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, bullet->sprite);
 
     // Check for collision with aliens in the current wave
     Wave *current_wave = &game_controller->stages[0].waves[game_controller->current_wave];
-    for (int i = 0; i < current_wave->alien_count; i++)
+    for (int j = 0; j < current_wave->alien_count; j++)
     {
-      Alien *alien = &current_wave->aliens[i];
+      Alien *alien = &current_wave->aliens[j];
 
       if (alien->name != NULL)
       {
         if (bullet->position.x >= alien->position.x &&
             bullet->position.x <= alien->position.x + alien->size.width &&
-            bullet->position.y - 20 >= alien->position.y &&
-            bullet->position.y - 20 <= alien->position.y + alien->size.height)
+            bullet->position.y >= alien->position.y &&
+            bullet->position.y <= alien->position.y + alien->size.height)
         {
+          uart_puts("Bullet hit an alien!\n");
 
           // Deal damage to the alien
-          deal_damage(game_controller, i);
+          deal_damage(game_controller, j);
 
           // Clear the bullet
           clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
-          //
-          bullet->name = NULL;
 
-          return; // Exit after collision
+          bullet->name = NULL;
+          // No break here, to allow for multiple collisions in the same frame
         }
       }
     }
+
+    // If bullet is still active, draw it at the new position
+    if (bullet->name != NULL)
+    {
+      draw_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, bullet->sprite);
+    }
   }
 }
+
+// void move_alien_bullets(GameController *game_controller, int index, int step) {
+//   for (int i = 0; i < game_controller->stages[0].waves[game_controller->current_wave].alien_count; i++)
+//   {
+//     Alien *alien = &game_controller->stages[0].waves[game_controller->current_wave].aliens[i];
+//     Bullet *bullet = &alien->bullet[index];
+
+//     // Clear the bullet at the previous position
+//     clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
+
+//     // Calculate potential new position
+//     bullet->position.y += step;
+
+//     // Check if the bullet is out of the screen
+//     if (bullet->position.y >= SCREEN_HEIGHT)
+//     {
+//       bullet->name = NULL;
+//       return; // No need to continue if the bullet is out of the screen
+//     }
+
+//     // Draw the bullet at the new position
+//     draw_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, bullet->sprite);
+
+//     // Check for collision with the spaceship
+//     Spaceship *spaceship = &game_controller->spaceship;
+//     if (bullet->position.x >= spaceship->position.x &&
+//         bullet->position.x <= spaceship->position.x + spaceship->size.width &&
+//         bullet->position.y >= spaceship->position.y &&
+//         bullet->position.y <= spaceship->position.y + spaceship->size.height)
+//     {
+//       // Receive damage from the bullet
+//       receive_damage(game_controller);
+
+//       // Clear the bullet
+//       clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
+//       bullet->name = NULL;
+
+//       return; // Exit after collision
+//     }
+//   }
+
+// }
 
 int pos_x[5] = {0, 130, 260, 390, 520};
 int pos_y[4] = {0, 109, 218, 327};
@@ -359,6 +407,22 @@ void draw_shield_PU(GameController *game_controller)
   draw_image_object(780 / 2, 450, 90, 90, epd_bitmap_shield_allArray[0], epd_bitmap_background);
 }
 
+void clear_all_bullets(GameController *game_controller)
+{
+  for (int i = 0; i < MAX_BULLETS; i++)
+  {
+    for (int j = 0; j < game_controller->spaceship.bullet_bonus + 1; j++)
+    {
+      Bullet *bullet = &game_controller->spaceship.bullet[i][j];
+      if (bullet->name != NULL)
+      {
+        clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
+        bullet->name = NULL;
+      }
+    }
+  }
+}
+
 void add_bullet(GameController *game_controller)
 {
   int num_positions;
@@ -366,6 +430,13 @@ void add_bullet(GameController *game_controller)
 
   // Calculate bullet positions
   calculate_bullet_positions(game_controller, positions, &num_positions);
+
+  // Reset the bullet count if it reaches the maximum
+  if (game_controller->bullet_on_screen_count >= MAX_BULLETS)
+  {
+    game_controller->bullet_on_screen_count = 0;
+    clear_all_bullets(game_controller);
+  }
 
   // Add new bullets to the screen
   for (int i = 0; i < num_positions; i++)
@@ -381,13 +452,26 @@ void add_bullet(GameController *game_controller)
       bullet.sprite = epd_bullet_lv1[0];
 
       // Add bullet to the spaceship's bullet array
-      game_controller->spaceship
-          .bullet[game_controller->bullet_on_screen_count][0] = bullet;
+      game_controller->spaceship.bullet[game_controller->bullet_on_screen_count][0] = bullet;
       game_controller->bullet_on_screen_count++;
     }
   }
 }
 
+// void add_alien_bullet(GameController *game_controller, int index)
+// {
+//   Wave *current_wave = &game_controller->stages[0].waves[game_controller->current_wave];
+//   Alien *alien = &current_wave->aliens[index];
+//   Bullet bullet;
+//   bullet.name = "Alien Bullet";
+//   bullet.size.width = 12;
+//   bullet.size.height = 48;
+//   bullet.position.x = alien->position.x + 65;
+//   bullet.position.y = alien->position.y + 50;
+//   bullet.sprite = epd_bitmap_alien_bullet;
+//   alien->bullet[game_controller->bullet_on_screen_alien_count] = bullet;
+//   game_controller->bullet_on_screen_alien_count++;
+// }
 // Receive damage from enemies
 void receive_damage(GameController *game_controller)
 {
