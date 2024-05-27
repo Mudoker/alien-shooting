@@ -136,5 +136,6 @@ void uart_dec(int num);        // Print a decimal number
 unsigned int uart_isReadByteReady();
 unsigned char getUart();
 void uart_logs(int command_index, char *log);
+void uart_show_info();
 
 #endif
