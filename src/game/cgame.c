@@ -816,7 +816,8 @@ void display_explosion(int x, int y, int w, int h, int num_frames, const unsigne
     for (int frame = 0; frame < num_frames; frame++)
     {
       draw_image(x, y, w, h, video[frame]);
-      wait_msec(100500);
+      // wait_msec(100500);
+      wait_msec(10000);
       clear_image(x, y, 90, 90, epd_bitmap_background);
     }
 }

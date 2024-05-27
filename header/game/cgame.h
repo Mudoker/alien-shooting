@@ -116,6 +116,7 @@ void move_alien(GameController *game_controller, int step);
 void move_spaceship(GameController *game_controller, int key, int step);
 void move_bullet(GameController *game_controller, int index, int step);
 
+
 void add_bullet(GameController *game_controller);
 
 void deal_damage(GameController *game_controller, int index,int posX, int posY);
