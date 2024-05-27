@@ -10,14 +10,16 @@
 #define MAX_ALIENS 20
 #define MAX_STAGES 9
 
-typedef enum {
+typedef enum
+{
   KEY_UP = 0,
   KEY_DOWN,
   KEY_LEFT,
   KEY_RIGHT,
 } Key;
 
-typedef enum {
+typedef enum
+{
   STAGE_1 = 0,
   STAGE_2,
   STAGE_3,
@@ -30,13 +32,15 @@ typedef enum {
 } StageLevel;
 
 // Current page
-typedef enum {
+typedef enum
+{
   WELCOME = 0,
   STAGE,
   IN_GAME,
 } Page;
 
-typedef enum {
+typedef enum
+{
   BULLET_BONUS = 0,
   HEALTH_BONUS,
   SHIELD_BONUS,
@@ -44,7 +48,8 @@ typedef enum {
 
 typedef struct Display Display;
 
-typedef struct GameController {
+typedef struct GameController
+{
   // Attributes
   Stage stages[MAX_STAGES];
   Spaceship spaceship;
@@ -66,7 +71,8 @@ typedef struct GameController {
   void (*render)(void);
 } GameController;
 
-struct Display {
+struct Display
+{
   void (*init_frame)(int offset_x, int offset_y);
   void (*draw_sprite)(int x, int y, int width, int height,
                       const unsigned long *sprite);
@@ -92,6 +98,13 @@ void draw_alien(GameController *game_controller);
 void draw_health_PU(GameController *game_controller);
 void draw_shield_PU(GameController *game_controller);
 char *itoa(int num);
+
+Spaceship init_current_ship_option();
+void draw_spaceship(GameController *game_controller);
+void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option);
+void draw_ship_selection_page();
+void draw_arrows(int order);
+void change_spaceship(GameController *game_controller, int order);
 
 void collision_detection(GameController *game_controller);
 void clear_wave(GameController *game_controller);

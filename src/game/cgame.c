@@ -10,7 +10,14 @@
 #include "../../assets/games/health_logo.h"
 #include "../../assets/games/powers_up/badge/bonus_bullets.h"
 #include "../../assets/games/spaceship/blader.h"
+#include "../../assets/games/spaceship/ship_lev1.h"
+#include "../../assets/games/spaceship/ship_lev3.h"
 #include "../../assets/games/welcome_screen/welcome.h"
+
+#include "../../assets/games/ship_selection_screen/ship_selection_title.h"
+#include "../../assets/games/ship_selection_screen/ship_selection_button.h"
+#include "../../assets/games/ship_selection_screen/arrow_left.h"
+#include "../../assets/games/ship_selection_screen/arrow_right.h"
 
 #define BUlLET_WIDTH 17
 #define BULLET_HEIGHT 52
@@ -140,6 +147,86 @@ void init_wave(GameController *gc)
     }
   }
   wave->alien_count = count;
+}
+
+Spaceship init_current_ship_option()
+{
+  Spaceship spaceship;
+  spaceship.name = "Blader";
+  spaceship.size.width = 124;
+  spaceship.size.height = 188;
+
+  spaceship.position.x = (SCREEN_WIDTH - 124) / 2;
+  spaceship.position.y = (SCREEN_HEIGHT - 188) / 2;
+  spaceship.health = 100;
+
+  spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
+
+  return spaceship;
+}
+
+void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option)
+{
+
+  if (clear)
+  {
+    clear_image(current_ship_option->position.x, current_ship_option->position.y, current_ship_option->size.width, current_ship_option->size.height, epd_bitmap_background);
+  }
+
+  switch (order)
+  {
+  case 1:
+    current_ship_option->size.width = 124;
+    current_ship_option->size.height = 188;
+    current_ship_option->sprite = epd_bitmap_ship_l1_allArray[0];
+    break;
+  case 2:
+    current_ship_option->size.width = 124;
+    current_ship_option->size.height = 128;
+    current_ship_option->sprite = epd_blader[0];
+    break;
+  case 3:
+    current_ship_option->size.width = 124;
+    current_ship_option->size.height = 127;
+    current_ship_option->sprite = epd_bitmap_ship_l3_allArray[0];
+    break;
+  default:
+    return;
+  }
+
+  current_ship_option->position.x = (SCREEN_WIDTH - current_ship_option->size.width) / 2;
+  current_ship_option->position.y = (SCREEN_HEIGHT - current_ship_option->size.height) / 2;
+  draw_image(current_ship_option->position.x, current_ship_option->position.y, current_ship_option->size.width, current_ship_option->size.height, current_ship_option->sprite);
+}
+
+void draw_ship_selection_page()
+{
+  draw_image(0, 60, SCREEN_WIDTH, 186, epd_bitmap_ship_selection_title);
+  draw_image(215, 650, 350, 103, epd_bitmap_ship_selection_button);
+}
+
+void draw_arrows(int order)
+{
+  const unsigned long *arrow_left = epd_bitmap_arrow_left;
+  const unsigned long *arrow_right = epd_bitmap_arrow_right;
+
+  switch (order)
+  {
+  case 1:
+    clear_image(60, 400, 70, 72, epd_bitmap_background);
+    draw_image(650, 400, 70, 72, arrow_right);
+    break;
+  case 2:
+    draw_image(60, 400, 70, 72, arrow_left);
+    draw_image(650, 400, 70, 72, arrow_right);
+    break;
+  case 3:
+    draw_image(60, 400, 70, 72, arrow_left);
+    clear_image(650, 400, 70, 72, epd_bitmap_background);
+    break;
+  default:
+    break;
+  }
 }
 
 // Draw spaceship
@@ -647,5 +734,29 @@ void draw_badge(int badge)
         badge_opacity = 0.0f;
       }
     }
+  }
+}
+
+void change_spaceship(GameController *game_controller, int order)
+{
+  switch (order)
+  {
+  case 1:
+    game_controller->spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
+    game_controller->spaceship.size.width = 124;
+    game_controller->spaceship.size.height = 188;
+    break;
+  case 2:
+    game_controller->spaceship.sprite = epd_blader[0];
+    game_controller->spaceship.size.width = 124;
+    game_controller->spaceship.size.height = 128;
+    break;
+  case 3:
+    game_controller->spaceship.sprite = epd_bitmap_ship_l3_allArray[0];
+    game_controller->spaceship.size.width = 124;
+    game_controller->spaceship.size.height = 127;
+    break;
+  default:
+    break;
   }
 }
