@@ -140,6 +140,48 @@ void stage_screen(GameController *game_controller)
   }
 }
 
+void ship_selection_screen(GameController *game_controller)
+{
+  int order = 1;
+
+  Spaceship *current_ship_option = init_current_ship_option();
+
+  draw_background();
+  draw_ship_selection_page();
+
+  draw_spaceship_option(&game_controller->spaceship, order, 0, &current_ship_option);
+  draw_arrows(order);
+
+  while (1)
+  {
+    // Check if a character is received
+    char c = getUart();
+    switch (c)
+    {
+    case 'a':
+      if (order > 1)
+      {
+        order--;
+        draw_spaceship_option(&game_controller->spaceship, order, 1, &current_ship_option);
+        draw_arrows(order);
+      }
+      break;
+    case 'd':
+      if (order < 3)
+      {
+        order++;
+        draw_spaceship_option(&game_controller->spaceship, order, 1, &current_ship_option);
+        draw_arrows(order);
+      }
+      break;
+    case '\n':
+      change_spaceship(game_controller, order);
+      welcome_screen(game_controller);
+      return;
+    }
+  }
+}
+
 void result_screen(GameController *game_controller)
 {
   // int score = game_controller->score;
@@ -243,11 +285,13 @@ void welcome_screen(GameController *game_controller)
       stage_screen(game_controller);
       break;
     case '2':
-      result_screen(game_controller);
+      // result_screen(game_controller);
+      ship_selection_screen(game_controller);
       break;
-    case '3':
-      in_game_screen(game_controller);
-      break;
+    // case '3':
+    //   in_game_screen(game_controller);
+
+    //   break;
     default:
       break;
     }
