@@ -59,7 +59,7 @@ typedef struct GameController
   int stage_level;
   int current_wave;
   Display *screen;
-  int bullet_on_screen_count;
+  unsigned long long bullet_on_screen_count;
   Page page;
   int score;
   PowerUp powerup;
