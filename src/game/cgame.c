@@ -2,6 +2,15 @@
 #include "../../header/game/cgame.h"
 #include "../../header/game/map.h"
 #include "../../assets/games/alient/alient_1.h"
+#include "../../assets/games/result_screens/lose_screen.h"
+#include "../../assets/games/result_screens/win_final_screen.h"
+#include "../../assets/games/result_screens/win_screen.h"
+#include "../../assets/games/result_screens/stars/stars_1.h"
+#include "../../assets/games/result_screens/stars/stars_3.h"
+#include "../../assets/games/result_screens/stars/stars_5.h"
+#include "../../assets/games/result_screens/digits/secs.h"
+#include "../../assets/games/result_screens/digits/digits.h"
+
 #include "../../assets/games/power_up/health.h"
 #include "../../assets/games/power_up/shield.h"
 #include "../utils/randomNum.h"
@@ -141,7 +150,6 @@ void init_wave(GameController *gc)
   }
   wave->alien_count = count;
 }
-
 // Draw spaceship
 void draw_spaceship(GameController *game_controller)
 {
@@ -153,7 +161,6 @@ void draw_spaceship(GameController *game_controller)
 // Draw the background
 void draw_background()
 {
-  draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background);
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background);
 }
 
@@ -560,6 +567,62 @@ void collision_detection(GameController *game_controller)
   //     }
   //   }
   // }
+}
+
+void draw_lose_screen(GameController *game_controller, int seconds)
+{
+  draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_lose_screen);
+  draw_completed_time(seconds, 505);
+}
+
+void draw_win_final_screen(GameController *game_controller, int seconds)
+{
+  draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_win_final_screen);
+  draw_stars(seconds);
+  draw_completed_time(seconds, 605);
+}
+
+void draw_win_screen(GameController *game_controller, int seconds)
+{
+  draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_win_screen);
+  draw_stars(seconds);
+  draw_completed_time(seconds, 476);
+}
+
+void draw_stars(int seconds)
+{
+  if (seconds <= 20)
+  {
+    draw_image(195, 100, 390, 100, epd_bitmap_stars_5);
+  }
+  else if (seconds <= 40)
+  {
+    draw_image(195, 100, 390, 100, epd_bitmap_stars_3);
+  }
+  else
+  {
+    draw_image(195, 100, 390, 100, epd_bitmap_stars_1);
+  }
+}
+
+void draw_completed_time(int seconds, int y)
+{
+  if (seconds < 10)
+  {
+    draw_image(502, y, 37, 37, epd_bitmap_digits_allArray[seconds]);
+  }
+  else
+  {
+    int tens = seconds / 10;
+    int ones = seconds % 10;
+
+    // Draw tens digit
+    draw_image(480, y, 37, 37, epd_bitmap_digits_allArray[tens]);
+    // Draw ones digit
+    draw_image(502, y, 37, 37, epd_bitmap_digits_allArray[ones]);
+  }
+
+  draw_image(535, y, 97, 37, epd_bitmap_secs);
 }
 
 char *itoa(int num)

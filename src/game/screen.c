@@ -140,6 +140,88 @@ void stage_screen(GameController *game_controller)
   }
 }
 
+void result_screen(GameController *game_controller)
+{
+  // int score = game_controller->score;
+  int score = 150;  // TODO: comment this out and replace it with the previous line
+  int seconds = 20; // TODO: make it dynamic from the timer
+
+  if (seconds == 60 || score < 100)
+  {
+    lose_screen(game_controller, seconds);
+  }
+
+  if (game_controller->stage_level == MAX_STAGES)
+  {
+    win_final_screen(game_controller, seconds);
+  }
+  else
+  {
+    win_screen(game_controller, seconds);
+  }
+}
+
+void lose_screen(GameController *game_controller, int seconds)
+{
+  draw_lose_screen(game_controller, seconds);
+
+  while (1)
+  {
+    char c = getUart();
+    switch (c)
+    {
+    case 'y':
+      in_game_screen(game_controller);
+      break;
+    case 'n':
+      welcome_screen(game_controller);
+      break;
+    default:
+      break;
+    }
+  }
+}
+
+void win_final_screen(GameController *game_controller, int seconds)
+{
+  draw_win_final_screen(game_controller, seconds);
+
+  while (1)
+  {
+    char c = getUart();
+    switch (c)
+    {
+    case 'n':
+      welcome_screen(game_controller);
+      break;
+    default:
+      break;
+    }
+  }
+}
+
+void win_screen(GameController *game_controller, int seconds)
+{
+  draw_win_screen(game_controller, seconds);
+
+  while (1)
+  {
+    char c = getUart();
+    switch (c)
+    {
+    case 'y':
+      game_controller->stage_level++;
+      in_game_screen(game_controller);
+      break;
+    case 'n':
+      welcome_screen(game_controller);
+      break;
+    default:
+      break;
+    }
+  }
+}
+
 void welcome_screen(GameController *game_controller)
 {
   draw_welcome_screen();
@@ -161,7 +243,7 @@ void welcome_screen(GameController *game_controller)
       stage_screen(game_controller);
       break;
     case '2':
-      // change_stage(game_controller, 1);
+      result_screen(game_controller);
       break;
     case '3':
       in_game_screen(game_controller);
