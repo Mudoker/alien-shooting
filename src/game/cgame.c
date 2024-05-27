@@ -319,7 +319,6 @@ void move_spaceship(GameController *game_controller, int key, int step)
 
 void move_bullet(GameController *game_controller, int index, int step)
 {
-  uart_dec(game_controller->bullet_on_screen_count);
   for (int i = 0; i < game_controller->spaceship.bullet_bonus + 1; i++)
   {
     Bullet *bullet = &game_controller->spaceship.bullet[index][i];
@@ -356,7 +355,7 @@ void move_bullet(GameController *game_controller, int index, int step)
             bullet->position.y >= alien->position.y &&
             bullet->position.y <= alien->position.y + alien->size.height)
         {
-          uart_puts("Bullet hit an alien!\n");
+          uart_puts("ALERT: BULLET HIT AN ALIEN!\n");
 
           // Deal damage to the alien
           deal_damage(game_controller, j);
@@ -377,48 +376,6 @@ void move_bullet(GameController *game_controller, int index, int step)
     }
   }
 }
-
-// void move_alien_bullets(GameController *game_controller, int index, int step) {
-//   for (int i = 0; i < game_controller->stages[0].waves[game_controller->current_wave].alien_count; i++)
-//   {
-//     Alien *alien = &game_controller->stages[0].waves[game_controller->current_wave].aliens[i];
-//     Bullet *bullet = &alien->bullet[index];
-
-//     // Clear the bullet at the previous position
-//     clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
-
-//     // Calculate potential new position
-//     bullet->position.y += step;
-
-//     // Check if the bullet is out of the screen
-//     if (bullet->position.y >= SCREEN_HEIGHT)
-//     {
-//       bullet->name = NULL;
-//       return; // No need to continue if the bullet is out of the screen
-//     }
-
-//     // Draw the bullet at the new position
-//     draw_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, bullet->sprite);
-
-//     // Check for collision with the spaceship
-//     Spaceship *spaceship = &game_controller->spaceship;
-//     if (bullet->position.x >= spaceship->position.x &&
-//         bullet->position.x <= spaceship->position.x + spaceship->size.width &&
-//         bullet->position.y >= spaceship->position.y &&
-//         bullet->position.y <= spaceship->position.y + spaceship->size.height)
-//     {
-//       // Receive damage from the bullet
-//       receive_damage(game_controller);
-
-//       // Clear the bullet
-//       clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
-//       bullet->name = NULL;
-
-//       return; // Exit after collision
-//     }
-//   }
-
-// }
 
 int pos_x[5] = {0, 130, 260, 390, 520};
 int pos_y[4] = {0, 109, 218, 327};
@@ -449,15 +406,6 @@ void init_power_up(GameController *game_controller)
     powerup.sprite = epd_bitmap_shield_allArray[0];
   }
 
-  // powerup.sprite = epd_bitmap_health_allArray[0];
-  uart_puts("Powerup position: ");
-  uart_puts(itoa(powerup.position.x));
-  uart_puts(itoa(powerup.position.y));
-  uart_puts("\n");
-  uart_puts("Powerup target: ");
-  uart_puts(itoa(powerup.target.x));
-  uart_puts(itoa(powerup.target.y));
-  uart_puts("\n");
   game_controller->powerup = powerup;
 }
 
@@ -465,9 +413,6 @@ void move_PU_to_position(GameController *game_controller)
 {
   PowerUp *powerup = &game_controller->powerup;
   clear_image(powerup->position.x, powerup->position.y, 90, 90, epd_bitmap_background);
-  uart_puts("Current Y position: ");
-  uart_puts(itoa(powerup->position.y));
-  uart_puts("\n");
 
   if (powerup->position.y < powerup->target.y)
   {
@@ -476,7 +421,7 @@ void move_PU_to_position(GameController *game_controller)
   else
   {
     powerup->reach_target = 1;
-    uart_puts("Powerup reached target\n");
+    uart_puts("ALERT: POWERUP REACHED THE TARGET!\n");
   }
 
   draw_health_PU(game_controller);
