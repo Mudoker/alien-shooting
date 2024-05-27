@@ -159,21 +159,22 @@ void init_wave(GameController *gc)
   wave->alien_count = count;
 }
 
-Spaceship* init_current_ship_option() {
-    static Spaceship spaceship; 
-    
-    spaceship.name = "Lev1";
-    spaceship.size.width = 124;
-    spaceship.size.height = 188;
-    spaceship.bullet_bonus = 4;
+Spaceship *init_current_ship_option()
+{
+  static Spaceship spaceship;
 
-    spaceship.position.x = (SCREEN_WIDTH - spaceship.size.width) / 2;
-    spaceship.position.y = (SCREEN_HEIGHT - spaceship.size.height) / 2;
-    spaceship.health = 100;
+  spaceship.name = "Lev1";
+  spaceship.size.width = 124;
+  spaceship.size.height = 188;
+  spaceship.bullet_bonus = 4;
 
-    spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
+  spaceship.position.x = (SCREEN_WIDTH - spaceship.size.width) / 2;
+  spaceship.position.y = (SCREEN_HEIGHT - spaceship.size.height) / 2;
+  spaceship.health = 100;
 
-    return &spaceship;
+  spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
+
+  return &spaceship;
 }
 
 void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option)
@@ -359,8 +360,8 @@ void move_bullet(GameController *game_controller, int index, int step)
         {
 
           // Deal damage to the alien
-          deal_damage(game_controller, i);
-
+          deal_damage(game_controller, i, alien->position.x, alien->position.y);
+          
           // Clear the bullet
           clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
           //
@@ -493,7 +494,7 @@ void receive_damage(GameController *game_controller)
   draw_health_bar(game_controller);
 }
 
-void deal_damage(GameController *game_controller, int index)
+void deal_damage(GameController *game_controller, int index,int posX, int posY)
 {
   Wave *current_wave = &game_controller->stages[0].waves[game_controller->current_wave];
   Alien *alien = &current_wave->aliens[index];
@@ -501,6 +502,7 @@ void deal_damage(GameController *game_controller, int index)
   if (alien->health <= 0)
   {
     clear_image(alien->position.x, alien->position.y, alien->size.width, alien->size.height, epd_bitmap_background);
+    explosion(posX, posY);
     alien->name = NULL;
   }
 }
@@ -803,25 +805,20 @@ void draw_badge(int badge)
   }
 }
 
-void explosion()
+void explosion(int posX, int posY)
 {
-  // framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, cinema_bg_width, cinema_bg_height, 0, 0);
-  display_explosion(paddingLeft, paddingTop, 90, 90, 10, epd_bitmap_explosion_allArray);
-  
+  framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, cinema_bg_width, cinema_bg_height, 0, 0);
+  display_explosion(posX, posY, 90, 90, 10, epd_bitmap_explosion_allArray);
 }
 
 void display_explosion(int x, int y, int w, int h, int num_frames, const unsigned long **video)
 {
-  for (int i = 0; i < 1; i++)
-  {
     for (int frame = 0; frame < num_frames; frame++)
     {
       draw_image(x, y, w, h, video[frame]);
       wait_msec(100500);
-      clear_image(paddingLeft, paddingTop, 90, 90, epd_bitmap_background);
+      clear_image(x, y, 90, 90, epd_bitmap_background);
     }
-    
-  }
 }
 
 void change_spaceship(GameController *game_controller, int order)

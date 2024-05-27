@@ -118,7 +118,7 @@ void move_bullet(GameController *game_controller, int index, int step);
 
 void add_bullet(GameController *game_controller);
 
-void deal_damage(GameController *game_controller, int index);
+void deal_damage(GameController *game_controller, int index,int posX, int posY);
 
 void draw_badge(int badge);
 
