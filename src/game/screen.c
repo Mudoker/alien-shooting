@@ -14,6 +14,8 @@ void in_game_screen(GameController *game_controller) {
   draw_spaceship(game_controller);
   draw_health_bar(game_controller);
   draw_alien(game_controller);
+  // draw_health_PU(game_controller);
+  // draw_shield_PU(game_controller);
 
   int bullet_timer = 0;
   int fire_timer = 0;
@@ -60,6 +62,9 @@ void in_game_screen(GameController *game_controller) {
       bullet_timer = 0;
     }
   }
+
+game_loop(game_controller);
+
 }
 
 void stage_screen(GameController *game_controller) {
