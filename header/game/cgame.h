@@ -61,6 +61,7 @@ typedef struct GameController
   Display *screen;
   unsigned long long bullet_on_screen_count;
   Page page;
+  int score;
   PowerUp powerup;
 
   // Methods
@@ -84,13 +85,14 @@ void init_frame(int offset_x, int offset_y);
 void init_spaceship(GameController *game_controller,
                     const unsigned long *sprite, int width, int height, int x,
                     int y);
+Spaceship *init_current_ship_option();
 void init_bullet(GameController *game_controller, const unsigned long *sprite,
                  int width, int height, int x, int y, int index);
 void init_stages(GameController *game_controller);
 void init_controller(GameController *game_controller);
 void init_alien(Alien *Alien, const unsigned long *sprite, int width, int height, int x, int y);
 void init_wave(GameController *game_controller);
-void draw_spaceship(GameController *game_controller);
+
 void draw_background();
 void draw_health_bar(GameController *game_controller);
 void draw_welcome_screen();
@@ -98,6 +100,12 @@ void draw_alien(GameController *game_controller);
 void draw_health_PU(GameController *game_controller);
 void draw_shield_PU(GameController *game_controller);
 char *itoa(int num);
+
+void draw_spaceship(GameController *game_controller);
+void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option);
+void draw_ship_selection_page();
+void draw_arrows(int order);
+void change_spaceship(GameController *game_controller, int order);
 
 void collision_detection(GameController *game_controller);
 void clear_wave(GameController *game_controller);
@@ -111,5 +119,9 @@ void add_bullet(GameController *game_controller);
 void deal_damage(GameController *game_controller, int index);
 
 void draw_badge(int badge);
+
+void draw_lose_screen(GameController *game_controller, int seconds);
+void draw_win_final_screen(GameController *game_controller, int seconds);
+void draw_win_screen(GameController *game_controller, int seconds);
 
 #endif // CGAME_H
