@@ -61,6 +61,7 @@ typedef struct GameController
   Display *screen;
   int bullet_on_screen_count;
   Page page;
+  int score;
   PowerUp powerup;
 
   // Methods
@@ -118,5 +119,9 @@ void add_bullet(GameController *game_controller);
 void deal_damage(GameController *game_controller, int index);
 
 void draw_badge(int badge);
+
+void draw_lose_screen(GameController *game_controller, int seconds);
+void draw_win_final_screen(GameController *game_controller, int seconds);
+void draw_win_screen(GameController *game_controller, int seconds);
 
 #endif // CGAME_H
