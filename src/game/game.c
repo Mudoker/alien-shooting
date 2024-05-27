@@ -10,6 +10,7 @@
 void gameCli() {
   GameController cgame;
   init_controller(&cgame);
+  
   if (cgame.page == WELCOME) {
     welcome_screen(&cgame);
   } else if (cgame.page == STAGE) {
