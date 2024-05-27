@@ -91,6 +91,8 @@ void draw_welcome_screen();
 void draw_alien(GameController *game_controller);
 void draw_health_PU(GameController *game_controller);
 void draw_shield_PU(GameController *game_controller);
+void explosion();
+void display_explosion(int x, int y, int w, int h, int num_frames, const unsigned long **video);
 char *itoa(int num);
 
 void collision_detection(GameController *game_controller);

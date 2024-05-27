@@ -10,6 +10,7 @@
 #include "../../assets/games/powers_up/badge/bonus_bullets.h"
 #include "../../assets/games/spaceship/blader.h"
 #include "../../assets/games/welcome_screen/welcome.h"
+#include "../../assets/games/explosion/explosion.h"
 
 #define BUlLET_WIDTH 17
 #define BULLET_HEIGHT 52
@@ -622,4 +623,26 @@ void draw_badge(int badge)
       }
     }
   }
+}
+
+void explosion()
+{
+  // framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, cinema_bg_width, cinema_bg_height, 0, 0);
+  display_explosion(paddingLeft, paddingTop, 90, 90, 10, epd_bitmap_explosion_allArray);
+  
+}
+
+void display_explosion(int x, int y, int w, int h, int num_frames, const unsigned long **video)
+{
+  for (int i = 0; i < 1; i++)
+  {
+    for (int frame = 0; frame < num_frames; frame++)
+    {
+      draw_image(x, y, w, h, video[frame]);
+      wait_msec(100500);
+      clear_image(paddingLeft, paddingTop, 90, 90, epd_bitmap_background);
+    }
+    
+  }
+  
 }
