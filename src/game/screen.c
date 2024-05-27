@@ -2,9 +2,15 @@
 #include "../../header/game/ui.h"
 
 void in_game_screen(GameController *game_controller) {
+  // Initialize the game background
   draw_background();
-  game_controller->spaceship.position.x = (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
-  game_controller->spaceship.position.y = SCREEN_HEIGHT - game_controller->spaceship.size.height;
+
+  // Reset spaceship position
+  game_controller->spaceship.position.x =
+      (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
+  game_controller->spaceship.position.y =
+      (SCREEN_HEIGHT - game_controller->spaceship.size.height);
+
   draw_spaceship(game_controller);
   draw_health_bar(game_controller);
   draw_alien(game_controller);
@@ -21,7 +27,6 @@ void in_game_screen(GameController *game_controller) {
     switch (c) {
     case 'w':
       move_spaceship(game_controller, KEY_UP, 10);
-      // deal_damage(game_controller);
       break;
     case 's':
       move_spaceship(game_controller, KEY_DOWN, 10);
@@ -36,24 +41,21 @@ void in_game_screen(GameController *game_controller) {
       break;
     }
 
-    
     // Increment the bullet timer
     bullet_timer += 30;
 
     if (fire_timer == 5) {
-      add_bullet(game_controller,
-                 game_controller->spaceship.position.x +
-                     game_controller->spaceship.size.width / 2 - 6,
-                 game_controller->spaceship.position.y -
-                     game_controller->spaceship.size.height / 2);
+      add_bullet(game_controller);
       fire_timer = 0;
     }
 
     // Bullet movement
     if (bullet_timer >= 10000000) { // 1 second for smoother bullet movement
-      for (int i = 0; i < MAX_BULLETS; i++) {
-        if (game_controller->spaceship.bullet[i].name != NULL) {
-          move_bullet(game_controller, i, 20);
+      for (int i = 0; i < game_controller->bullet_on_screen_count; i++) {
+        for (int j = 0; j < game_controller->spaceship.bullet_bonus + 1; j++) {
+          if (game_controller->spaceship.bullet[i][j].name != NULL) {
+            move_bullet(game_controller, i, 20);
+          }
         }
       }
       fire_timer++;

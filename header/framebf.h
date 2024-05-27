@@ -32,5 +32,8 @@ void drawt_stringARGB32(int x, int y, const char *title, const char *str,
 void update_position(int dx, int dy, int *offsetX, int *offsetY);
 void clear_image(int x, int y, int w, int h, const unsigned long *background);
 void draw_image(int x, int y, int w, int h, const unsigned long *image);
+void draw_image_with_opacity(int x, int y, int w, int h,
+                             const unsigned long *image,
+                             const unsigned long *background, float opacity);
 
 #endif
