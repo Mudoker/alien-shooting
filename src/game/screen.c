@@ -2,7 +2,15 @@
 #include "../../header/game/ui.h"
 
 void in_game_screen(GameController *game_controller) {
+  // Initialize the game background
   draw_background();
+
+  // Reset spaceship position
+  game_controller->spaceship.position.x =
+      (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
+  game_controller->spaceship.position.y =
+      (SCREEN_HEIGHT - game_controller->spaceship.size.height);
+
   draw_spaceship(game_controller);
   draw_health_bar(game_controller);
   draw_alien(game_controller);
@@ -102,6 +110,7 @@ void stage_screen(GameController *game_controller) {
 
 void welcome_screen(GameController *game_controller) {
   draw_welcome_screen();
+
   game_controller->spaceship.position.x =
       (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
   game_controller->spaceship.position.y =
