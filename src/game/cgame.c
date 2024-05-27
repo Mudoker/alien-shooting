@@ -617,33 +617,6 @@ void calculate_bullet_positions(GameController *game_controller,
 // Collision detection (should check at the alien)
 void collision_detection(GameController *game_controller)
 {
-  // Alien *alien = &game_controller->alien;
-  // if (alien->name == NULL) {
-  //   return;
-  // }
-  // Spaceship *spaceship = &game_controller->spaceship;
-  // Bullet *bullets = spaceship->bullet;
-
-  // for (int i = 0; i < MAX_BULLETS; i++) {
-  //   if (bullets[i].name != NULL) {
-  //     if (bullets[i].position.x >= alien->position.x &&
-  //         bullets[i].position.x <= alien->position.x + alien->size.width &&
-  //         bullets[i].position.y >= alien->position.y &&
-  //         bullets[i].position.y <= alien->position.y + alien->size.height)
-  //         {
-  //       // Clear the bullet
-  //       deal_damage(game_controller);
-  //       clear_image(bullets[i].position.x, bullets[i].position.y,
-  //       bullets[i].size.width, bullets[i].size.height,
-  //       epd_bitmap_background); bullets[i].name = NULL;
-
-  //       // Clear the alien
-  //       // clear_image(alien->position.x, alien->position.y,
-  //       alien->size.width, alien->size.height, epd_bitmap_background);
-  //       // alien->name = NULL;
-  //     }
-  //   }
-  // }
 }
 
 char *itoa(int num)
