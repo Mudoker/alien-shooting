@@ -7,10 +7,13 @@
 struct Alien;
 struct Bullet;
 struct Spaceship;
+struct Stage;
+struct Wave;
 
 #define MAX_BULLETS 1000
 
-typedef struct Bullet {
+typedef struct Bullet
+{
   char *id;                    // Unique identifier
   char *name;                  // Bullet name
   float damage;                // Damage
@@ -25,7 +28,8 @@ typedef struct Bullet {
 } Bullet;
 
 // Game structs
-typedef struct Spaceship {
+typedef struct Spaceship
+{
   char *id;                      // Unique identifier
   char *name;                    // Spaceship name
   Position position;             // Position
@@ -47,7 +51,8 @@ typedef struct Spaceship {
   boolean (*powerup)(int x, int y);          // Powerup (use mana)
 } Spaceship;
 
-typedef struct Alien {
+typedef struct Alien
+{
   char *id;          // Unique identifier
   char *name;        // Alien name
   Position position; // Position
@@ -58,6 +63,7 @@ typedef struct Alien {
   int speed;                   // Speed
   float damage;                // Damage
   const unsigned long *sprite; // Sprite (Image)
+  int direction;               // Direction
 
   // Methods
   boolean (*draw)();              // Draw the alien
@@ -66,18 +72,28 @@ typedef struct Alien {
   boolean (*die)();               // Die
 } Alien;
 
-typedef struct Stage {
+typedef struct Wave
+{
+  int level;       // Wave level
+  int alien_count; // Alien count
+  Alien aliens[5]; // Aliens
+} Wave;
+
+typedef struct Stage
+{
   char name[MAX_STR_LENGTH]; // Stage name
-  int level;
+  int level;                 // Stage level
+  Wave waves[3];             // Waves
 } Stage;
 
-typedef struct PowerUp {
-  char *id;                    // Unique identifier
-  char *name;                  // PowerUp name
+typedef struct PowerUp
+{
+  char *id;   // Unique identifier
+  char *name; // PowerUp name
   int type;
-  Position position;   
+  Position position;
   Position target;
-  int reach_target;        // Position
+  int reach_target;            // Position
   Size size;                   // Size
   const unsigned long *sprite; // Sprite (Image)
 

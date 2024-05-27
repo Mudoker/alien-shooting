@@ -1,5 +1,6 @@
 
 #include "../../header/game/cgame.h"
+#include "../../header/game/map.h"
 #include "../../assets/games/alient/alient_1.h"
 #include "../../assets/games/power_up/health.h"
 #include "../../assets/games/power_up/shield.h"
@@ -90,36 +91,57 @@ void init_stages(GameController *game_controller)
 {
   for (int i = 0; i < 9; i++)
   {
-    Stage stage;
-    stage.level = i + 1;
-    strcpy(stage.name, "STAGE ");
-    strcat(stage.name, int_to_string(i + 1));
-    game_controller->stages[i] = stage;
+    char name[MAX_STR_LENGTH];
+    strcpy(name, "STAGE ");
+    strcat(name, int_to_string(i + 1));
+
+    strcpy(game_controller->stages[i].name, name);
+
+    game_controller->stages[i].level = i + 1;
+
+    for (int j = 0; j < 3; j++)
+    {
+      game_controller->stages[i].waves[j].level = j + 1;
+      game_controller->stages[i].waves[j].alien_count = 0; // Initialize alien count
+    }
   }
   game_controller->stage_level = 1;
 }
 
-void init_alien(GameController *game_controller, const unsigned long *sprite,
-                int width, int height, int x, int y)
+void init_alien(Alien *alien, const unsigned long *sprite, int width, int height, int x, int y)
 {
-  Alien alien;
-  alien.name = "Alien";
-  alien.size.width = width;
-  alien.size.height = height;
+  alien->name = "Alien";
+  alien->size.width = width;
+  alien->size.height = height;
 
-  alien.position.x = x;
-  alien.position.y = y;
-  alien.health = 100;
-
-  alien.sprite = sprite;
-
-  game_controller->alien = alien;
+  alien->position.x = x;
+  alien->position.y = y;
+  alien->direction = 1;
+  alien->health = 100;
+  alien->sprite = sprite;
 }
 
-void deinit_alien(GameController *game_controller)
+// Init wave
+void init_wave(GameController *gc)
 {
-  game_controller->alien.name = NULL;
+  Wave *wave = &gc->stages[0].waves[gc->current_wave]; // Initialize the first wave of the given stage
+  wave->level = gc->current_wave + 1;
+
+  int count = 0;
+  for (int j = 0; j < 3; j++)
+  { // Rows of the map
+    for (int k = 0; k < 5; k++)
+    { // Columns of the map
+      if (map_1[gc->current_wave][j][k] == 1)
+      {
+        init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130, 109, 130 * k, 109 * j);
+        count++;
+      }
+    }
+  }
+  wave->alien_count = count;
 }
+
 // Draw spaceship
 void draw_spaceship(GameController *game_controller)
 {
@@ -132,16 +154,15 @@ void draw_spaceship(GameController *game_controller)
 void draw_background()
 {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background);
+  draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background);
 }
 
 // Draw health bar
 void draw_health_bar(GameController *game_controller)
 {
   float healthPercentage = (float)game_controller->spaceship.health / 100.0;
-  draw_capsuleARGB32(59, SCREEN_HEIGHT - 45, 250, 10, 0x00FF0000, 1,
-                     healthPercentage);
-  draw_image_object(20, SCREEN_HEIGHT - 60, 40, 40, epd_bitmap_health_bar_icon,
-                    epd_bitmap_background);
+  draw_capsuleARGB32(59, SCREEN_HEIGHT - 45, 250, 10, 0x00FF0000, 1, healthPercentage);
+  draw_image_object(20, SCREEN_HEIGHT - 60, 40, 40, epd_bitmap_health_bar_icon, epd_bitmap_background);
 }
 
 void draw_welcome_screen()
@@ -152,18 +173,20 @@ void draw_welcome_screen()
 // Draw alien
 void draw_alien(GameController *game_controller)
 {
-  draw_image(game_controller->alien.position.x,
-             game_controller->alien.position.y,
-             game_controller->alien.size.width,
-             game_controller->alien.size.height, game_controller->alien.sprite);
+  for (int i = 0; i < game_controller->stages[0].waves[game_controller->current_wave].alien_count; i++)
+  {
+    Alien alien = game_controller->stages[0].waves[game_controller->current_wave].aliens[i];
+    if (game_controller->stages[0].waves[game_controller->current_wave].aliens[i].name != NULL)
+    {
+      draw_image(alien.position.x, alien.position.y, alien.size.width, alien.size.height, alien.sprite);
+    }
+  }
 }
 
 void move_spaceship(GameController *game_controller, int key, int step)
 {
   Spaceship *spaceship = &game_controller->spaceship;
-  clear_image(spaceship->position.x, spaceship->position.y,
-              spaceship->size.width, spaceship->size.height,
-              epd_bitmap_background);
+  clear_image(spaceship->position.x, spaceship->position.y, spaceship->size.width, spaceship->size.height, epd_bitmap_background);
   // Calculate potential new position
   int newX = spaceship->position.x;
   int newY = spaceship->position.y;
@@ -200,50 +223,58 @@ void move_spaceship(GameController *game_controller, int key, int step)
   draw_spaceship(game_controller);
 }
 
+// ALways go vertically up
 void move_bullet(GameController *game_controller, int index, int step)
 {
-  // Get all bullets at all indexes based on the bonus
   for (int i = 0; i < game_controller->spaceship.bullet_bonus + 1; i++)
   {
     Bullet *bullet = &game_controller->spaceship.bullet[index][i];
-    Alien *alien = &game_controller->alien;
 
-    if (bullet->name != NULL)
+    // Clear the bullet at the previous position
+    clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
+
+    // Calculate potential new position
+    bullet->position.y -= step;
+
+    // Check if the bullet is out of the screen
+    if (bullet->position.y <= -bullet->size.height)
     {
-      clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
-                  bullet->size.height, epd_bitmap_background);
-      // Calculate potential new position
-      bullet->position.y = bullet->position.y - step;
+      bullet->name = NULL;
+      // game_controller->bullet_on_screen_count--;
+      return; // No need to continue if the bullet is out of the screen
+    }
 
-      draw_image(bullet->position.x, bullet->position.y, bullet->size.width,
-                 bullet->size.height, bullet->sprite);
+    // Draw the bullet at the new position
+    draw_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, bullet->sprite);
 
-      if (bullet->position.y <= -bullet->size.height)
-      {
-        bullet->name = NULL;
-      }
+    // Check for collision with aliens in the current wave
+    Wave *current_wave = &game_controller->stages[0].waves[game_controller->current_wave];
+    for (int i = 0; i < current_wave->alien_count; i++)
+    {
+      Alien *alien = &current_wave->aliens[i];
 
       if (alien->name != NULL)
       {
         if (bullet->position.x >= alien->position.x &&
             bullet->position.x <= alien->position.x + alien->size.width &&
-            bullet->position.y >= alien->position.y &&
-            bullet->position.y <= alien->position.y + alien->size.height)
+            bullet->position.y - 20 >= alien->position.y &&
+            bullet->position.y - 20 <= alien->position.y + alien->size.height)
         {
+
+          // Deal damage to the alien
+          deal_damage(game_controller, i);
+
           // Clear the bullet
-          deal_damage(game_controller);
-          clear_image(bullet->position.x, bullet->position.y,
-                      bullet->size.width, bullet->size.height,
-                      epd_bitmap_background);
+          clear_image(bullet->position.x, bullet->position.y, bullet->size.width, bullet->size.height, epd_bitmap_background);
+          //
           bullet->name = NULL;
+
+          return; // Exit after collision
         }
       }
     }
   }
 }
-// Clear the alien
-// clear_image(alien->position.x, alien->position.y, alien->size.width,
-// alien->size.height, epd_bitmap_background); alien->name = NULL;
 
 int pos_x[5] = {0, 130, 260, 390, 520};
 int pos_y[4] = {0, 109, 218, 327};
@@ -286,22 +317,6 @@ void init_power_up(GameController *game_controller)
   game_controller->powerup = powerup;
 }
 
-// void move_PU_to_position(GameController *game_controller)
-// {
-//   PowerUp *powerup = &game_controller->powerup;
-//   clear_image(powerup->position.x, powerup->position.y, 90, 90, epd_bitmap_background);
-//   if (powerup->position.y < powerup->target.y)
-//   {
-//     powerup->position.y += 2;
-//   }
-//   else
-//   {
-//     powerup->reach_target = 1;
-//   }
-//   draw_health_PU(game_controller);
-//   // draw_image_object(powerup->position.x, powerup->position.y, 90, 90, powerup->sprite, epd_bitmap_background);
-// }
-
 void move_PU_to_position(GameController *game_controller)
 {
   PowerUp *powerup = &game_controller->powerup;
@@ -332,20 +347,6 @@ int pu_reach_target(GameController *game_controller)
   return 1; // All aliens have reached their positions
 }
 
-void game_loop(GameController *game_controller)
-{
-  // while (1)
-  // {
-  //   init_power_up(game_controller);
-
-  //   while (!pu_reach_target(game_controller))
-  //   {
-  //     move_PU_to_position(game_controller);
-  //     wait_msec(8000);
-  //   }
-  // }
-}
-
 void draw_health_PU(GameController *game_controller)
 {
   draw_image_object(game_controller->powerup.position.x, game_controller->powerup.position.y, 90, 90, game_controller->powerup.sprite, epd_bitmap_background);
@@ -356,27 +357,6 @@ void draw_shield_PU(GameController *game_controller)
   // int x = pos_x[rand() % 5];
   // int y = pos_y[rand() % 4];
   draw_image_object(780 / 2, 450, 90, 90, epd_bitmap_shield_allArray[0], epd_bitmap_background);
-}
-void move_alien(GameController *game_controller, int step)
-{
-  Alien *alien = &game_controller->alien;
-  clear_image(alien->position.x, alien->position.y, alien->size.width, alien->size.height, epd_bitmap_background);
-  // Calculate potential new position
-  int newX = alien->position.x;
-  int newY = alien->position.y;
-
-  // Calculate boundary limits
-  int maxX = SCREEN_WIDTH - alien->size.width;
-  int maxY = SCREEN_HEIGHT - alien->size.height;
-
-  // Clamp position to stay within boundaries
-  alien->position.x = (newX < 0) ? 0 : (newX > maxX) ? maxX
-                                                     : newX;
-  alien->position.y = (newY < 0) ? 0 : (newY > maxY) ? maxY
-                                                     : newY;
-
-  // Draw the spaceship at the new position
-  draw_alien(game_controller);
 }
 
 void add_bullet(GameController *game_controller)
@@ -416,17 +396,63 @@ void receive_damage(GameController *game_controller)
   draw_health_bar(game_controller);
 }
 
-void deal_damage(GameController *game_controller)
+void deal_damage(GameController *game_controller, int index)
 {
-  game_controller->alien.health -= 10;
-  uart_dec(game_controller->alien.health);
-  if (game_controller->alien.health <= 0)
+  Wave *current_wave = &game_controller->stages[0].waves[game_controller->current_wave];
+  Alien *alien = &current_wave->aliens[index];
+  alien->health -= 10;
+  if (alien->health <= 0)
   {
-    clear_image(game_controller->alien.position.x,
-                game_controller->alien.position.y,
-                game_controller->alien.size.width,
-                game_controller->alien.size.height, epd_bitmap_background);
-    game_controller->alien.name = NULL;
+    clear_image(alien->position.x, alien->position.y, alien->size.width, alien->size.height, epd_bitmap_background);
+    alien->name = NULL;
+  }
+}
+
+void clear_wave(GameController *game_controller)
+{
+  int defeat_count = 0;
+  Wave *current_wave = &game_controller->stages[0].waves[game_controller->current_wave];
+  for (int i = 0; i < current_wave->alien_count; i++)
+  {
+    Alien *alien = &current_wave->aliens[i];
+    if (alien->name == NULL)
+    {
+      defeat_count++;
+    }
+  }
+
+  if (defeat_count == current_wave->alien_count)
+  {
+    wait_msec(1000000);
+    game_controller->current_wave++;
+    init_wave(game_controller);
+
+    draw_alien(game_controller);
+  }
+}
+
+void move_aliens(GameController *game_controller, int step)
+{
+  // Update position of the alien
+  Wave *current_wave = &game_controller->stages[0].waves[game_controller->current_wave];
+
+  for (int i = 0; i < current_wave->alien_count; i++)
+  {
+    Alien *alien = &current_wave->aliens[i];
+    if (alien->name != NULL)
+    {
+      clear_image(alien->position.x, alien->position.y, alien->size.width, alien->size.height, epd_bitmap_background);
+      alien->position.x += step * alien->direction;
+
+      // Check for screen boundaries and change direction if necessary
+      if (alien->position.x <= 0 || alien->position.x + alien->size.width >= SCREEN_WIDTH)
+      {
+        alien->direction *= -1;                       // Reverse direction
+        alien->position.x += step * alien->direction; // Move back into screen bounds
+      }
+
+      draw_image(alien->position.x, alien->position.y, alien->size.width, alien->size.height, alien->sprite);
+    }
   }
 }
 
