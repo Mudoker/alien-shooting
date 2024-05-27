@@ -63,6 +63,7 @@ typedef struct GameController
   Page page;
   int score;
   PowerUp powerup;
+  int command_count;
 
   // Methods
   void (*init)(void);
