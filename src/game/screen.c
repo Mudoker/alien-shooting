@@ -144,7 +144,7 @@ void ship_selection_screen(GameController *game_controller)
 {
   int order = 1;
 
-  Spaceship current_ship_option = init_current_ship_option();
+  Spaceship *current_ship_option = init_current_ship_option();
 
   draw_background();
   draw_ship_selection_page();
@@ -285,8 +285,8 @@ void welcome_screen(GameController *game_controller)
       stage_screen(game_controller);
       break;
     case '2':
-      result_screen(game_controller);
-      // ship_selection_screen(game_controller);
+      // result_screen(game_controller);
+      ship_selection_screen(game_controller);
       break;
     // case '3':
     //   in_game_screen(game_controller);

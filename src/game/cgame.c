@@ -158,20 +158,21 @@ void init_wave(GameController *gc)
   wave->alien_count = count;
 }
 
-Spaceship init_current_ship_option()
-{
-  Spaceship spaceship;
-  spaceship.name = "Blader";
-  spaceship.size.width = 124;
-  spaceship.size.height = 188;
+Spaceship* init_current_ship_option() {
+    static Spaceship spaceship; 
+    
+    spaceship.name = "Lev1";
+    spaceship.size.width = 124;
+    spaceship.size.height = 188;
+    spaceship.bullet_bonus = 4;
 
-  spaceship.position.x = (SCREEN_WIDTH - 124) / 2;
-  spaceship.position.y = (SCREEN_HEIGHT - 188) / 2;
-  spaceship.health = 100;
+    spaceship.position.x = (SCREEN_WIDTH - spaceship.size.width) / 2;
+    spaceship.position.y = (SCREEN_HEIGHT - spaceship.size.height) / 2;
+    spaceship.health = 100;
 
-  spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
+    spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
 
-  return spaceship;
+    return &spaceship;
 }
 
 void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option)
