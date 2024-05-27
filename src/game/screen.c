@@ -34,25 +34,25 @@ void in_game_screen(GameController *game_controller)
     {
     case 'w':
       game_controller->command_count++;
-      uart_logs(game_controller->command_count, "Moved Spaceship to up");
+      uart_logs(game_controller->command_count, "Moved spaceship to up");
 
       move_spaceship(game_controller, KEY_UP, 10);
       break;
     case 's':
       game_controller->command_count++;
-      uart_logs(game_controller->command_count, "Moved Spaceship to down");
+      uart_logs(game_controller->command_count, "Moved spaceship to down");
 
       move_spaceship(game_controller, KEY_DOWN, 10);
       break;
     case 'a':
       game_controller->command_count++;
-      uart_logs(game_controller->command_count, "Moved Spaceship to left");
+      uart_logs(game_controller->command_count, "Moved spaceship to left");
 
       move_spaceship(game_controller, KEY_LEFT, 10);
       break;
     case 'd':
       game_controller->command_count++;
-      uart_logs(game_controller->command_count, "Moved Spaceship to right");
+      uart_logs(game_controller->command_count, "Moved spaceship to right");
 
       move_spaceship(game_controller, KEY_RIGHT, 10);
       break;
