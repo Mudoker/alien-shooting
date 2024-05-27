@@ -469,7 +469,7 @@ void move_alien_bullet(GameController *game_controller, int step)
                       game_controller->spaceship.size.height)
           {
 
-            uart_puts("Alien bullet hit the spaceship!\n");
+            uart_puts("ALERT: ALIEN BULLET HIT THE SPACESHIP!\n");
 
             // Deal damage to the spaceship
             receive_damage(game_controller);
@@ -551,7 +551,7 @@ void move_bullet(GameController *game_controller, int index, int step)
             bullet->position.y >= alien->position.y &&
             bullet->position.y <= alien->position.y + alien->size.height)
         {
-          uart_puts("Bullet hit an alien!\n");
+          uart_puts("ALERT: BULLET HIT AN ALIEN!\n");
 
           // Deal damage to the alien
           deal_damage(game_controller, j);
@@ -610,9 +610,6 @@ void move_PU_to_position(GameController *game_controller)
   PowerUp *powerup = &game_controller->powerup;
   clear_image(powerup->position.x, powerup->position.y, 90, 90,
               epd_bitmap_background);
-  uart_puts("Current Y position: ");
-  uart_puts(itoa(powerup->position.y));
-  uart_puts("\n");
 
   if (powerup->position.y < powerup->target.y)
   {
