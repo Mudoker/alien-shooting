@@ -11,6 +11,11 @@ void win_screen(GameController *game_controller, int seconds);
 void welcome_screen(GameController *game_controller);
 void init_wave(GameController *game_controller); // Forward declaration
 
+void manage_command(GameController *game_controller, char *log) {
+  game_controller->command_count++;
+  uart_logs(game_controller->command_count, log);
+}
+
 void in_game_screen(GameController *game_controller) {
   game_controller->current_wave = 0;
   init_wave(game_controller);
@@ -133,7 +138,8 @@ void stage_screen(GameController *game_controller) {
       game_controller->stage_level++;
       is_update = True;
 
-      manage_command(game_controller, "Moved down to select another stage level");
+      manage_command(game_controller,
+                     "Moved down to select another stage level");
       break;
     case '\n':
       manage_command(game_controller, "Selected a stage level to play");
@@ -165,8 +171,7 @@ void ship_selection_screen(GameController *game_controller) {
     case 'a':
       manage_command(game_controller, "Moved left to select another spaceship");
 
-      if (order > 1)
-      {
+      if (order > 1) {
         order--;
         draw_spaceship_option(&game_controller->spaceship, order, 1,
                               current_ship_option);
@@ -174,10 +179,10 @@ void ship_selection_screen(GameController *game_controller) {
       }
       break;
     case 'd':
-      manage_command(game_controller, "Moved right to select another spaceship");
+      manage_command(game_controller,
+                     "Moved right to select another spaceship");
 
-      if (order < 3)
-      {
+      if (order < 3) {
         order++;
         draw_spaceship_option(&game_controller->spaceship, order, 1,
                               current_ship_option);
@@ -218,12 +223,15 @@ void lose_screen(GameController *game_controller, int seconds) {
     char c = getUart();
     switch (c) {
     case 'y':
-      manage_command(game_controller, "Redirected to the game screen from lose result screen");
+      manage_command(game_controller,
+                     "Redirected to the game screen from lose result screen");
 
       in_game_screen(game_controller);
       break;
     case 'n':
-      manage_command(game_controller, "Redirected to the welcome screen from lose result screen");
+      manage_command(
+          game_controller,
+          "Redirected to the welcome screen from lose result screen");
 
       welcome_screen(game_controller);
       break;
@@ -240,7 +248,9 @@ void win_final_screen(GameController *game_controller, int seconds) {
     char c = getUart();
     switch (c) {
     case 'n':
-      manage_command(game_controller, "Redirected to the welcome screen from win final result screen");
+      manage_command(
+          game_controller,
+          "Redirected to the welcome screen from win final result screen");
 
       welcome_screen(game_controller);
       break;
@@ -257,13 +267,16 @@ void win_screen(GameController *game_controller, int seconds) {
     char c = getUart();
     switch (c) {
     case 'y':
-      manage_command(game_controller, "Redirected to the next stage's game screen from win result screen");
+      manage_command(
+          game_controller,
+          "Redirected to the next stage's game screen from win result screen");
 
       game_controller->stage_level++;
       in_game_screen(game_controller);
       break;
     case 'n':
-      manage_command(game_controller, "Redirected to the welcome screen from win result screen");
+      manage_command(game_controller,
+                     "Redirected to the welcome screen from win result screen");
 
       welcome_screen(game_controller);
       break;
@@ -288,12 +301,15 @@ void welcome_screen(GameController *game_controller) {
     char c = getUart();
     switch (c) {
     case '1':
-      manage_command(game_controller, "Redirected to the stage screen from welcome screen");
+      manage_command(game_controller,
+                     "Redirected to the stage screen from welcome screen");
 
       stage_screen(game_controller);
       break;
     case '2':
-      manage_command(game_controller, "Redirected to the spaceship selection screen from welcome screen");
+      manage_command(
+          game_controller,
+          "Redirected to the spaceship selection screen from welcome screen");
 
       ship_selection_screen(game_controller);
       break;
@@ -301,10 +317,4 @@ void welcome_screen(GameController *game_controller) {
       break;
     }
   }
-}
-
-void manage_command(GameController *game_controller, char *log)
-{
-  game_controller->command_count++;
-  uart_logs(game_controller->command_count, log);
 }
