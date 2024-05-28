@@ -20,6 +20,7 @@
 #define TIMER_CS_MATCH (1 << 1)
 #define TIMER_CLOCK_HZ 1000000
 
+#define COUNTDOWN 60;
 extern volatile int countdown;
 
 // Timer initialization

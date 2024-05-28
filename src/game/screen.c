@@ -229,12 +229,12 @@ void ship_selection_screen(GameController *game_controller)
 void result_screen(GameController *game_controller)
 {
 
-  int actual_count = 60 - countdown;
+  int actual_count = COUNTDOWN - countdown;
 
   // reset the countdown
-  countdown = 5;
+  countdown = COUNTDOWN;
 
-  if (actual_count > 60)
+  if (actual_count == countdown)
   {
     lose_screen(game_controller, actual_count);
   }

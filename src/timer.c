@@ -2,7 +2,7 @@
 #include "../header/uart.h"
 
 volatile unsigned long system_millis = 0;
-volatile int countdown = 5;
+volatile int countdown = COUNTDOWN;
 
 // Function to get the current time in milliseconds
 unsigned long get_time_ms() { return system_millis; }
