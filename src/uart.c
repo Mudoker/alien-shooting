@@ -128,14 +128,19 @@ void uart_puts(char *s)
 
 void uart_logs(int command_index, char *log, int is_positive)
 {
-  uart_puts("Command ");
-  uart_dec(command_index);
+
   if (is_positive)
   {
+    uart_puts(GREEN_TEXT);
+    uart_puts("Command ");
+    uart_dec(command_index);
     uart_puts(" - ACK: ");
   }
   else
   {
+    uart_puts(RED_TEXT);
+    uart_puts("Command ");
+    uart_dec(command_index);
     uart_puts(" - NAK: ");
   }
   uart_puts(log);
