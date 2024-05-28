@@ -214,7 +214,7 @@ int main()
   uart_init(); // Initialize UART
   os_greet();  // Show welcome message
 
-  // cli(); // Get command from user
+  cli(); // Get command from user
 
   game_cli();
 
