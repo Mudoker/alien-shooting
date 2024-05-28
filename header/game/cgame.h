@@ -23,12 +23,6 @@ typedef enum
   STAGE_1 = 0,
   STAGE_2,
   STAGE_3,
-  STAGE_4,
-  STAGE_5,
-  STAGE_6,
-  STAGE_7,
-  STAGE_8,
-  STAGE_9,
 } StageLevel;
 
 // Current page
