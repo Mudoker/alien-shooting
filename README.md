@@ -3,7 +3,7 @@
 
 ### Project Information
 
-This project is a part of the course EEET2490 – Embedded System: OS and Interfacing, Semester 2024-1, titled "Assessment 3 – Group Work Report: SCREEN DISPLAY & APPLICATION DEVELOPMENT FOR BARE METAL OS".
+This project is a part of the course EEET2490 – Embedded System: OS and Interfacing, Semester 2024-1, titled 'Screen display & Application development for Bare metal OS'.
 
 #### Team Info
 
