@@ -23,14 +23,17 @@ void in_game_screen(GameController *game_controller)
   draw_spaceship(game_controller);
   draw_health_bar(game_controller);
   draw_alien(game_controller);
-  // draw_health_PU(game_controller);
-  // draw_shield_PU(game_controller);
-
+  
+  int last_powerup_update = 0; // Add this variable to track the time
   int bullet_timer = 0;
   int fire_timer = 0;
   int alien_move_timer = 0;
   int alien_move_step = 10;
   int power_up_timer = 0;
+  int powerup_active = 0;
+  int next_powerup_time = 8000; // Initial delay for the first power-up
+  static int  shieldTimer = 0;
+  // lighting();
 
   while (1)
   {
@@ -63,7 +66,7 @@ void in_game_screen(GameController *game_controller)
     // Increment the bullet timer
     bullet_timer += 30;
     alien_move_timer += 30;
-    power_up_timer += 30;
+    power_up_timer += 700;
 
     if (fire_timer == 5)
     {
@@ -100,6 +103,9 @@ void in_game_screen(GameController *game_controller)
 
       power_up_timer = 0;
     }
+   
+      game_controller->spaceship.shieldTimer -= 80;
+
   }
 }
 
@@ -122,7 +128,7 @@ void stage_screen(GameController *game_controller)
 
       is_update = False;
 
-      int yOffset = 40; // Start with the offset for the active stage
+      int yOffset = 300; // Start with the offset for the active stage
       for (int i = 0; i < MAX_STAGES; i++)
       {
         int buttonState = (game_controller->stage_level ==
@@ -132,7 +138,7 @@ void stage_screen(GameController *game_controller)
         draw_button(SCREEN_WIDTH / 2 - 150, yOffset, 300, 60,
                     game_controller->stages[i].name, buttonState);
 
-        yOffset += 90; // Increase the y-offset for the next button
+        yOffset += 120; // Increase the y-offset for the next button
       }
     }
 

@@ -39,6 +39,7 @@ typedef struct Spaceship {
   float mana;                     // Mana
   int bullet_bonus;               // Bullet bonus
   const unsigned long *sprite;    // Sprite (Image)
+  int shieldTimer;
 
   // Methods
   boolean (*show)();                         // Draw the spaceship
@@ -105,5 +106,6 @@ typedef struct Explosion {
   int active;
   const unsigned long **video_frames;
 } Explosion;
+
 
 #endif

@@ -8,7 +8,7 @@
 #include "ui.h"
 
 #define MAX_ALIENS 20
-#define MAX_STAGES 9
+#define MAX_STAGES 3
 
 typedef enum {
   KEY_UP = 0,
@@ -21,12 +21,6 @@ typedef enum {
   STAGE_1 = 0,
   STAGE_2,
   STAGE_3,
-  STAGE_4,
-  STAGE_5,
-  STAGE_6,
-  STAGE_7,
-  STAGE_8,
-  STAGE_9,
 } StageLevel;
 
 // Current page
@@ -36,11 +30,17 @@ typedef enum {
   IN_GAME,
 } Page;
 
-typedef enum {
-  BULLET_BONUS = 0,
-  HEALTH_BONUS,
-  SHIELD_BONUS,
+typedef enum
+{
+  BULLET_BONUS = 2,
+  HEALTH_BONUS = 0,
+  SHIELD_BONUS = 1,
 } Badge;
+
+typedef enum {
+  BULLET_BIG,
+  BULLET_THUNDER
+} BossBulletType;
 
 typedef struct Display Display;
 
@@ -100,10 +100,8 @@ void draw_health_bar(GameController *game_controller);
 void draw_welcome_screen();
 void draw_alien(GameController *game_controller);
 void draw_health_PU(GameController *game_controller);
-void draw_shield_PU(GameController *game_controller);
-void explosion();
-void display_explosion(int x, int y, int w, int h, int num_frames,
-                       const unsigned long **video);
+void explosion(int posX, int posY);
+void display_explosion(int x, int y, int w, int h, int num_frames, const unsigned long **video);
 char *itoa(int num);
 
 void draw_spaceship(GameController *game_controller);
@@ -120,7 +118,6 @@ void move_alien(GameController *game_controller, int step);
 void move_spaceship(GameController *game_controller, int key, int step);
 void move_bullet(GameController *game_controller, int index, int step);
 void draw_health_PU(GameController *game_controller);
-void draw_shield_PU(GameController *game_controller);
 void clear_all_bullets(GameController *game_controller);
 void add_bullet(GameController *game_controller);
 void receive_damage(GameController *game_controller);
