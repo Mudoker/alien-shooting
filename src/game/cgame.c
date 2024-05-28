@@ -770,10 +770,7 @@ void receive_damage(GameController *game_controller)
       result_screen(game_controller);
     }
   }
-  // uart_puts(WHITE);
-  // uart_puts("SHIELD TIMER: ");
-  // uart_puts(itoa(game_controller->spaceship.shieldTimer));
-  // uart_puts("\n");
+
   clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
   draw_health_bar(game_controller);
 }
@@ -1010,6 +1007,7 @@ void draw_completed_time(int seconds, int y)
   }
 
   draw_image(535, y, 97, 37, epd_bitmap_secs);
+
 }
 
 char *itoa(int num)

@@ -2,7 +2,7 @@
 #include "../header/uart.h"
 
 volatile unsigned long system_millis = 0;
-volatile int countdown = 60;
+volatile int countdown = 5;
 
 // Function to get the current time in milliseconds
 unsigned long get_time_ms() { return system_millis; }
@@ -22,7 +22,7 @@ void init_system_timer()
   TIMER_CS |= TIMER_CS_MATCH;
 }
 
-void handle_system_timer()
+int handle_system_timer()
 {
   // Clear the match 1 interrupt flag
   TIMER_CS |= TIMER_CS_MATCH;
@@ -38,17 +38,17 @@ void handle_system_timer()
     uart_puts("COUNTDOWN: ");
     uart_dec(countdown);
     uart_puts("\n");
-  }
-  else
-  {
-    // uart_puts("Countdown complete!\n");
 
-    // Stop interrupts
-    return;
+    if (countdown == 0)
+    {
+      return 0;
+    }
   }
 
   // Toggle GPIO3
   GPSET0 ^= (1 << 3);
+
+  return 1;
 }
 
 void wait_msec(unsigned int n)

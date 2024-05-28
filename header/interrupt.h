@@ -13,10 +13,10 @@
 #define IRQ_BASIC_PENDING (*(volatile unsigned int *)(INTERRUPT_BASE + 0x200))
 #define IRQ_PENDING (*(volatile unsigned int *)(INTERRUPT_BASE + 0x204))
 #define FIQ_CONTROL (*(volatile unsigned int *)(INTERRUPT_BASE + 0x20C))
-#define INTERRUPT_ENABLE_IRQS                                                  \
+#define INTERRUPT_ENABLE_IRQS \
   (*(volatile unsigned int *)(INTERRUPT_BASE + 0x210))
 #define ENABLE_BASIC_IRQS (*(volatile unsigned int *)(INTERRUPT_BASE + 0x218))
-#define INTERRUPT_DISABLE_IRQS                                                 \
+#define INTERRUPT_DISABLE_IRQS \
   (*(volatile unsigned int *)(INTERRUPT_BASE + 0x21C))
 #define DISABLE_BASIC_IRQS (*(volatile unsigned int *)(INTERRUPT_BASE + 0x224))
 
@@ -34,6 +34,6 @@ void enable_system_timer_irq(void);
 void disable_system_timer_irq(void);
 void enable_uart0_irq(void);
 void disable_uart0_irq(void);
-void handle_irq_elx(void);
+int handle_irq_elx(void);
 
 #endif // INTERRUPT_H

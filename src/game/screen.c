@@ -33,13 +33,19 @@ void in_game_screen(GameController *game_controller)
   int powerup_active = 0;
   int next_powerup_time = 8000; // Initial delay for the first power-up
   static int shieldTimer = 0;
-  // lighting();
 
   init_interrupts(); // Initialize interrupts
 
   while (1)
   {
-    handle_irq_elx();
+    int is_done = handle_irq_elx();
+
+    if (is_done == 0)
+    {
+      result_screen(game_controller);
+      return;
+    }
+
     clear_wave(game_controller);
     char c = getUart();
     switch (c)
@@ -222,20 +228,24 @@ void ship_selection_screen(GameController *game_controller)
 
 void result_screen(GameController *game_controller)
 {
-  int seconds = 20; // TODO: make it dynamic from the timer
 
-  if (seconds > 60)
+  int actual_count = 60 - countdown;
+
+  // reset the countdown
+  countdown = 5;
+
+  if (actual_count > 60)
   {
-    lose_screen(game_controller, seconds);
+    lose_screen(game_controller, actual_count);
   }
 
   if (game_controller->stage_level == MAX_STAGES)
   {
-    win_final_screen(game_controller, seconds);
+    win_final_screen(game_controller, actual_count);
   }
   else
   {
-    win_screen(game_controller, seconds);
+    win_screen(game_controller, actual_count);
   }
 }
 

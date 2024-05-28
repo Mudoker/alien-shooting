@@ -20,11 +20,13 @@
 #define TIMER_CS_MATCH (1 << 1)
 #define TIMER_CLOCK_HZ 1000000
 
+extern volatile int countdown;
+
 // Timer initialization
 void init_system_timer();
 
 // Timer IRQ handlers
-void handle_system_timer();
+int handle_system_timer();
 
 // Timer functions
 void wait_msec(unsigned int n);
