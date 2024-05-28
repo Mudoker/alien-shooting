@@ -1,8 +1,8 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "gpio.h"
 #include "global.h"
+#include "gpio.h"
 
 // Base MMIO address
 #define MMIO_BASE 0x3F000000
@@ -32,5 +32,7 @@ int handle_system_timer();
 // Timer functions
 void wait_msec(unsigned int n);
 void set_wait_timer(int set, unsigned int msVal);
+
+extern volatile int countdown;
 
 #endif

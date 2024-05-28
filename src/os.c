@@ -968,7 +968,7 @@ void parse_command(char *input)
   {
     uart_puts("\n\n");
     // Show video on the screen
-    video_mode();
+    // video_mode();
   }
   else if (is_equal(command, "game"))
   {

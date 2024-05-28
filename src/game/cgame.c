@@ -9,12 +9,12 @@
 #include "../../assets/games/explosion/explosion.h"
 #include "../../assets/games/health_logo.h"
 #include "../../assets/games/lighting/lighting.h"
+#include "../../assets/games/power_up/bullet.h"
 #include "../../assets/games/power_up/health.h"
 #include "../../assets/games/power_up/shield.h"
-#include "../../assets/games/power_up/bullet.h"
 #include "../../assets/games/powers_up/badge/bonus_bullets.h"
-#include "../../assets/games/powers_up/badge/bonus_shield.h"
 #include "../../assets/games/powers_up/badge/bonus_health.h"
+#include "../../assets/games/powers_up/badge/bonus_shield.h"
 #include "../../assets/games/result_screens/digits/digits.h"
 #include "../../assets/games/result_screens/digits/secs.h"
 #include "../../assets/games/result_screens/lose_screen.h"
@@ -43,15 +43,13 @@
 #define BOSS_BULLET_WIDTH 68
 #define BOSS_BULLET_HEIGHT 116
 
-void init_frame(int offset_x, int offset_y)
-{
+void init_frame(int offset_x, int offset_y) {
   // Initialize buffer
   framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT,
                offset_x, offset_y);
 }
 
-void init_controller(GameController *game_controller)
-{
+void init_controller(GameController *game_controller) {
   game_controller->screen = &((Display){.init_frame = &init_frame});
   game_controller->screen->init_frame(0, 0);
   game_controller->page = WELCOME;
@@ -68,8 +66,7 @@ void init_controller(GameController *game_controller)
 
   calculate_bullet_positions(game_controller, positions, &num_positions);
 
-  for (int i = 0; i < num_positions; i++)
-  {
+  for (int i = 0; i < num_positions; i++) {
     init_bullet(game_controller, epd_bullet_lv1[0], BUlLET_WIDTH, BULLET_HEIGHT,
                 positions[i][0], positions[i][1], i);
   }
@@ -78,13 +75,12 @@ void init_controller(GameController *game_controller)
 // Initialize the spaceship object
 void init_spaceship(GameController *game_controller,
                     const unsigned long *sprite, int width, int height, int x,
-                    int y, char *name, int damage, int health)
-{
+                    int y, char *name, int damage, int health) {
   Spaceship spaceship;
   spaceship.name = name;
   spaceship.size.width = width;
   spaceship.size.height = height;
-  spaceship.bullet_bonus = 0;
+  spaceship.bullet_bonus = 4;
   spaceship.shieldTimer = 0;
   spaceship.position.x = x;
   spaceship.position.y = y;
@@ -96,8 +92,7 @@ void init_spaceship(GameController *game_controller,
 }
 
 void init_bullet(GameController *game_controller, const unsigned long *sprite,
-                 int width, int height, int x, int y, int index)
-{
+                 int width, int height, int x, int y, int index) {
   Bullet bullet;
   bullet.name = "Bullet";
   bullet.size.width = width;
@@ -113,10 +108,8 @@ void init_bullet(GameController *game_controller, const unsigned long *sprite,
 }
 
 // Init stage
-void init_stages(GameController *game_controller)
-{
-  for (int i = 0; i < 3; i++)
-  {
+void init_stages(GameController *game_controller) {
+  for (int i = 0; i < 3; i++) {
     char name[MAX_STR_LENGTH];
     strcpy(name, "STAGE ");
     strcat(name, int_to_string(i + 1));
@@ -125,8 +118,7 @@ void init_stages(GameController *game_controller)
 
     game_controller->stages[i].level = i + 1;
 
-    for (int j = 0; j < 3; j++)
-    {
+    for (int j = 0; j < 3; j++) {
       game_controller->stages[i].waves[j].level = j + 1;
       game_controller->stages[i].waves[j].alien_count =
           0; // Initialize alien count
@@ -137,8 +129,7 @@ void init_stages(GameController *game_controller)
 
 void init_alien(Alien *alien, const unsigned long *sprite, int width,
                 int height, int x, int y, int health, int damage,
-                const unsigned long *bullet_sprite)
-{
+                const unsigned long *bullet_sprite) {
   alien->name =
       bullet_sprite == epd_bitmap_bullet_big_boss[0] ? "Boss" : "Alien";
   alien->size.width = width;
@@ -150,8 +141,7 @@ void init_alien(Alien *alien, const unsigned long *sprite, int width,
   alien->sprite = sprite;
   alien->damage = damage;
 
-  for (int i = 0; i < 5; i++)
-  {
+  for (int i = 0; i < 5; i++) {
     Bullet bullet = {
         .name = NULL,
         .size.width = bullet_sprite == epd_bitmap_bullet_big_boss[0]
@@ -169,8 +159,7 @@ void init_alien(Alien *alien, const unsigned long *sprite, int width,
   }
 }
 
-void init_wave(GameController *gc)
-{
+void init_wave(GameController *gc) {
   Wave *wave = &gc->stages[0].waves[gc->current_wave];
   wave->level = gc->current_wave + 1;
 
@@ -178,31 +167,21 @@ void init_wave(GameController *gc)
 
   // Determine which map to use based on the stage level
   const unsigned int(*current_map)[3][5];
-  if (gc->stage_level == 2)
-  {
+  if (gc->stage_level == 2) {
     current_map = map_2;
-  }
-  else if (gc->stage_level == 3)
-  {
+  } else if (gc->stage_level == 3) {
     current_map = map_3;
-  }
-  else
-  {
+  } else {
     current_map = map_1;
   }
 
   // Handle boss round (Stage 3)
-  if (gc->stage_level == 3)
-  {
+  if (gc->stage_level == 3) {
     // If it's the first wave of Stage 3, initialize normal aliens
-    if (gc->current_wave < 2)
-    {
-      for (int j = 0; j < 3; j++)
-      {
-        for (int k = 0; k < 5; k++)
-        {
-          if (current_map[gc->current_wave][j][k] == 1)
-          {
+    if (gc->current_wave < 2) {
+      for (int j = 0; j < 3; j++) {
+        for (int k = 0; k < 5; k++) {
+          if (current_map[gc->current_wave][j][k] == 1) {
             init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130,
                        109, 130 * k, 109 * j, 100, 10,
                        epd_bitmap_alien_bullet); // Damage set to 10
@@ -210,24 +189,17 @@ void init_wave(GameController *gc)
           }
         }
       }
-    }
-    else
-    { // Third wave of Stage 3: Boss
+    } else { // Third wave of Stage 3: Boss
       init_alien(&wave->aliens[count], epd_bitmap_big_boss[0], 502, 350,
                  (SCREEN_WIDTH - 467) / 2, 0, 10000, 30,
                  epd_bitmap_bullet_big_boss[0]); // Damage set to 50
       count++;
     }
-  }
-  else
-  {
+  } else {
     // Regular alien initialization for other stages
-    for (int j = 0; j < 3; j++)
-    { // Rows of the map
-      for (int k = 0; k < 5; k++)
-      { // Columns of the map
-        if (current_map[gc->current_wave][j][k] == 1)
-        {
+    for (int j = 0; j < 3; j++) {   // Rows of the map
+      for (int k = 0; k < 5; k++) { // Columns of the map
+        if (current_map[gc->current_wave][j][k] == 1) {
           init_alien(&wave->aliens[count], epd_bitmap_alient_1_resize, 130, 109,
                      130 * k, 109 * j, 100, 10,
                      epd_bitmap_alien_bullet); // Damage set to 10
@@ -240,8 +212,7 @@ void init_wave(GameController *gc)
   wave->alien_count = count;
 }
 
-Spaceship *init_current_ship_option()
-{
+Spaceship *init_current_ship_option() {
   static Spaceship spaceship;
 
   spaceship.name = "Lev1";
@@ -264,19 +235,16 @@ Spaceship *init_current_ship_option()
 }
 
 void draw_spaceship_option(Spaceship *spaceship, int order, int clear,
-                           Spaceship *current_ship_option)
-{
+                           Spaceship *current_ship_option) {
 
-  if (clear)
-  {
+  if (clear) {
     clear_image(current_ship_option->position.x,
                 current_ship_option->position.y,
                 current_ship_option->size.width,
                 current_ship_option->size.height, epd_bitmap_background);
   }
 
-  switch (order)
-  {
+  switch (order) {
   case 1:
     current_ship_option->size.width = 124;
     current_ship_option->size.height = 188;
@@ -305,19 +273,16 @@ void draw_spaceship_option(Spaceship *spaceship, int order, int clear,
              current_ship_option->sprite);
 }
 
-void draw_ship_selection_page()
-{
+void draw_ship_selection_page() {
   draw_image(0, 60, SCREEN_WIDTH, 186, epd_bitmap_ship_selection_title);
   draw_image(215, 650, 350, 103, epd_bitmap_ship_selection_button);
 }
 
-void draw_arrows(int order)
-{
+void draw_arrows(int order) {
   const unsigned long *arrow_left = epd_bitmap_arrow_left;
   const unsigned long *arrow_right = epd_bitmap_arrow_right;
 
-  switch (order)
-  {
+  switch (order) {
   case 1:
     clear_image(60, 400, 70, 72, epd_bitmap_background);
     draw_image(650, 400, 70, 72, arrow_right);
@@ -336,22 +301,19 @@ void draw_arrows(int order)
 }
 
 // Draw spaceship
-void draw_spaceship(GameController *game_controller)
-{
+void draw_spaceship(GameController *game_controller) {
   Spaceship spaceship = game_controller->spaceship;
   draw_image(spaceship.position.x, spaceship.position.y, spaceship.size.width,
              spaceship.size.height, spaceship.sprite);
 }
 
 // Draw the background
-void draw_background()
-{
+void draw_background() {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_background);
 }
 
 // Draw health bar
-void draw_health_bar(GameController *game_controller)
-{
+void draw_health_bar(GameController *game_controller) {
   float healthPercentage = (float)game_controller->spaceship.health / 100.0;
   draw_capsuleARGB32(59, SCREEN_HEIGHT - 45, 250, 10, 0x00FF0000, 1,
                      healthPercentage);
@@ -359,36 +321,30 @@ void draw_health_bar(GameController *game_controller)
                     epd_bitmap_background);
 }
 
-void draw_welcome_screen()
-{
+void draw_welcome_screen() {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_welcome);
 }
 
 // Draw alien
-void draw_alien(GameController *game_controller)
-{
+void draw_alien(GameController *game_controller) {
   // Ensure current_wave is within valid range
-  if (game_controller->current_wave >= 3)
-  {
+  if (game_controller->current_wave >= 3) {
     return;
   }
 
   Wave *current_wave =
       &game_controller->stages[0].waves[game_controller->current_wave];
 
-  for (int i = 0; i < current_wave->alien_count; i++)
-  {
+  for (int i = 0; i < current_wave->alien_count; i++) {
     Alien *alien = &current_wave->aliens[i];
-    if (alien->name != NULL)
-    {
+    if (alien->name != NULL) {
       draw_image(alien->position.x, alien->position.y, alien->size.width,
                  alien->size.height, alien->sprite);
     }
   }
 }
 
-void move_spaceship(GameController *game_controller, int key, int step)
-{
+void move_spaceship(GameController *game_controller, int key, int step) {
   Spaceship *spaceship = &game_controller->spaceship;
   clear_image(spaceship->position.x, spaceship->position.y,
               spaceship->size.width, spaceship->size.height,
@@ -397,8 +353,7 @@ void move_spaceship(GameController *game_controller, int key, int step)
   int newX = spaceship->position.x;
   int newY = spaceship->position.y;
 
-  switch (key)
-  {
+  switch (key) {
   case KEY_RIGHT:
     newX += step;
     break;
@@ -420,10 +375,8 @@ void move_spaceship(GameController *game_controller, int key, int step)
   int maxY = SCREEN_HEIGHT - spaceship->size.height;
 
   // Clamp position to stay within boundaries
-  spaceship->position.x = (newX < 0) ? 0 : (newX > maxX) ? maxX
-                                                         : newX;
-  spaceship->position.y = (newY < 0) ? 0 : (newY > maxY) ? maxY
-                                                         : newY;
+  spaceship->position.x = (newX < 0) ? 0 : (newX > maxX) ? maxX : newX;
+  spaceship->position.y = (newY < 0) ? 0 : (newY > maxY) ? maxY : newY;
 
   // Draw the spaceship at the new position
   draw_spaceship(game_controller);
@@ -433,37 +386,27 @@ BossBulletType currentBossBulletType = BULLET_BIG;
 int bossBulletIndex = 0;          // Index for the boss's bullet array
 unsigned int bossBulletTimer = 0; // Timer for boss bullet firing
 
-void move_alien_bullet(GameController *game_controller, int step)
-{
+void move_alien_bullet(GameController *game_controller, int step) {
   // Adjust step size
-  step = step / 5;
+  step = step / 20;
 
   // Iterate over aliens in the current wave
   for (int i = 0; i < game_controller->stages[0]
                           .waves[game_controller->current_wave]
                           .alien_count;
-       i++)
-  {
+       i++) {
     Alien *alien = &game_controller->stages[0]
                         .waves[game_controller->current_wave]
                         .aliens[i];
 
-    if (alien->sprite == epd_bitmap_big_boss[0])
-    {
-      // step = step / 1.5;
-    }
-
     // Check if the alien is active
-    if (alien->name != NULL)
-    {
+    if (alien->name != NULL) {
       // Iterate through each alien's bullets
-      for (int j = 0; j < 5; j++)
-      {
+      for (int j = 0; j < 5; j++) {
         Bullet *bullet = &alien->bullets[j];
 
         // Check if the bullet is active
-        if (bullet->name != NULL)
-        {
+        if (bullet->name != NULL) {
           // Clear the bullet at the previous position
           clear_image(bullet->position.x, bullet->position.y,
                       bullet->size.width, bullet->size.height,
@@ -489,8 +432,7 @@ void move_alien_bullet(GameController *game_controller, int step)
                   game_controller->spaceship.position.y - offset_y &&
               bullet->position.y <=
                   game_controller->spaceship.position.y +
-                      game_controller->spaceship.size.height)
-          {
+                      game_controller->spaceship.size.height) {
 
             uart_alert("ALIEN BULLET HIT THE SPACESHIP!");
 
@@ -499,26 +441,19 @@ void move_alien_bullet(GameController *game_controller, int step)
 
             // Clear the bullet
             bullet->name = NULL;
-          }
-          else if (bullet->position.y >= SCREEN_HEIGHT)
-          {
+          } else if (bullet->position.y >= SCREEN_HEIGHT) {
             // Check if the bullet is out of the screen
             bullet->name = NULL;
-          }
-          else
-          {
+          } else {
             // Draw the bullet
             draw_image(bullet->position.x, bullet->position.y,
                        bullet->size.width, bullet->size.height, bullet->sprite);
 
             draw_health_bar(game_controller);
           }
-        }
-        else
-        {
+        } else {
           // If bullet is inactive, try to fire a new one
-          if (randomNum() % 1000 < 5)
-          {
+          if (randomNum() % 1000 < 2) {
             // 0.01% chance to fire a bullet each frame
             bullet->name = "Alien Bullet";
             bullet->position.x = alien->position.x + alien->size.width / 2 -
@@ -531,19 +466,16 @@ void move_alien_bullet(GameController *game_controller, int step)
   }
 }
 
-void move_bullet(GameController *game_controller, int index, int step)
-{
+void move_bullet(GameController *game_controller, int index, int step) {
   // handle aliens' bullet movement
   move_alien_bullet(game_controller, step);
 
   // handle player bullet movement
-  for (int i = 0; i < game_controller->spaceship.bullet_bonus + 1; i++)
-  {
+  for (int i = 0; i < game_controller->spaceship.bullet_bonus + 1; i++) {
     Bullet *bullet = &game_controller->spaceship.bullets[index][i];
 
     // If the bullet is already inactive, skip it
-    if (bullet->name == NULL)
-    {
+    if (bullet->name == NULL) {
       continue;
     }
 
@@ -555,25 +487,21 @@ void move_bullet(GameController *game_controller, int index, int step)
     bullet->position.y -= step;
 
     // Check if the bullet is out of the screen
-    if (bullet->position.y <= -bullet->size.height)
-    {
+    if (bullet->position.y <= -bullet->size.height) {
       bullet->name = NULL;
       continue; // Skip to the next bullet, do not return
     }
 
     Wave *current_wave =
         &game_controller->stages[0].waves[game_controller->current_wave];
-    for (int j = 0; j < current_wave->alien_count; j++)
-    {
+    for (int j = 0; j < current_wave->alien_count; j++) {
       Alien *alien = &current_wave->aliens[j];
 
-      if (alien->name != NULL)
-      {
+      if (alien->name != NULL) {
         if (bullet->position.x >= alien->position.x &&
             bullet->position.x <= alien->position.x + alien->size.width &&
             bullet->position.y >= alien->position.y &&
-            bullet->position.y <= alien->position.y + alien->size.height)
-        {
+            bullet->position.y <= alien->position.y + alien->size.height) {
 
           uart_alert("BULLET HIT AN ALIEN!");
 
@@ -591,8 +519,7 @@ void move_bullet(GameController *game_controller, int index, int step)
     }
 
     // If bullet is still active, draw it at the new position
-    if (bullet->name != NULL)
-    {
+    if (bullet->name != NULL) {
       draw_image(bullet->position.x, bullet->position.y, bullet->size.width,
                  bullet->size.height, bullet->sprite);
     }
@@ -603,8 +530,7 @@ int pos_y[4] = {0, 109, 218, 327};
 int row_counts[4] = {0, 0, 0, 0};
 int col_counts[5] = {0, 0, 0, 0, 0};
 
-void init_power_up(GameController *game_controller)
-{
+void init_power_up(GameController *game_controller) {
   int rand_col;
   int type = randomNum() % 3;
   PowerUp powerup;
@@ -616,18 +542,13 @@ void init_power_up(GameController *game_controller)
   powerup.target.y = 900;
   powerup.reach_target = 0;
 
-  if (type == 0)
-  {
+  if (type == 0) {
     powerup.sprite = epd_bitmap_health_allArray[0];
     powerup.type = 0;
-  }
-  else if (type == 1)
-  {
+  } else if (type == 1) {
     powerup.sprite = epd_bitmap_shield_allArray[0];
     powerup.type = 1;
-  }
-  else
-  {
+  } else {
     powerup.sprite = epd_bitmap_bullet_PU_allArray[0];
     powerup.type = 2;
   }
@@ -635,18 +556,14 @@ void init_power_up(GameController *game_controller)
   game_controller->powerup = powerup;
 }
 
-void move_PU_to_position(GameController *game_controller)
-{
+void move_PU_to_position(GameController *game_controller) {
   PowerUp *powerup = &game_controller->powerup;
   Spaceship *spaceship = &game_controller->spaceship;
 
   // Draw the powerup in its new position first
-  if (powerup->position.y < powerup->target.y)
-  {
+  if (powerup->position.y < powerup->target.y) {
     powerup->position.y += 2;
-  }
-  else
-  {
+  } else {
     powerup->reach_target = 1;
     init_power_up(game_controller);
     uart_alert("POWERUP REACHED THE TARGET!");
@@ -669,21 +586,18 @@ void move_PU_to_position(GameController *game_controller)
     // set the powerip position to the end of the screen
     powerup->position.y = 900;
 
-    if (powerup->sprite == epd_bitmap_health_allArray[0])
-    {
+    if (powerup->sprite == epd_bitmap_health_allArray[0]) {
       draw_badge(HEALTH_BONUS);
       spaceship->health += 10;
-    }
-    else if (powerup->sprite == epd_bitmap_shield_allArray[0])
-    {
+    } else if (powerup->sprite == epd_bitmap_shield_allArray[0]) {
       draw_badge(SHIELD_BONUS);
-      spaceship->shieldTimer = 100;
-    }
-    else
-    {
+      spaceship->shieldTimer = 10000000;
+    } else {
       // Add a statement here
       draw_badge(BULLET_BONUS);
-      spaceship->bullet_bonus += 1;
+      if (spaceship->bullet_bonus < 4) {
+        spaceship->bullet_bonus += 1;
+      }
     }
   }
 
@@ -695,15 +609,11 @@ void move_PU_to_position(GameController *game_controller)
   draw_health_bar(game_controller);
 }
 
-void clear_all_bullets(GameController *game_controller)
-{
-  for (int i = 0; i < MAX_BULLETS; i++)
-  {
-    for (int j = 0; j < game_controller->spaceship.bullet_bonus + 1; j++)
-    {
+void clear_all_bullets(GameController *game_controller) {
+  for (int i = 0; i < MAX_BULLETS; i++) {
+    for (int j = 0; j < game_controller->spaceship.bullet_bonus + 1; j++) {
       Bullet *bullet = &game_controller->spaceship.bullets[i][j];
-      if (bullet->name != NULL)
-      {
+      if (bullet->name != NULL) {
         clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
                     bullet->size.height, epd_bitmap_background);
         bullet->name = NULL;
@@ -712,8 +622,7 @@ void clear_all_bullets(GameController *game_controller)
   }
 }
 
-void add_bullet(GameController *game_controller)
-{
+void add_bullet(GameController *game_controller) {
   int num_positions;
   int positions[MAX_BULLETS][2]; // Maximum of MAX_BULLETS positions
 
@@ -721,17 +630,14 @@ void add_bullet(GameController *game_controller)
   calculate_bullet_positions(game_controller, positions, &num_positions);
 
   // Reset the bullet count if it reaches the maximum
-  if (game_controller->bullet_on_screen_count >= MAX_BULLETS)
-  {
+  if (game_controller->bullet_on_screen_count >= MAX_BULLETS) {
     game_controller->bullet_on_screen_count = 0;
     clear_all_bullets(game_controller);
   }
 
   // Add new bullets to the screen
-  for (int i = 0; i < num_positions; i++)
-  {
-    if (game_controller->bullet_on_screen_count < MAX_BULLETS)
-    {
+  for (int i = 0; i < num_positions; i++) {
+    if (game_controller->bullet_on_screen_count < MAX_BULLETS) {
       Bullet bullet;
       bullet.name = "Bullet";
       bullet.size.width = BUlLET_WIDTH;
@@ -749,19 +655,18 @@ void add_bullet(GameController *game_controller)
 }
 static unsigned int shieldTimer = 0;
 // Receive damage from enemies
-void receive_damage(GameController *game_controller)
-{
+void receive_damage(GameController *game_controller) {
 
   // === DAMAGE LOGIC ===
-  if (game_controller->spaceship.shieldTimer <= 0)
-  {
-    game_controller->spaceship.health -= game_controller->stages[0]
-                                             .waves[game_controller->current_wave]
-                                             .aliens[0]
-                                             .damage;
-
-    if (game_controller->spaceship.health <= 0)
-    {
+  if (game_controller->spaceship.shieldTimer <= 0) {
+    if (game_controller->spaceship.shieldTimer <= 0) {
+      game_controller->spaceship.health -=
+          game_controller->stages[0]
+              .waves[game_controller->current_wave]
+              .aliens[0]
+              .damage;
+    }
+    if (game_controller->spaceship.health <= 0) {
       uart_puts(WHITE);
       uart_puts("HEALTH: ");
       uart_puts(itoa(game_controller->spaceship.health));
@@ -771,13 +676,14 @@ void receive_damage(GameController *game_controller)
     }
   }
 
+  uart_puts("Shield timer: ");
+  uart_puts(itoa(game_controller->spaceship.shieldTimer));
   clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
   draw_health_bar(game_controller);
 }
 
 void deal_damage(GameController *game_controller, int index, int posX,
-                 int posY)
-{
+                 int posY) {
   Wave *current_wave =
       &game_controller->stages[0].waves[game_controller->current_wave];
 
@@ -786,13 +692,10 @@ void deal_damage(GameController *game_controller, int index, int posX,
 
   alien->health -= game_controller->spaceship.damage;
 
-  if (alien->health <= 0)
-  {
-    for (int j = 0; j < 5; j++)
-    {
+  if (alien->health <= 0) {
+    for (int j = 0; j < 5; j++) {
       Bullet *bullet = &alien->bullets[j];
-      if (bullet->name != NULL)
-      {
+      if (bullet->name != NULL) {
         clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
                     bullet->size.height, epd_bitmap_background);
 
@@ -807,27 +710,22 @@ void deal_damage(GameController *game_controller, int index, int posX,
   }
 }
 
-void clear_wave(GameController *game_controller)
-{
+void clear_wave(GameController *game_controller) {
   int defeat_count = 0;
   Wave *current_wave =
       &game_controller->stages[0].waves[game_controller->current_wave];
-  for (int i = 0; i < current_wave->alien_count; i++)
-  {
+  for (int i = 0; i < current_wave->alien_count; i++) {
     Alien *alien = &current_wave->aliens[i];
-    if (alien->name == NULL)
-    {
+    if (alien->name == NULL) {
       defeat_count++;
     }
   }
 
-  if (defeat_count == current_wave->alien_count)
-  {
+  if (defeat_count == current_wave->alien_count) {
     wait_msec(500000);
     game_controller->current_wave++;
     // If current_wave exceeds the number of waves, stop the game
-    if (game_controller->current_wave >= 3)
-    {
+    if (game_controller->current_wave >= 3) {
 
       uart_alert("GAME OVER!");
 
@@ -840,25 +738,21 @@ void clear_wave(GameController *game_controller)
   }
 }
 
-void move_aliens(GameController *game_controller, int step)
-{
+void move_aliens(GameController *game_controller, int step) {
   // Update position of the alien
   Wave *current_wave =
       &game_controller->stages[0].waves[game_controller->current_wave];
 
-  for (int i = 0; i < current_wave->alien_count; i++)
-  {
+  for (int i = 0; i < current_wave->alien_count; i++) {
     Alien *alien = &current_wave->aliens[i];
-    if (alien->name != NULL)
-    {
+    if (alien->name != NULL) {
       clear_image(alien->position.x, alien->position.y, alien->size.width,
                   alien->size.height, epd_bitmap_background);
       alien->position.x += step * alien->direction;
 
       // Check for screen boundaries and change direction if necessary
       if (alien->position.x <= 0 ||
-          alien->position.x + alien->size.width >= SCREEN_WIDTH)
-      {
+          alien->position.x + alien->size.width >= SCREEN_WIDTH) {
         alien->direction *= -1; // Reverse direction
         alien->position.x +=
             step * alien->direction; // Move back into screen bounds
@@ -871,8 +765,7 @@ void move_aliens(GameController *game_controller, int step)
 }
 
 void calculate_bullet_positions(GameController *game_controller,
-                                int positions[][2], int *num_positions)
-{
+                                int positions[][2], int *num_positions) {
   int bonus = game_controller->spaceship.bullet_bonus;
 
   int spaceship_center_x = game_controller->spaceship.position.x +
@@ -880,31 +773,25 @@ void calculate_bullet_positions(GameController *game_controller,
   int spaceship_center_y = game_controller->spaceship.position.y +
                            game_controller->spaceship.size.height / 2 - 160;
 
-  if (bonus > 4)
-  {
+  if (bonus > 4) {
     *num_positions = 0;
     return;
   }
 
   *num_positions = bonus + 1;
 
-  if (*num_positions == 1)
-  {
+  if (*num_positions == 1) {
     // Special pattern for one bullet
     positions[0][0] = spaceship_center_x;
     positions[0][1] = spaceship_center_y + 24;
-  }
-  else if (*num_positions == 2)
-  {
+  } else if (*num_positions == 2) {
     // Special pattern for two bullets
     int spacing = 24;
     positions[0][0] = spaceship_center_x - spacing / 2;
     positions[0][1] = spaceship_center_y + 24;
     positions[1][0] = spaceship_center_x + spacing / 2;
     positions[1][1] = spaceship_center_y + 24;
-  }
-  else if (*num_positions == 3)
-  {
+  } else if (*num_positions == 3) {
     // Special pattern for three bullets
     positions[0][0] = spaceship_center_x - 24;
     positions[0][1] = spaceship_center_y + 6;
@@ -912,9 +799,7 @@ void calculate_bullet_positions(GameController *game_controller,
     positions[1][1] = spaceship_center_y - 24;
     positions[2][0] = spaceship_center_x + 24;
     positions[2][1] = spaceship_center_y + 6;
-  }
-  else if (*num_positions == 4)
-  {
+  } else if (*num_positions == 4) {
     // Special pattern for four bullets
     positions[0][0] = spaceship_center_x - 36;
     positions[0][1] = spaceship_center_y + 6;
@@ -924,9 +809,7 @@ void calculate_bullet_positions(GameController *game_controller,
     positions[2][1] = spaceship_center_y - 24;
     positions[3][0] = spaceship_center_x + 36;
     positions[3][1] = spaceship_center_y + 6;
-  }
-  else if (*num_positions == 5)
-  {
+  } else if (*num_positions == 5) {
     // Special pattern for five bullets
     positions[0][0] = spaceship_center_x - 48;
     positions[0][1] = spaceship_center_y + 12;
@@ -938,65 +821,50 @@ void calculate_bullet_positions(GameController *game_controller,
     positions[3][1] = spaceship_center_y - 12;
     positions[4][0] = spaceship_center_x + 48;
     positions[4][1] = spaceship_center_y + 12;
-  }
-  else
-  {
+  } else {
     *num_positions = 0;
   }
 }
 
-void draw_health_PU(GameController *game_controller)
-{
+void draw_health_PU(GameController *game_controller) {
   draw_image_object(game_controller->powerup.position.x,
                     game_controller->powerup.position.y, 90, 90,
                     game_controller->powerup.sprite, epd_bitmap_background);
 }
 
-void draw_lose_screen(GameController *game_controller, int seconds)
-{
+void draw_lose_screen(GameController *game_controller, int seconds) {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_lose_screen);
   draw_completed_time(seconds, 505);
+
 }
 
-void draw_win_final_screen(GameController *game_controller, int seconds)
-{
+void draw_win_final_screen(GameController *game_controller, int seconds) {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
                   epd_bitmap_win_final_screen);
   draw_stars(seconds);
   draw_completed_time(seconds, 605);
 }
 
-void draw_win_screen(GameController *game_controller, int seconds)
-{
+void draw_win_screen(GameController *game_controller, int seconds) {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_win_screen);
   draw_stars(seconds);
   draw_completed_time(seconds, 476);
 }
 
-void draw_stars(int seconds)
-{
-  if (seconds <= 20)
-  {
+void draw_stars(int seconds) {
+  if (seconds <= 20) {
     draw_image(195, 100, 390, 100, epd_bitmap_stars_5);
-  }
-  else if (seconds <= 40)
-  {
+  } else if (seconds <= 40) {
     draw_image(195, 100, 390, 100, epd_bitmap_stars_3);
-  }
-  else
-  {
+  } else {
     draw_image(195, 100, 390, 100, epd_bitmap_stars_1);
   }
 }
 
-void draw_completed_time(int seconds, int y)
-{
-  if (seconds < 10)
-  {
+void draw_completed_time(int seconds, int y) {
+  if (seconds < 10) {
     draw_image(502, y, 37, 37, epd_bitmap_digits_allArray[seconds]);
-  }
-  else
-  {
+  } else {
     int tens = seconds / 10;
     int ones = seconds % 10;
 
@@ -1007,19 +875,16 @@ void draw_completed_time(int seconds, int y)
   }
 
   draw_image(535, y, 97, 37, epd_bitmap_secs);
-
 }
 
-char *itoa(int num)
-{
+char *itoa(int num) {
   static char str[12]; // Large enough for an integer, includes space for
                        // negative sign and null terminator
   int i = 0;
   int isNegative = 0;
 
   // Handle 0 explicitly, otherwise, an empty string is printed for 0
-  if (num == 0)
-  {
+  if (num == 0) {
     str[i++] = '0';
     str[i] = '\0';
     return str;
@@ -1027,15 +892,13 @@ char *itoa(int num)
 
   // In standard itoa(), negative numbers are handled only with base 10
   // Otherwise, numbers are considered unsigned
-  if (num < 0)
-  {
+  if (num < 0) {
     isNegative = 1;
     num = -num;
   }
 
   // Process individual digits
-  while (num != 0)
-  {
+  while (num != 0) {
     int rem = num % 10;
     str[i++] = rem + '0'; // Convert int to char
     num = num / 10;
@@ -1050,8 +913,7 @@ char *itoa(int num)
   // Reverse the string
   int start = 0;
   int end = i - 1;
-  while (start < end)
-  {
+  while (start < end) {
     char temp = str[start];
     str[start] = str[end];
     str[end] = temp;
@@ -1061,8 +923,7 @@ char *itoa(int num)
 
   return str;
 }
-void draw_badge(int badge)
-{
+void draw_badge(int badge) {
   // Badge Constants
   const int BONUS_WIDTH = 210;
   const int BONUS_HEIGHT = 226;
@@ -1074,11 +935,9 @@ void draw_badge(int badge)
   int fade_duration = 100;                 // Fade duration in frames
   unsigned int animation_duration = 10000; // Animation duration in milliseconds
 
-  if (badge == BULLET_BONUS)
-  {
+  if (badge == BULLET_BONUS) {
     // Gradually decrease opacity over fade duration
-    for (int frame = 0; frame < fade_duration; frame++)
-    {
+    for (int frame = 0; frame < fade_duration; frame++) {
       // Draw the badge with current opacity
       draw_image_with_opacity(POS_X, POS_Y, BONUS_WIDTH, BONUS_HEIGHT,
                               epd_bullet_bonus_badge[0], epd_bitmap_background,
@@ -1090,21 +949,17 @@ void draw_badge(int badge)
 
       // Decrease opacity gradually
       badge_opacity -= 1.0f / fade_duration;
-      if (badge_opacity < 0.0f)
-      {
+      if (badge_opacity < 0.0f) {
         badge_opacity = 0.0f;
       }
     }
-  }
-  else if (badge == SHIELD_BONUS)
-  {
+  } else if (badge == SHIELD_BONUS) {
     // Gradually decrease opacity over fade duration
-    for (int frame = 0; frame < fade_duration; frame++)
-    {
+    for (int frame = 0; frame < fade_duration; frame++) {
       // Draw the badge with current opacity
       draw_image_with_opacity(POS_X, POS_Y, BONUS_WIDTH, BONUS_HEIGHT,
-                              epd_bitmap_shield_badge_allArray[0], epd_bitmap_background,
-                              badge_opacity);
+                              epd_bitmap_shield_badge_allArray[0],
+                              epd_bitmap_background, badge_opacity);
 
       // Wait for a specific amount of time
       unsigned int frame_duration = animation_duration / fade_duration;
@@ -1112,21 +967,17 @@ void draw_badge(int badge)
 
       // Decrease opacity gradually
       badge_opacity -= 1.0f / fade_duration;
-      if (badge_opacity < 0.0f)
-      {
+      if (badge_opacity < 0.0f) {
         badge_opacity = 0.0f;
       }
     }
-  }
-  else if (badge == HEALTH_BONUS)
-  {
+  } else if (badge == HEALTH_BONUS) {
     // Gradually decrease opacity over fade duration
-    for (int frame = 0; frame < fade_duration; frame++)
-    {
+    for (int frame = 0; frame < fade_duration; frame++) {
       // Draw the badge with current opacity
       draw_image_with_opacity(POS_X, POS_Y, BONUS_WIDTH, BONUS_HEIGHT,
-                              epd_bitmap_health_badge_allArray[0], epd_bitmap_background,
-                              badge_opacity);
+                              epd_bitmap_health_badge_allArray[0],
+                              epd_bitmap_background, badge_opacity);
 
       // Wait for a specific amount of time
       unsigned int frame_duration = animation_duration / fade_duration;
@@ -1134,26 +985,22 @@ void draw_badge(int badge)
 
       // Decrease opacity gradually
       badge_opacity -= 1.0f / fade_duration;
-      if (badge_opacity < 0.0f)
-      {
+      if (badge_opacity < 0.0f) {
         badge_opacity = 0.0f;
       }
     }
   }
 }
 
-void explosion(int posX, int posY)
-{
+void explosion(int posX, int posY) {
   framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, cinema_bg_width, cinema_bg_height,
                0, 0);
   display_explosion(posX, posY, 90, 90, 10, epd_bitmap_explosion_allArray);
 }
 
 void display_explosion(int x, int y, int w, int h, int num_frames,
-                       const unsigned long **video)
-{
-  for (int frame = 0; frame < num_frames; frame++)
-  {
+                       const unsigned long **video) {
+  for (int frame = 0; frame < num_frames; frame++) {
     draw_image(x, y, w, h, video[frame]);
     // wait_msec(100500);
     wait_msec(10000);
@@ -1161,12 +1008,10 @@ void display_explosion(int x, int y, int w, int h, int num_frames,
   }
 }
 
-void change_spaceship(GameController *game_controller, int order)
-{
+void change_spaceship(GameController *game_controller, int order) {
   int position_x = game_controller->spaceship.position.x;
   int position_y = game_controller->spaceship.position.y;
-  switch (order)
-  {
+  switch (order) {
   case 1:
     init_spaceship(game_controller, epd_bitmap_ship_l1_allArray[0], 124, 188,
                    position_x, position_y, "Lev 1", 30, 100);
@@ -1184,17 +1029,16 @@ void change_spaceship(GameController *game_controller, int order)
   }
 }
 
-void lighting()
-{
-  framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, cinema_bg_width, cinema_bg_height, 0, 0);
+void lighting() {
+  framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, cinema_bg_width, cinema_bg_height,
+               0, 0);
   display_lighting(450, 450, 208, 224, 5, epd_bitmap_lighting_allArray);
 }
 
-void display_lighting(int x, int y, int w, int h, int num_frames, const unsigned long **video)
-{
+void display_lighting(int x, int y, int w, int h, int num_frames,
+                      const unsigned long **video) {
 
-  for (int frame = 0; frame < num_frames; frame++)
-  {
+  for (int frame = 0; frame < num_frames; frame++) {
     draw_image(x, y, w, h, video[frame]);
     wait_msec(100500);
     // wait_msec(10000);
