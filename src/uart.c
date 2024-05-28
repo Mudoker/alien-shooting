@@ -8,7 +8,8 @@ void uart_show_log_management_title();
 /**
  * Set baud rate and characteristics and map to GPIO
  */
-void uart_init() {
+void uart_init()
+{
   unsigned int r;
 
   /* Turn off UART0 */
@@ -28,12 +29,14 @@ void uart_init() {
   GPPUD = 0; // No pull up/down control
   // Toogle clock to flush GPIO setup
   r = 150;
-  while (r--) {
+  while (r--)
+  {
     asm volatile("nop");
   } // waiting 150 cycles
   GPPUDCLK0 = (1 << 14) | (1 << 15); // enable clock for GPIO 14, 15
   r = 150;
-  while (r--) {
+  while (r--)
+  {
     asm volatile("nop");
   } // waiting 150 cycles
   GPPUDCLK0 = 0; // flush GPIO setup
@@ -73,11 +76,13 @@ void uart_init() {
 /**
  * Send a character
  */
-void uart_sendc(char c) {
+void uart_sendc(char c)
+{
 
   /* Check Flags Register */
   /* And wait until transmitter is not full */
-  do {
+  do
+  {
     asm volatile("nop");
   } while (UART0_FR & UART0_FR_TXFF);
 
@@ -88,13 +93,15 @@ void uart_sendc(char c) {
 /**
  * Receive a character
  */
-char uart_getc() {
+char uart_getc()
+{
   char c = 0;
 
   /* Check Flags Register */
   /* Wait until Receiver is not empty
    * (at least one byte data in receive fifo)*/
-  do {
+  do
+  {
     asm volatile("nop");
   } while (UART0_FR & UART0_FR_RXFE);
 
@@ -108,8 +115,10 @@ char uart_getc() {
 /**
  * Display a string
  */
-void uart_puts(char *s) {
-  while (*s) {
+void uart_puts(char *s)
+{
+  while (*s)
+  {
     /* convert newline to carriage return + newline */
     if (*s == '\n')
       uart_sendc('\r');
@@ -117,10 +126,47 @@ void uart_puts(char *s) {
   }
 }
 
-void uart_logs(int command_index, char *log) {
-  uart_puts("Command ");
-  uart_dec(command_index);
-  uart_puts(": ");
+void uart_alert(char *alert)
+{
+  uart_puts(YELLOW);
+  uart_puts("ALERT: ");
+  uart_puts(alert);
+  uart_puts("\n");
+}
+
+void uart_logs(int command_index, char *log, char *c, int is_positive)
+{
+  char c_str[3];
+
+  if (c == '\n')
+  {
+    strcpy(c_str, "ENTER KEY");
+  }
+  else
+  {
+    c_str[0] = c;
+    c_str[1] = '\0';
+  }
+
+  if (is_positive)
+  {
+    uart_puts(GREEN);
+    uart_puts("Command ");
+    uart_dec(command_index);
+    uart_puts(" - ACK (Input: ");
+    uart_puts(c_str);
+    uart_puts("): ");
+  }
+  else
+  {
+    uart_puts(RED);
+    uart_puts("Command ");
+    uart_dec(command_index);
+    uart_puts(" - NAK (Input: ");
+    uart_puts(c_str);
+    uart_puts("): ");
+  }
+
   uart_puts(log);
   uart_puts("\n");
 }
@@ -128,9 +174,11 @@ void uart_logs(int command_index, char *log) {
 /**
  * Display a value in hexadecimal format
  */
-void uart_hex(unsigned int num) {
+void uart_hex(unsigned int num)
+{
   uart_puts("0x");
-  for (int pos = 28; pos >= 0; pos = pos - 4) {
+  for (int pos = 28; pos >= 0; pos = pos - 4)
+  {
     // Get highest 4-bit nibble
     char digit = (num >> pos) & 0xF;
     /* Convert to ASCII code */
@@ -142,18 +190,21 @@ void uart_hex(unsigned int num) {
 /**
  * Display a value in decimal format
  */
-void uart_dec(int num) {
+void uart_dec(int num)
+{
   // A string to store the digit characters
   char str[33] = "";
   // Calculate the number of digits
   int len = 1;
   int temp = num;
-  while (temp >= 10) {
+  while (temp >= 10)
+  {
     len++;
     temp = temp / 10;
   }
   // Store into the string and print out
-  for (int i = 0; i < len; i++) {
+  for (int i = 0; i < len; i++)
+  {
     int digit = num % 10; // get last digit
     num = num / 10;       // remove last digit from the number
     str[len - (i + 1)] = digit + '0';
@@ -166,14 +217,16 @@ void uart_dec(int num) {
 unsigned int uart_isReadByteReady() { return !(UART0_FR & UART0_FR_RXFE); }
 
 /* New function: Check and return if no new character, don't wait */
-unsigned char getUart() {
+unsigned char getUart()
+{
   unsigned char ch = 0;
   if (uart_isReadByteReady())
     ch = uart_getc();
   return ch;
 }
 
-void uart_show_info() {
+void uart_show_info()
+{
   uart_show_log_management_title();
 
   uart_puts("UART CONFIGURATION\n"
@@ -191,7 +244,8 @@ void uart_show_info() {
   // TODO: Timer Interrupt
 }
 
-void uart_show_log_management_title() {
+void uart_show_log_management_title()
+{
   uart_puts("\n\n    #     #        ###  #######  #     #       #####   #     "
             "#  #######  #######  #######  ###  #     #   #####          \n"
             "   # #    #         #   #        ##    #      #     #  #     #  # "
