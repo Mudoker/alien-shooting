@@ -221,16 +221,10 @@ void result_screen(GameController *game_controller) {
   countdown = 60;
 
   if (game_controller->spaceship.health <= 0) {
-    uart_puts("You lose!\n");
-    uart_puts("Actual count: ");
-    uart_dec(actual_count);
     lose_screen(game_controller, actual_count);
   }
 
   if (actual_count == 60) {
-    uart_puts("You lose!\n");
-    uart_puts("Actual count: ");
-    uart_dec(actual_count);
     lose_screen(game_controller, actual_count);
   }
 
