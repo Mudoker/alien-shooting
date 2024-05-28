@@ -484,7 +484,7 @@ void move_alien_bullet(GameController *game_controller, int step)
                       game_controller->spaceship.size.height)
           {
 
-            uart_puts("ALERT: ALIEN BULLET HIT THE SPACESHIP!\n");
+            uart_alert("ALIEN BULLET HIT THE SPACESHIP!");
 
             // Deal damage to the spaceship
             receive_damage(game_controller);
@@ -567,7 +567,7 @@ void move_bullet(GameController *game_controller, int index, int step)
             bullet->position.y <= alien->position.y + alien->size.height)
         {
 
-          uart_puts("ALERT: BULLET HIT AN ALIEN!\n");
+          uart_alert("BULLET HIT AN ALIEN!");
 
           // Deal damage to the alien
           deal_damage(game_controller, j, alien->position.x, alien->position.y);
@@ -635,7 +635,7 @@ void move_PU_to_position(GameController *game_controller)
   {
     powerup->reach_target = 1;
     init_power_up(game_controller);
-    uart_puts("ALERT: POWERUP REACHED THE TARGET!\n");
+    uart_alert("POWERUP REACHED THE TARGET!");
   }
 
   // Clear the previous position of the power-up
@@ -768,10 +768,6 @@ void deal_damage(GameController *game_controller, int index, int posX,
 
   alien->health -= game_controller->spaceship.damage;
 
-  uart_puts("Current Health: ");
-  uart_puts(itoa(alien->health));
-  uart_puts("\n");
-
   if (alien->health <= 0)
   {
     for (int j = 0; j < 5; j++)
@@ -816,7 +812,7 @@ void clear_wave(GameController *game_controller)
     if (game_controller->current_wave >= 3)
     {
 
-      uart_puts("ALERT: GAME OVER!\n");
+      uart_alert("GAME OVER!");
 
       result_screen(game_controller);
       return;

@@ -126,26 +126,47 @@ void uart_puts(char *s)
   }
 }
 
+void uart_alert(char *alert)
+{
+  uart_puts(YELLOW_TEXT);
+  uart_puts("ALERT: ");
+  uart_puts(alert);
+  uart_puts("\n");
+}
+
 void uart_logs(int command_index, char *log, char *c, int is_positive)
 {
+  char c_str[3];
+
+  if (c == '\n')
+  {
+    strcpy(c_str, "ENTER KEY");
+  }
+  else
+  {
+    c_str[0] = c;
+    c_str[1] = '\0';
+  }
 
   if (is_positive)
   {
     uart_puts(GREEN_TEXT);
     uart_puts("Command ");
     uart_dec(command_index);
-    uart_puts(" - ACK");
+    uart_puts(" - ACK (Input: ");
+    uart_puts(c_str);
+    uart_puts("): ");
   }
   else
   {
     uart_puts(RED_TEXT);
     uart_puts("Command ");
     uart_dec(command_index);
-    uart_puts(" - NAK");
+    uart_puts(" - NAK (Input: ");
+    uart_puts(c_str);
+    uart_puts("): ");
   }
-  uart_puts(" (Input: ");
-  uart_sendc(c);
-  uart_puts("): ");
+
   uart_puts(log);
   uart_puts("\n");
 }

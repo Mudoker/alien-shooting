@@ -334,7 +334,6 @@ void welcome_screen(GameController *game_controller)
 
 void manage_command(GameController *game_controller, char *log, char *c, int is_positive)
 {
-  uart_puts(c);
   game_controller->command_count++;
   uart_logs(game_controller->command_count, log, c, is_positive);
 }
