@@ -4,10 +4,13 @@
 #ifndef OS_COMMAND
 #define OS_COMMAND
 
+#include "./game/game.h"
 #include "./global.h"
+#include "./image.h"
 #include "./mbox.h"
 #include "./uart.h"
 #include "./utils.h"
+#include "./video.h"
 
 // Struct to store command stack
 typedef struct CommandStack {
@@ -18,7 +21,7 @@ typedef struct CommandStack {
 // Function prototypes
 void os_greet();                   // Welcome message
 void show_help(char *command);     // Show help menu
-void parse_command(char *command); // Parse the command
+void parse_command(char *command); // Parse the commandf
 
 // Command stack methods
 void push_command(struct CommandStack *stack, char *command); // Push command

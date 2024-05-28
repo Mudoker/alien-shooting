@@ -2,7 +2,7 @@
 #include "../../header/game/screen.h"
 #include "../../header/utils.h"
 
-void gameCli()
+void game_cli()
 {
   GameController cgame;
   init_controller(&cgame);

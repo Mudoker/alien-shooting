@@ -58,6 +58,15 @@ void in_game_screen(GameController *game_controller)
       manage_command(game_controller, "Moved spaceship to right", c, 1);
       move_spaceship(game_controller, KEY_RIGHT, 14);
       break;
+    case 'x':
+      manage_command(game_controller, "Exited the game screen");
+
+      welcome_screen(game_controller);
+      break;
+    case 'k':
+      manage_command(game_controller, "Exited the game");
+
+      return;
     default:
       handle_wrong_input(game_controller, c);
       break;
@@ -331,6 +340,11 @@ void welcome_screen(GameController *game_controller)
       manage_command(game_controller, "Redirected to the spaceship selection screen from welcome screen", c, 1);
       ship_selection_screen(game_controller);
       break;
+    case 'x':
+      manage_command(game_controller,
+                     "Exited the game from the welcome screen");
+
+      return;
     default:
       handle_wrong_input(game_controller, c);
       break;
