@@ -1,4 +1,5 @@
 # Alien Shooting: Arcade-style Shooter Game
+
 ======================================================
 
 ### Project Information
@@ -10,18 +11,21 @@ This project is a part of the course EEET2490 – Embedded System: OS and Interf
 Team Number: 10
 
 Team Members:
+
 - Doan Huu Quoc (s3927776@student.rmit.edu.au)
 - Kim Seokyung (s3939114@rmit.edu.vn)
 - Tran Vu Quang Anh (s3916566@rmit.edu.vn)
 - Nguyen Dinh Viet (s3927291@rmit.edu.vn)
 
-Introduction
-------------
+## Introduction
 
 Welcome to Alien Shooting, an immersive arcade-style shooter game where players embark on an exhilarating quest to defend the galaxy against relentless alien invaders. With engaging gameplay mechanics, dynamic progression systems, and challenging boss encounters, Alien Shooting promises hours of thrilling entertainment.
 
-Objective and Gameplay
-----------------------
+<div style="text-align:center">
+<img alt="Welcome Screen" src="./public/welcome_screen.png">
+</div>
+
+## Objective and Gameplay
 
 In Alien Shooting, players take on the role of a skilled pilot tasked with piloting a spaceship and eliminating waves of alien adversaries. The game features straightforward controls and fast-paced action, making it accessible to players of all skill levels.
 
