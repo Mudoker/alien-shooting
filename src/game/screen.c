@@ -41,19 +41,19 @@ void in_game_screen(GameController *game_controller)
     {
     case 'w':
       manage_command(game_controller, "Moved spaceship to up", c, 1);
-      move_spaceship(game_controller, KEY_UP, 10);
+      move_spaceship(game_controller, KEY_UP, 14);
       break;
     case 's':
       manage_command(game_controller, "Moved spaceship to down", c, 1);
-      move_spaceship(game_controller, KEY_DOWN, 10);
+      move_spaceship(game_controller, KEY_DOWN, 14);
       break;
     case 'a':
       manage_command(game_controller, "Moved spaceship to left", c, 1);
-      move_spaceship(game_controller, KEY_LEFT, 10);
+      move_spaceship(game_controller, KEY_LEFT, 14);
       break;
     case 'd':
       manage_command(game_controller, "Moved spaceship to right", c, 1);
-      move_spaceship(game_controller, KEY_RIGHT, 10);
+      move_spaceship(game_controller, KEY_RIGHT, 14);
       break;
     default:
       handle_wrong_input(game_controller, c);
