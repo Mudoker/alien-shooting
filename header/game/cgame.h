@@ -105,7 +105,6 @@ void draw_health_bar(GameController *game_controller);
 void draw_welcome_screen();
 void draw_alien(GameController *game_controller);
 void draw_health_PU(GameController *game_controller);
-void draw_shield_PU(GameController *game_controller);
 void explosion(int posX, int posY);
 void display_explosion(int x, int y, int w, int h, int num_frames, const unsigned long **video);
 char *itoa(int num);
