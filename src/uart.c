@@ -128,7 +128,7 @@ void uart_puts(char *s)
 
 void uart_alert(char *alert)
 {
-  uart_puts(YELLOW_TEXT);
+  uart_puts(YELLOW);
   uart_puts("ALERT: ");
   uart_puts(alert);
   uart_puts("\n");
@@ -150,7 +150,7 @@ void uart_logs(int command_index, char *log, char *c, int is_positive)
 
   if (is_positive)
   {
-    uart_puts(GREEN_TEXT);
+    uart_puts(GREEN);
     uart_puts("Command ");
     uart_dec(command_index);
     uart_puts(" - ACK (Input: ");
@@ -159,7 +159,7 @@ void uart_logs(int command_index, char *log, char *c, int is_positive)
   }
   else
   {
-    uart_puts(RED_TEXT);
+    uart_puts(RED);
     uart_puts("Command ");
     uart_dec(command_index);
     uart_puts(" - NAK (Input: ");

@@ -10,18 +10,18 @@
 #define MAX_ARG_SIZE 100    // Maximum number of arguments size
 #define MAX_CMD_HISTORY 200 // Maximum number of command history
 
-#define IMAGE_WIDTH 816  // Image width
+#define IMAGE_WIDTH 816   // Image width
 #define IMAGE_HEIGHT 1263 // Image height
 
-#define SCREEN_WIDTH 780 // Screen width
+#define SCREEN_WIDTH 780  // Screen width
 #define SCREEN_HEIGHT 900 // Screen height
 
-#define cinema_bg_width 780 // Cinema background width
+#define cinema_bg_width 780  // Cinema background width
 #define cinema_bg_height 900 // Cinema background height
-#define paddingLeft 180 // Padding left
-#define paddingTop 240 // Padding top
-#define VIDEO_HEIGHT 236 // Video height
-#define VIDEO_WIDTH 420 // Video width
+#define paddingLeft 180      // Padding left
+#define paddingTop 240       // Padding top
+#define VIDEO_HEIGHT 236     // Video height
+#define VIDEO_WIDTH 420      // Video width
 
 #define NUM_FRAMES 45 // Number of frames
 #define VIDEO_LOOP 10 // Video loop
@@ -58,7 +58,8 @@
 // typedef enum { False = 0, True = 1 } boolean; // Boolean data type
 
 // OS trademark structure
-typedef struct {
+typedef struct
+{
   // OS information
   const char *OS_NAME;    // OS name
   const char *OS_ID;      // OS id
@@ -69,7 +70,8 @@ typedef struct {
 } Information;
 
 // Member information structure
-typedef struct {
+typedef struct
+{
   const char *NAME;         // Member name
   const char *SID;          // Member ID
   const char *GITHUB;       // Member GitHub
@@ -77,7 +79,8 @@ typedef struct {
 } Member;
 
 // Team information structure
-typedef struct {
+typedef struct
+{
   const char *TEAM_NAME;        // Team name
   const char *TEAM_ID;          // Team ID
   const char *TEAM_DESCRIPTION; // Team description

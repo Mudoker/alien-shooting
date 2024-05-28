@@ -126,10 +126,6 @@ extern int HANDSHAKE_CONFIG;            // Handshake configuration
 extern int IS_REINIT_UART;              // UART reinitialization state
 extern int IS_CONFIG_BAUD_RATE;         // Flag to check if the baud rate is configured
 
-#define RED_TEXT "\033[0;31m"
-#define GREEN_TEXT "\033[0;32m"
-#define YELLOW_TEXT "\033[0;33m"
-
 // Function prototypes
 void uart_init();              // Initialize UART
 void uart_sendc(char c);       // Send a character
