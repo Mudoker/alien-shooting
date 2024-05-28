@@ -2,6 +2,20 @@
 #include "../header/gpio.h"
 #include "../header/utils.h"
 
+// 115200 baud rate configuration for UART
+BaudRateConfig BAUD_RATE_CONFIG = {
+    .ibrd = 26,
+    .fbrd = 3,
+};
+
+// State of the UART
+int IS_REINIT_UART = 0;      // UART reinitialization state
+int DATA_BITS_CONFIG = 8;    // Data bits configuration (default 8 bits)
+int STOP_BIT_CONFIG = 2;     // Stop bit configuration (default 2 bit)
+int PARITY_CONFIG = 0;       // Parity configuration (default None)
+int HANDSHAKE_CONFIG = 0;    // Handshake configuration (default None)
+int IS_CONFIG_BAUD_RATE = 0; // Baud rate configuration state
+
 // Function prototypes
 void uart_show_log_management_title();
 
@@ -278,4 +292,56 @@ void uart_show_log_management_title()
             "#   #####   #######  #     #  #######  #     #     #    \n"
             "                                                                  "
             "                                                      \n\n");
+}
+
+// Calculate baud rate
+BaudRateConfig get_baud_rate(int baud_rate) {
+  // Define valid baud rates
+  const int VALID_BAUD[] = {
+      300,   600,   1200,  2400,   4800,   9600,   14400,
+      19200, 38400, 57600, 921600, 230400, 460800, 115200,
+  };
+
+  BaudRateConfig config;
+
+  // Validate baud rate
+  for (int i = 0; i <= 13; i++) {
+    if (baud_rate == VALID_BAUD[i]) {
+      uart_puts("\n\nBaud rate set to ");
+      uart_dec(baud_rate);
+      uart_puts("\n");
+      break;
+    }
+
+    // Give warning if baud rate is invalid
+    if (i == 13) {
+      // Return default baud rate
+      str_format("\n\nInvalid baud rate \n", THEME.ERROR_COLOR);
+
+      str_format("Supported values: 300, 1200, 2400, 4800, 9600, "
+                 "19200, 38400, 57600, 115200, 230400, 460800, 921600\n\n",
+                 THEME.SECONDARY_COLOR);
+
+      str_format("Reverting... \n", THEME.ERROR_COLOR);
+
+      // Set default baud rate
+      config = BAUD_RATE_CONFIG;
+      return config;
+    }
+  }
+
+  // Calculate Divider
+  float divider = (float)UART_CLK / (16.0f * baud_rate);
+
+  // Calculate integer and fractional parts of Divider
+  int integerPart = (int)divider;
+  float fractionalPart = divider - integerPart;
+
+  // Calculate the integer part of the baud rate divisor
+  config.ibrd = integerPart;
+
+  // Calculate the fractional part of the baud rate divisor
+  config.fbrd = (int)(fractionalPart * 64 + 0.5);
+
+  return config;
 }
