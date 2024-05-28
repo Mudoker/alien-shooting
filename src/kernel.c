@@ -209,14 +209,14 @@ void cli()
   }
 }
 
-int main()
-{
-  uart_init(); // Initialize UART
-  os_greet();  // Show welcome message
+int main() {
+  uart_init();       // Initialize UART
+  os_greet();        // Show welcome message
 
-  cli(); // Get command from user
-
-  game_cli();
+  while (True) {
+    uart_puts(THEME.BACKGROUND_COLOR); // Set background color
+    cli();                             // Get command from user
+  }
 
   return 0;
 }
