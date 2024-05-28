@@ -126,11 +126,18 @@ void uart_puts(char *s)
   }
 }
 
-void uart_logs(int command_index, char *log)
+void uart_logs(int command_index, char *log, int is_positive)
 {
   uart_puts("Command ");
   uart_dec(command_index);
-  uart_puts(": ");
+  if (is_positive)
+  {
+    uart_puts(" - ACK: ");
+  }
+  else
+  {
+    uart_puts(" - NAK: ");
+  }
   uart_puts(log);
   uart_puts("\n");
 }
@@ -187,20 +194,6 @@ unsigned char getUart()
   if (uart_isReadByteReady())
     ch = uart_getc();
   return ch;
-}
-
-void uart_response(int is_positive)
-{
-  uart_puts("Response: ");
-  if (is_positive)
-  {
-    uart_puts("ACK");
-  }
-  else
-  {
-    uart_puts("NCK");
-  }
-  uart_puts("\n");
 }
 
 void uart_show_info()

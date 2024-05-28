@@ -2,7 +2,7 @@
 #include "../../header/game/ui.h"
 
 // Function prototypes
-void result_screen(GameController *game_controller, int defeat_count);
+void result_screen(GameController *game_controller);
 void lose_screen(GameController *game_controller, int seconds);
 void win_final_screen(GameController *game_controller, int seconds);
 void win_screen(GameController *game_controller, int seconds);
@@ -40,27 +40,23 @@ void in_game_screen(GameController *game_controller)
     switch (c)
     {
     case 'w':
-      manage_command(game_controller, "Moved spaceship to up");
-      uart_response(1);
+      manage_command(game_controller, "Moved spaceship to up", 1);
       move_spaceship(game_controller, KEY_UP, 10);
       break;
     case 's':
-      manage_command(game_controller, "Moved spaceship to down");
-      uart_response(1);
+      manage_command(game_controller, "Moved spaceship to down", 1);
       move_spaceship(game_controller, KEY_DOWN, 10);
       break;
     case 'a':
-      manage_command(game_controller, "Moved spaceship to left");
-      uart_response(1);
+      manage_command(game_controller, "Moved spaceship to left", 1);
       move_spaceship(game_controller, KEY_LEFT, 10);
       break;
     case 'd':
-      manage_command(game_controller, "Moved spaceship to right");
-      uart_response(1);
+      manage_command(game_controller, "Moved spaceship to right", 1);
       move_spaceship(game_controller, KEY_RIGHT, 10);
       break;
     default:
-      handle_wrong_input(c);
+      handle_wrong_input(game_controller, c);
       break;
     }
 
@@ -148,23 +144,20 @@ void stage_screen(GameController *game_controller)
       game_controller->stage_level--;
       is_update = True;
 
-      manage_command(game_controller, "Moved up to select another stage level");
-      uart_response(1);
+      manage_command(game_controller, "Moved up to select another stage level", 1);
       break;
     case 's':
       game_controller->stage_level++;
       is_update = True;
 
-      manage_command(game_controller, "Moved down to select another stage level");
-      uart_response(1);
+      manage_command(game_controller, "Moved down to select another stage level", 1);
       break;
     case '\n':
-      manage_command(game_controller, "Selected a stage level to play");
-      uart_response(1);
+      manage_command(game_controller, "Selected a stage level to play", 1);
       in_game_screen(game_controller);
       break;
     default:
-      handle_wrong_input(c);
+      handle_wrong_input(game_controller, c);
       break;
     }
   }
@@ -189,17 +182,16 @@ void ship_selection_screen(GameController *game_controller)
     switch (c)
     {
     case 'a':
-      manage_command(game_controller, "Moved left to select another spaceship");
+      manage_command(game_controller, "Moved left to select another spaceship", 1);
       if (order > 1)
       {
         order--;
         draw_spaceship_option(&game_controller->spaceship, order, 1, &current_ship_option);
         draw_arrows(order);
       }
-      uart_response(1);
       break;
     case 'd':
-      manage_command(game_controller, "Moved right to select another spaceship");
+      manage_command(game_controller, "Moved right to select another spaceship", 1);
 
       if (order < 3)
       {
@@ -207,17 +199,15 @@ void ship_selection_screen(GameController *game_controller)
         draw_spaceship_option(&game_controller->spaceship, order, 1, &current_ship_option);
         draw_arrows(order);
       }
-      uart_response(1);
       break;
     case '\n':
-      manage_command(game_controller, "Selected a spaceship");
+      manage_command(game_controller, "Selected a spaceship", 1);
 
       change_spaceship(game_controller, order);
-      uart_response(1);
       welcome_screen(game_controller);
       return;
     default:
-      handle_wrong_input(c);
+      handle_wrong_input(game_controller, c);
       break;
     }
   }
@@ -252,17 +242,15 @@ void lose_screen(GameController *game_controller, int seconds)
     switch (c)
     {
     case 'y':
-      manage_command(game_controller, "Redirected to the game screen from lose result screen");
-      uart_response(1);
+      manage_command(game_controller, "Redirected to the game screen from lose result screen", 1);
       in_game_screen(game_controller);
       break;
     case 'n':
-      manage_command(game_controller, "Redirected to the welcome screen from lose result screen");
-      uart_response(1);
+      manage_command(game_controller, "Redirected to the welcome screen from lose result screen", 1);
       welcome_screen(game_controller);
       break;
     default:
-      handle_wrong_input(c);
+      handle_wrong_input(game_controller, c);
       break;
     }
   }
@@ -278,12 +266,11 @@ void win_final_screen(GameController *game_controller, int seconds)
     switch (c)
     {
     case 'n':
-      manage_command(game_controller, "Redirected to the welcome screen from win final result screen");
-      uart_response(1);
+      manage_command(game_controller, "Redirected to the welcome screen from win final result screen", 1);
       welcome_screen(game_controller);
       break;
     default:
-      handle_wrong_input(c);
+      handle_wrong_input(game_controller, c);
       break;
     }
   }
@@ -299,18 +286,16 @@ void win_screen(GameController *game_controller, int seconds)
     switch (c)
     {
     case 'y':
-      manage_command(game_controller, "Redirected to the next stage's game screen from win result screen");
+      manage_command(game_controller, "Redirected to the next stage's game screen from win result screen", 1);
       game_controller->stage_level++;
-      uart_response(1);
       in_game_screen(game_controller);
       break;
     case 'n':
-      manage_command(game_controller, "Redirected to the welcome screen from win result screen");
-      uart_response(1);
+      manage_command(game_controller, "Redirected to the welcome screen from win result screen", 1);
       welcome_screen(game_controller);
       break;
     default:
-      handle_wrong_input(c);
+      handle_wrong_input(game_controller, c);
       break;
     }
   }
@@ -333,33 +318,30 @@ void welcome_screen(GameController *game_controller)
     switch (c)
     {
     case '1':
-      manage_command(game_controller, "Redirected to the stage screen from welcome screen");
-      uart_response(1);
+      manage_command(game_controller, "Redirected to the stage screen from welcome screen", 1);
       stage_screen(game_controller);
       break;
     case '2':
-      manage_command(game_controller, "Redirected to the spaceship selection screen from welcome screen");
-      uart_response(1);
+      manage_command(game_controller, "Redirected to the spaceship selection screen from welcome screen", 1);
       ship_selection_screen(game_controller);
       break;
     default:
-      handle_wrong_input(c);
+      handle_wrong_input(game_controller, c);
       break;
     }
   }
 }
 
-void manage_command(GameController *game_controller, char *log)
+void manage_command(GameController *game_controller, char *log, int is_positive)
 {
   game_controller->command_count++;
-  uart_logs(game_controller->command_count, log);
+  uart_logs(game_controller->command_count, log, is_positive);
 }
 
-void handle_wrong_input(char *c)
+void handle_wrong_input(GameController *game_controller, char *c)
 {
   if (c != NULL && c != '\n')
   {
-    uart_response(0);
-    uart_puts(c);
+    manage_command(game_controller, "Wrong input", 0);
   }
 }
