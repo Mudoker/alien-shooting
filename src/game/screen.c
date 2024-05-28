@@ -23,7 +23,7 @@ void in_game_screen(GameController *game_controller)
   draw_spaceship(game_controller);
   draw_health_bar(game_controller);
   draw_alien(game_controller);
-  
+
   int last_powerup_update = 0; // Add this variable to track the time
   int bullet_timer = 0;
   int fire_timer = 0;
@@ -32,12 +32,20 @@ void in_game_screen(GameController *game_controller)
   int power_up_timer = 0;
   int powerup_active = 0;
   int next_powerup_time = 8000; // Initial delay for the first power-up
-  static int  shieldTimer = 0;
-  // lighting();
+  static int shieldTimer = 0;
+
+  init_interrupts(); // Initialize interrupts
 
   while (1)
   {
-    // Check if a character is received
+    int is_done = handle_irq_elx();
+
+    if (is_done == 0)
+    {
+      result_screen(game_controller);
+      return;
+    }
+
     clear_wave(game_controller);
     char c = getUart();
     switch (c)
@@ -59,12 +67,12 @@ void in_game_screen(GameController *game_controller)
       move_spaceship(game_controller, KEY_RIGHT, 14);
       break;
     case 'x':
-      manage_command(game_controller, "Exited the game screen");
+      manage_command(game_controller, "Exited the game screen", c, 1);
 
       welcome_screen(game_controller);
       break;
     case 'k':
-      manage_command(game_controller, "Exited the game");
+      manage_command(game_controller, "Exited the application", c, 1);
 
       return;
     default:
@@ -112,9 +120,8 @@ void in_game_screen(GameController *game_controller)
 
       power_up_timer = 0;
     }
-   
-      game_controller->spaceship.shieldTimer -= 80;
 
+    game_controller->spaceship.shieldTimer -= 80;
   }
 }
 
@@ -230,20 +237,24 @@ void ship_selection_screen(GameController *game_controller)
 
 void result_screen(GameController *game_controller)
 {
-  int seconds = 20; // TODO: make it dynamic from the timer
 
-  if (seconds > 60)
+  int actual_count = COUNTDOWN - countdown;
+
+  // reset the countdown
+  countdown = COUNTDOWN;
+
+  if (actual_count == countdown)
   {
-    lose_screen(game_controller, seconds);
+    lose_screen(game_controller, actual_count);
   }
 
   if (game_controller->stage_level == MAX_STAGES)
   {
-    win_final_screen(game_controller, seconds);
+    win_final_screen(game_controller, actual_count);
   }
   else
   {
-    win_screen(game_controller, seconds);
+    win_screen(game_controller, actual_count);
   }
 }
 
@@ -342,7 +353,7 @@ void welcome_screen(GameController *game_controller)
       break;
     case 'x':
       manage_command(game_controller,
-                     "Exited the game from the welcome screen");
+                     "Exited the appliation from the welcome screen", c, 1);
 
       return;
     default:

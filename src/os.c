@@ -5,23 +5,40 @@ CommandStack command_stack = {.top_index = -1};
 
 // List of available commands
 char *commands[] = {
-    "os",       "help",  "clear", "history", "setcolor", "ref",
-    "showinfo", "image", "video", "game",    (char *)0,
+    "os",
+    "help",
+    "clear",
+    "history",
+    "setcolor",
+    "ref",
+    "showinfo",
+    "image",
+    "video",
+    "game",
+    (char *)0,
 };
 
 char *extended_commands[] = {
-    "help setcolor",    "help ref",
-    "help showinfo",    "help clear",
-    "help history",     "help os",
-    "help help",        "ref -uart",
-    "showinfo -v",      "ref -uart -baud",
-    "ref -uart -dbits", "ref -uart -sbits",
-    "ref -uart -par",   "ref -uart -handshake",
+    "help setcolor",
+    "help ref",
+    "help showinfo",
+    "help clear",
+    "help history",
+    "help os",
+    "help help",
+    "ref -uart",
+    "showinfo -v",
+    "ref -uart -baud",
+    "ref -uart -dbits",
+    "ref -uart -sbits",
+    "ref -uart -par",
+    "ref -uart -handshake",
     (char *)0,
 };
 
 // Print the OS information (welcome message)
-void os_greet() {
+void os_greet()
+{
   uart_puts("\n");
 
   // OS logo
@@ -86,14 +103,19 @@ void os_greet() {
 
 // As per limitations of bare-metal programming, the stack is implemented as an
 // array of strings Add a command to the stack
-void push_command(struct CommandStack *stack, char *command) {
+void push_command(struct CommandStack *stack, char *command)
+{
   // Check if the stack is full
-  if (stack->top_index == MAX_CMD_HISTORY - 1) {
+  if (stack->top_index == MAX_CMD_HISTORY - 1)
+  {
     // Shift the stack to the left
-    for (int i = 0; i < MAX_CMD_HISTORY - 1; i++) {
+    for (int i = 0; i < MAX_CMD_HISTORY - 1; i++)
+    {
       strcpy(stack->command[i], stack->command[i + 1]);
     }
-  } else {
+  }
+  else
+  {
     // Increment the top index
     stack->top_index++;
   }
@@ -103,9 +125,11 @@ void push_command(struct CommandStack *stack, char *command) {
 }
 
 // Remove the top command from the stack
-void pop_command(struct CommandStack *self) {
+void pop_command(struct CommandStack *self)
+{
   // Check if the stack is empty
-  if (self->top_index == -1) {
+  if (self->top_index == -1)
+  {
     return;
   }
 
@@ -114,9 +138,11 @@ void pop_command(struct CommandStack *self) {
 }
 
 // Get the command at the top of the stack
-void get_command(struct CommandStack *self) {
+void get_command(struct CommandStack *self)
+{
   // Check if the stack is empty
-  if (self->top_index == -1) {
+  if (self->top_index == -1)
+  {
     return;
   }
 
@@ -125,38 +151,48 @@ void get_command(struct CommandStack *self) {
 }
 
 // Get all commands in the stack
-void get_all_commands(struct CommandStack *stack) {
+void get_all_commands(struct CommandStack *stack)
+{
   // Check if the stack is empty
-  if (stack->top_index == -1) {
+  if (stack->top_index == -1)
+  {
     return;
   }
 
   // Print all commands in the stack
-  for (int i = 0; i <= stack->top_index; i++) {
+  for (int i = 0; i <= stack->top_index; i++)
+  {
     uart_puts(stack->command[i]);
     uart_puts("\n");
   }
 }
 
 // Take a list of keys and values and initialize the values array with null
-void initialize_values(char *values[MAX_ROWS][MAX_ROWS], int rows) {
+void initialize_values(char *values[MAX_ROWS][MAX_ROWS], int rows)
+{
   // Loop through the values array and initialize it with null
-  for (int i = 0; i < MAX_ROWS; i++) {
-    for (int j = 0; j < rows; j++) {
+  for (int i = 0; i < MAX_ROWS; i++)
+  {
+    for (int j = 0; j < rows; j++)
+    {
       values[i][j] = (char *)0;
     }
   }
 }
 
 // Show command execution status
-void show_status(int status, char *msg) {
+void show_status(int status, char *msg)
+{
   // Initialize the color based on the status
   const char *color;
 
   // Define the color based on the status (0: success, 1: error)
-  if (status == 0) {
+  if (status == 0)
+  {
     color = THEME.SUCCESS_COLOR;
-  } else {
+  }
+  else
+  {
     color = THEME.ERROR_COLOR;
   }
 
@@ -167,7 +203,8 @@ void show_status(int status, char *msg) {
 }
 
 // Display help menu
-void show_help(char *command) {
+void show_help(char *command)
+{
   char *keys[] = {"Command", "Description"}; // Table headers
   char *values[MAX_ROWS][MAX_ROWS];          // Table values
   char *commands_desc[MAX_ROWS][MAX_ROWS];   // Command descriptions
@@ -247,24 +284,31 @@ void show_help(char *command) {
   int num_rows = 0;
 
   // Display help for all commands
-  if (is_equal(command, "all")) {
+  if (is_equal(command, "all"))
+  {
     // Loop through the commands and descriptions to extract the values
-    for (int i = 0; commands[i] != (char *)0; i++) {
+    for (int i = 0; commands[i] != (char *)0; i++)
+    {
       values[i][0] = commands[i];
       num_rows++;
     }
 
-    for (int i = 0; commands_desc[i][0] != (char *)0; i++) {
+    for (int i = 0; commands_desc[i][0] != (char *)0; i++)
+    {
       values[i][1] = commands_desc[i][0];
     }
-  } else {
+  }
+  else
+  {
     // Display help for a specific command
     int i;
 
     // Loop through the commands to find the command
-    for (i = 0; commands[i] != (char *)0; i++) {
+    for (i = 0; commands[i] != (char *)0; i++)
+    {
       // Check if the command is found
-      if (is_equal(command, commands[i])) {
+      if (is_equal(command, commands[i]))
+      {
         // Extract the command and description
         values[0][0] = commands[i];
         values[0][1] = commands_desc[i][0];
@@ -274,7 +318,8 @@ void show_help(char *command) {
         Loop through the descriptions to extract the values. One command can
         have multiple descriptions (flags)
         */
-        for (int j = 1; commands_desc[i][j] != (char *)0; j++) {
+        for (int j = 1; commands_desc[i][j] != (char *)0; j++)
+        {
           values[j][0] = "";
           values[j][1] = commands_desc[i][j];
           num_rows++;
@@ -284,7 +329,8 @@ void show_help(char *command) {
     }
 
     // Check if the command is not found
-    if (commands[i] == (char *)0) {
+    if (commands[i] == (char *)0)
+    {
       show_status(1,
                   "Command not found. Type 'help' to see available commands.");
       return;
@@ -298,14 +344,17 @@ void show_help(char *command) {
 }
 
 // Auto-complete command
-char *autocomplete_command(char *buffer) {
+char *autocomplete_command(char *buffer)
+{
   // Check if the buffer is empty
-  if (len(buffer) == 0) {
+  if (len(buffer) == 0)
+  {
     return (char *)0;
   }
 
   // Check if the buffer starts with '?' and return "help" if true
-  if (buffer[0] == '?') {
+  if (buffer[0] == '?')
+  {
     buffer[0] = 'h';
     buffer[1] = 'e';
     buffer[2] = 'l';
@@ -313,16 +362,20 @@ char *autocomplete_command(char *buffer) {
   }
 
   // Loop through the commands to find the matching command
-  for (int i = 0; commands[i] != (char *)0; i++) {
+  for (int i = 0; commands[i] != (char *)0; i++)
+  {
 
-    if (starts_with(commands[i], buffer)) {
+    if (starts_with(commands[i], buffer))
+    {
       return commands[i];
     }
   }
 
   // Loop through the extended commands to find the matching command
-  for (int i = 0; extended_commands[i] != (char *)0; i++) {
-    if (starts_with(extended_commands[i], buffer)) {
+  for (int i = 0; extended_commands[i] != (char *)0; i++)
+  {
+    if (starts_with(extended_commands[i], buffer))
+    {
       return extended_commands[i];
     }
   }
@@ -333,7 +386,8 @@ char *autocomplete_command(char *buffer) {
 
 // Parse flags from the input, passing by reference the flags array making it
 // can be used outside the function without returning it
-int parse_flags(char *input, char *flags[], int max_flags, int min_flags) {
+int parse_flags(char *input, char *flags[], int max_flags, int min_flags)
+{
   int i = 0;                                    // Index for the input string
   int j = 0;                                    // Index for the flag string
   int k = 0;                                    // Index for the flags array
@@ -341,22 +395,27 @@ int parse_flags(char *input, char *flags[], int max_flags, int min_flags) {
   char flag_buffer[MAX_CMD_SIZE][MAX_CMD_SIZE]; // Buffer to store flags
 
   // Initialize the flag buffer
-  for (int i = 0; i < MAX_CMD_SIZE; i++) {
-    for (int j = 0; j < MAX_CMD_SIZE; j++) {
+  for (int i = 0; i < MAX_CMD_SIZE; i++)
+  {
+    for (int j = 0; j < MAX_CMD_SIZE; j++)
+    {
       flag_buffer[i][j] = '\0';
     }
   }
 
   // Extract the flags from the input
-  while (input[i] != '\0' && k < MAX_CMD_SIZE) {
+  while (input[i] != '\0' && k < MAX_CMD_SIZE)
+  {
     // If a flag is found (starts with '-')
-    if (input[i] == '-') {
+    if (input[i] == '-')
+    {
       i++;          // Skip the '-'
       j = 0;        // Reset j for a new flag
       flag_count++; // Increment the flag count
 
       // Extract the flag
-      while (input[i] != '\0' && input[i + 1] != '-' && j < MAX_CMD_SIZE - 1) {
+      while (input[i] != '\0' && input[i + 1] != '-' && j < MAX_CMD_SIZE - 1)
+      {
         flag_buffer[k][j++] = input[i++];
       }
 
@@ -368,14 +427,16 @@ int parse_flags(char *input, char *flags[], int max_flags, int min_flags) {
   }
 
   // Check if the number of flags exceeds the maximum allowed flags
-  if (flag_count > max_flags) {
+  if (flag_count > max_flags)
+  {
     show_status(
         1, "Too many flags. Type 'help <command>' to see available flags.");
     return 0;
   }
 
   // Check if the number of flags is less than the minimum required flags
-  if (flag_count < min_flags) {
+  if (flag_count < min_flags)
+  {
     show_status(1,
                 "Too few flags. Type 'help <command>' to see available flags.");
     return 0;
@@ -386,25 +447,29 @@ int parse_flags(char *input, char *flags[], int max_flags, int min_flags) {
 }
 
 // Parse target from the flags (e.g., -t red)
-void parse_target(char *flag, char *target, char *option) {
+void parse_target(char *flag, char *target, char *option)
+{
   // Extract the target and option
   int k = 0;
 
   // Extract the target
-  while (flag[k] != '\0' && flag[k] != ' ') {
+  while (flag[k] != '\0' && flag[k] != ' ')
+  {
     target[k] = flag[k];
     k++;
   }
   target[k] = '\0'; // Null-terminate the target
 
   // Skip spaces after target
-  while (flag[k] == ' ') {
+  while (flag[k] == ' ')
+  {
     k++;
   }
 
   // Extract the option
   int l = 0;
-  while (flag[k] != '\0') {
+  while (flag[k] != '\0')
+  {
     option[l++] = flag[k++];
   }
 
@@ -412,9 +477,11 @@ void parse_target(char *flag, char *target, char *option) {
 }
 
 // Parse the color from the flags and return the color code
-char *to_color(char *flag, int type) {
+char *to_color(char *flag, int type)
+{
   // If the type is 0, it is a text color, if it is 1, it is a background color
-  if (type == 0) {
+  if (type == 0)
+  {
     if (is_equal(flag, "red"))
       return RED;
     else if (is_equal(flag, "green"))
@@ -431,7 +498,9 @@ char *to_color(char *flag, int type) {
       return WHITE;
     else if (is_equal(flag, "black"))
       return BLACK;
-  } else {
+  }
+  else
+  {
     if (is_equal(flag, "red"))
       return RED_BG;
     else if (is_equal(flag, "green"))
@@ -459,30 +528,35 @@ char *to_color(char *flag, int type) {
 }
 
 // Parse and execute command
-void parse_command(char *input) {
+void parse_command(char *input)
+{
   // Initialize variables
   char command[MAX_CMD_SIZE];
   int i, j;
 
   // Extract command from input
-  for (i = 0; input[i] != '\0' && input[i] != ' '; i++) {
+  for (i = 0; input[i] != '\0' && input[i] != ' '; i++)
+  {
     command[i] = input[i];
   }
   command[i] = '\0'; // Null-terminate the command
 
   // Skip spaces after command
-  while (input[i] == ' ') {
+  while (input[i] == ' ')
+  {
     i++;
   }
 
   // Check for various commands
-  if (is_equal(command, "help") || is_equal(command, "?")) {
+  if (is_equal(command, "help") || is_equal(command, "?"))
+  {
     // Extract the command to get help for
     char help_command[MAX_CMD_SIZE];
     j = 0;
 
     // Extract the help command from the input
-    while (input[i] != '\0') {
+    while (input[i] != '\0')
+    {
       help_command[j++] = input[i++];
     }
 
@@ -490,22 +564,30 @@ void parse_command(char *input) {
     help_command[j] = '\0';
 
     // If help command is empty, treat as "all"
-    if (len(help_command) == 0) {
+    if (len(help_command) == 0)
+    {
       show_help("all");
-    } else {
+    }
+    else
+    {
       show_help(help_command);
     }
-  } else if (is_equal(command, "os")) {
+  }
+  else if (is_equal(command, "os"))
+  {
     // Show OS information
     os_greet();
-  } else if (is_equal(command, "clr") || is_equal(command, "cls") ||
-             is_equal(command, "clear")) {
+  }
+  else if (is_equal(command, "clr") || is_equal(command, "cls") ||
+           is_equal(command, "clear"))
+  {
 
     // Parse the flags
     char *flags[MAX_CMD_SIZE];
 
     // Initialize the flags array
-    for (int i = 0; i < MAX_CMD_SIZE; i++) {
+    for (int i = 0; i < MAX_CMD_SIZE; i++)
+    {
       flags[i] = (char *)0;
     }
 
@@ -517,20 +599,23 @@ void parse_command(char *input) {
     parse_flags(&input[i], flags, MAX_FLAGS, MIN_FLAGS);
 
     // If no flags are provided, clear the terminal
-    if (flags == (char **)0) {
+    if (flags == (char **)0)
+    {
       // Clear the terminal
       uart_puts("\033[2J \033[1;1H");
       return;
     }
 
-    if (flags[0] == (char *)0) {
+    if (flags[0] == (char *)0)
+    {
       // clear the terminal (by default if no flags are provided)
       uart_puts("\033[2J \033[1;1H");
       return;
     }
 
     // Check for the flags provided (e.g., -f for full clear)
-    if (is_equal(flags[0], "f")) {
+    if (is_equal(flags[0], "f"))
+    {
       // Clear everything from the terminal
       uart_puts("\033c");
       return;
@@ -538,16 +623,21 @@ void parse_command(char *input) {
 
     // ERROR_COLOR message
     show_status(1, "Invalid flag. Type 'help clear' to see available flags.");
-  } else if (is_equal(command, "history") || is_equal(command, "hist")) {
+  }
+  else if (is_equal(command, "history") || is_equal(command, "hist"))
+  {
     // Show command history
     print_in_box("Command History");
     get_all_commands(&command_stack);
-  } else if (is_equal(command, "setcolor")) {
+  }
+  else if (is_equal(command, "setcolor"))
+  {
     // Extract the flags
     char *flags[MAX_CMD_SIZE];
 
     // Initialize the flags array
-    for (int i = 0; i < MAX_CMD_SIZE; i++) {
+    for (int i = 0; i < MAX_CMD_SIZE; i++)
+    {
       flags[i] = (char *)0;
     }
 
@@ -557,12 +647,14 @@ void parse_command(char *input) {
 
     // Parse the flags
     int flag_count = parse_flags(&input[i], flags, MAX_FLAGS, MIN_FLAGS);
-    if (flag_count == 0) {
+    if (flag_count == 0)
+    {
       return;
     }
 
     // Initialize the color option
-    if (flags == (char **)0) {
+    if (flags == (char **)0)
+    {
       return;
     }
 
@@ -571,9 +663,11 @@ void parse_command(char *input) {
 
     // Loop through the flags and set the colors and execute the each flag
     // sequencially.
-    for (int i = 0; i < flag_count; i++) {
+    for (int i = 0; i < flag_count; i++)
+    {
       // If the flag is null, break the loop
-      if (flags[i] == (char *)0) {
+      if (flags[i] == (char *)0)
+      {
         break;
       }
 
@@ -586,90 +680,117 @@ void parse_command(char *input) {
       parse_target(flags[i], target, option);
 
       // Check for the target and set the color
-      if (is_equal(target, "b")) {
+      if (is_equal(target, "b"))
+      {
         // b flag requires only color and will set the background color
         color_option = to_color(option, 1);
 
         // If the color option is null or invalid, return from the function
-        if (color_option == (char *)0) {
+        if (color_option == (char *)0)
+        {
           return;
         }
 
         // Set the background color
         THEME.BACKGROUND_COLOR = color_option;
-
-      } else if (is_equal(target, "t")) {
+      }
+      else if (is_equal(target, "t"))
+      {
 
         // t flag requires only color and will set the text color
         color_option = to_color(option, 0);
 
         // If the color option is null or invalid, return from the function
-        if (color_option == (char *)0) {
+        if (color_option == (char *)0)
+        {
           return;
         }
 
         // Set the text color
         THEME.PRIMARY_COLOR = color_option;
         THEME.SECONDARY_COLOR = color_option;
-      } else if (is_equal(target, "os")) {
+      }
+      else if (is_equal(target, "os"))
+      {
         // For the os flag, set the OS theme
-        if (is_equal(option, "bright")) {
+        if (is_equal(option, "bright"))
+        {
           THEME.PRIMARY_COLOR = YELLOW;
           THEME.SECONDARY_COLOR = WHITE;
           THEME.BACKGROUND_COLOR = CLEAR;
           THEME.SUCCESS_COLOR = GREEN;
           THEME.ERROR_COLOR = RED;
-        } else if (is_equal(option, "dark")) {
+        }
+        else if (is_equal(option, "dark"))
+        {
           THEME.PRIMARY_COLOR = CYAN;
           THEME.SECONDARY_COLOR = WHITE;
           THEME.BACKGROUND_COLOR = BLACK_BG;
           THEME.SUCCESS_COLOR = GREEN;
           THEME.ERROR_COLOR = RED;
-        } else if (is_equal(option, "light")) {
+        }
+        else if (is_equal(option, "light"))
+        {
           THEME.PRIMARY_COLOR = BLUE;
           THEME.SECONDARY_COLOR = BLACK;
           THEME.BACKGROUND_COLOR = WHITE_BG;
           THEME.SUCCESS_COLOR = GREEN;
           THEME.ERROR_COLOR = RED;
-        } else {
+        }
+        else
+        {
           show_status(
               1,
               "Invalid theme. Type 'help setcolor' to see available themes.");
           return;
         }
-      } else if (is_equal(target, "pri")) { // Set primary color
+      }
+      else if (is_equal(target, "pri"))
+      {                                     // Set primary color
         color_option = to_color(option, 0); // Get the color option
 
-        if (color_option == (char *)0) {
+        if (color_option == (char *)0)
+        {
           return;
         }
 
         THEME.PRIMARY_COLOR = color_option;
-      } else if (is_equal(target, "sec")) { // Set secondary color
+      }
+      else if (is_equal(target, "sec"))
+      {                                     // Set secondary color
         color_option = to_color(option, 0); // Get the color option
 
-        if (color_option == (char *)0) {
+        if (color_option == (char *)0)
+        {
           return;
         }
 
         THEME.SECONDARY_COLOR = color_option;
-      } else if (is_equal(target, "err")) { // Set error color
+      }
+      else if (is_equal(target, "err"))
+      {                                     // Set error color
         color_option = to_color(option, 0); // Get the color option
 
-        if (color_option == (char *)0) {
+        if (color_option == (char *)0)
+        {
           return;
         }
 
         THEME.ERROR_COLOR = color_option;
-      } else if (is_equal(target, "suc")) { // Set success color
+      }
+      else if (is_equal(target, "suc"))
+      {                                     // Set success color
         color_option = to_color(option, 0); // Get the color option
 
-        if (color_option == (char *)0) {
+        if (color_option == (char *)0)
+        {
           return;
         }
 
         THEME.SUCCESS_COLOR = color_option;
-      } else {
+      }
+      else
+      {
         show_status(
             1,
             "Invalid command. Type 'help setcolor' to see available targets.");
@@ -679,12 +800,15 @@ void parse_command(char *input) {
 
     // SUCCESS_COLOR message
     show_status(0, "Color set successfully.");
-  } else if (is_equal(command, "ref")) {
+  }
+  else if (is_equal(command, "ref"))
+  {
     // Extract the flags
     char *flags[MAX_CMD_SIZE];
 
     // Initialize the flags array
-    for (int i = 0; i < MAX_CMD_SIZE; i++) {
+    for (int i = 0; i < MAX_CMD_SIZE; i++)
+    {
       flags[i] = (char *)0;
     }
 
@@ -695,25 +819,32 @@ void parse_command(char *input) {
 
     // Parse the flags
     parse_flags(&input[i], flags, MAX_FLAGS, MIN_FLAGS);
-    if (flags == (char **)0) {
+    if (flags == (char **)0)
+    {
       return;
     }
 
     // Check for the flags provided
-    if (is_equal(flags[0], "uart")) {
+    if (is_equal(flags[0], "uart"))
+    {
       show_status(1, "This feature is not available in this version.");
-    } else {
+    }
+    else
+    {
       show_status(1,
                   "Command not found. Type 'help' to see available commands.");
     }
-  } else if (is_equal(command, "showinfo")) { // Show device information
+  }
+  else if (is_equal(command, "showinfo"))
+  { // Show device information
     uart_puts("\n\n");
 
     // Extract the flags
     char *flags[MAX_CMD_SIZE];
 
     // Initialize the flags array
-    for (int i = 0; i < MAX_CMD_SIZE; i++) {
+    for (int i = 0; i < MAX_CMD_SIZE; i++)
+    {
       flags[i] = (char *)0;
     }
 
@@ -743,14 +874,17 @@ void parse_command(char *input) {
     mBuf[7] = MBOX_TAG_LAST;
     char mac_address[18];
 
-    if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
+    if (mbox_call(ADDR(mBuf), MBOX_CH_PROP))
+    {
       // Convert the MAC Address to a string
       mac_address_format(mBuf[5], mBuf[6], mac_address);
 
       // Store the MAC Address in the values array
       values[0][0] = "MAC Address";
       values[0][1] = mac_address;
-    } else {
+    }
+    else
+    {
       show_status(1, "Failed to query MAC Address.");
     }
 
@@ -763,11 +897,14 @@ void parse_command(char *input) {
     mBuf[5] = 0; // clear output buffer (response data are mBuf[5])
     mBuf[6] = MBOX_TAG_LAST;
 
-    if (mbox_call(ADDR(mBuf), MBOX_CH_PROP)) {
+    if (mbox_call(ADDR(mBuf), MBOX_CH_PROP))
+    {
       // Store the Board Revision Number in the values array
       values[1][0] = "Board Revision Number";
       values[1][1] = hex_to_string(mBuf[5]);
-    } else {
+    }
+    else
+    {
       show_status(1, "Failed to query Board Revision.");
     }
 
@@ -775,7 +912,8 @@ void parse_command(char *input) {
     tabulate(keys, 2, values, 2);
 
     // Check for the flags provided (e.g., -v for full information)
-    if (is_equal(flags[0], "v")) {
+    if (is_equal(flags[0], "v"))
+    {
       // Display the full device information (e.g., MAC Address, Board Revision,
       // UART Configuration)
       char *keys[] = {"Uart", "Value"};
@@ -819,21 +957,29 @@ void parse_command(char *input) {
       tabulate(keys, 2, values, 6);
       return;
     }
-  } else if (is_equal(command, "image")) {
+  }
+  else if (is_equal(command, "image"))
+  {
     uart_puts("\n\n");
     // Show image on the screen
     load_image();
-  } else if (is_equal(command, "video")) {
+  }
+  else if (is_equal(command, "video"))
+  {
     uart_puts("\n\n");
     // Show video on the screen
     video_mode();
-  } else if (is_equal(command, "game")) {
+  }
+  else if (is_equal(command, "game"))
+  {
     uart_puts("\n\n");
 
     // Show game on the screen
 
     game_cli();
-  } else {
+  }
+  else
+  {
     show_status(1, "Command not found. Type 'help' to see available commands.");
   }
 }

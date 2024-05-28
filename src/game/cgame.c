@@ -665,7 +665,7 @@ void move_PU_to_position(GameController *game_controller)
     // Collision detected!
     // Handle power-up effect (e.g., increase health, apply shield)
 
-    uart_puts("POWER-UP COLLECTED!\n");
+    uart_alert("POWER-UP COLLECTED!");
     // set the powerip position to the end of the screen
     powerup->position.y = 900;
 
@@ -686,6 +686,7 @@ void move_PU_to_position(GameController *game_controller)
       spaceship->bullet_bonus += 1;
     }
   }
+
   // Redraw the aliens
   draw_alien(game_controller);
 
@@ -752,16 +753,26 @@ void receive_damage(GameController *game_controller)
 {
 
   // === DAMAGE LOGIC ===
-  if (game_controller->spaceship.shieldTimer <= 0) {
+  if (game_controller->spaceship.shieldTimer <= 0)
+  {
     game_controller->spaceship.health -= game_controller->stages[0]
-                                           .waves[game_controller->current_wave]
-                                           .aliens[0]
-                                           .damage;
-  } 
-  uart_puts("shield timer: ");
-  uart_puts(itoa(game_controller->spaceship.shieldTimer));
-   clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
-    draw_health_bar(game_controller);
+                                             .waves[game_controller->current_wave]
+                                             .aliens[0]
+                                             .damage;
+
+    if (game_controller->spaceship.health <= 0)
+    {
+      uart_puts(WHITE);
+      uart_puts("HEALTH: ");
+      uart_puts(itoa(game_controller->spaceship.health));
+      uart_puts("\n");
+
+      result_screen(game_controller);
+    }
+  }
+
+  clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
+  draw_health_bar(game_controller);
 }
 
 void deal_damage(GameController *game_controller, int index, int posX,
@@ -774,8 +785,7 @@ void deal_damage(GameController *game_controller, int index, int posX,
   Spaceship *spaceship = &game_controller->spaceship;
 
   alien->health -= game_controller->spaceship.damage;
-  uart_puts("Health: ");
-  uart_puts(itoa(alien->health));
+
   if (alien->health <= 0)
   {
     for (int j = 0; j < 5; j++)
@@ -997,6 +1007,7 @@ void draw_completed_time(int seconds, int y)
   }
 
   draw_image(535, y, 97, 37, epd_bitmap_secs);
+
 }
 
 char *itoa(int num)
