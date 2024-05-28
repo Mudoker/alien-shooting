@@ -55,6 +55,15 @@ void in_game_screen(GameController *game_controller) {
 
       move_spaceship(game_controller, KEY_RIGHT, 14);
       break;
+    case 'x':
+      manage_command(game_controller, "Exited the game screen");
+
+      welcome_screen(game_controller);
+      break;
+    case 'k':
+      manage_command(game_controller, "Exited the game");
+
+      return;
     default:
       break;
     }
@@ -304,6 +313,11 @@ void welcome_screen(GameController *game_controller) {
 
       ship_selection_screen(game_controller);
       break;
+    case 'x':
+      manage_command(game_controller,
+                     "Exited the game from the welcome screen");
+
+      return;
     default:
       break;
     }

@@ -4,6 +4,6 @@
 // #include "ui.h"
 #include "screen.h"
 
-void gameCli();
+void game_cli();
 
 #endif

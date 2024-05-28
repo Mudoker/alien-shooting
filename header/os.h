@@ -4,6 +4,7 @@
 #ifndef OS_COMMAND
 #define OS_COMMAND
 
+#include "./game/game.h"
 #include "./global.h"
 #include "./image.h"
 #include "./mbox.h"

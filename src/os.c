@@ -828,8 +828,11 @@ void parse_command(char *input) {
     // Show video on the screen
     video_mode();
   } else if (is_equal(command, "game")) {
+    uart_puts("\n\n");
+
     // Show game on the screen
-    show_status(1, "This feature is not available in this version.");
+
+    game_cli();
   } else {
     show_status(1, "Command not found. Type 'help' to see available commands.");
   }
