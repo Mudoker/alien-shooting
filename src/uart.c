@@ -255,7 +255,6 @@ void uart_show_info()
             "| Handshaking mode   | On      |\n"
             "===============================\n\n");
 
-  // TODO: Timer Interrupt
 }
 
 void uart_show_log_management_title()
