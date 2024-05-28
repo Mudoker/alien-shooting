@@ -1,5 +1,6 @@
 #include "../../header/game/screen.h"
 #include "../../header/game/ui.h"
+#include "../../header/timer.h"
 
 void in_game_screen(GameController *game_controller)
 {
@@ -19,11 +20,17 @@ void in_game_screen(GameController *game_controller)
   draw_alien(game_controller);
   // draw_health_PU(game_controller);
   // draw_shield_PU(game_controller);
-
+  // explosion();
+  
+  int last_powerup_update = 0; // Add this variable to track the time
   int bullet_timer = 0;
   int fire_timer = 0;
   int alien_move_timer = 0;
   int alien_move_step = 10;
+  int power_up_timer = 0;
+  int powerup_active = 0;
+  int next_powerup_time = 8000; // Initial delay for the first power-up
+  // lighting();
 
   while (1)
   {
@@ -59,6 +66,7 @@ void in_game_screen(GameController *game_controller)
     // Increment the bullet timer
     bullet_timer += 30;
     alien_move_timer += 30;
+    power_up_timer += 30;
 
     if (fire_timer == 5)
     {
@@ -83,15 +91,21 @@ void in_game_screen(GameController *game_controller)
       bullet_timer = 0;
     }
 
+    
     // Alien movement
     if (alien_move_timer >= 10000000)
     { // 1 second for smoother alien movement
       move_aliens(game_controller, alien_move_step);
       alien_move_timer = 0;
     }
+    if (power_up_timer >= 10000000 ) {
+      move_PU_to_position(game_controller);
+
+      power_up_timer = 0;
+    }
   }
 
-  // game_loop(game_controller);
+
 }
 
 void stage_screen(GameController *game_controller)
@@ -295,7 +309,6 @@ void win_screen(GameController *game_controller, int seconds)
 void welcome_screen(GameController *game_controller)
 {
   draw_welcome_screen();
-
   game_controller->spaceship.position.x =
       (SCREEN_WIDTH - game_controller->spaceship.size.width) / 2;
   game_controller->spaceship.position.y =

@@ -26,8 +26,10 @@
 #include "../../assets/games/spaceship/ship_lev1.h"
 #include "../../assets/games/spaceship/ship_lev3.h"
 #include "../../assets/games/welcome_screen/welcome.h"
+#include "../../assets/games/explosion/explosion.h"
 #include "../../header/game/map.h"
 #include "../utils/randomNum.h"
+#include "../../assets/games/lighting/lighting.h"
 
 // Constants
 #define BUlLET_WIDTH 17
@@ -244,9 +246,14 @@ Spaceship *init_current_ship_option()
   spaceship.position.x = (SCREEN_WIDTH - spaceship.size.width) / 2;
   spaceship.position.y = (SCREEN_HEIGHT - spaceship.size.height) / 2;
   spaceship.health = 100;
+  spaceship.position.x = (SCREEN_WIDTH - spaceship.size.width) / 2;
+  spaceship.position.y = (SCREEN_HEIGHT - spaceship.size.height) / 2;
+  spaceship.health = 100;
 
   spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
+  spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
 
+  return &spaceship;
   return &spaceship;
 }
 
@@ -554,13 +561,14 @@ void move_bullet(GameController *game_controller, int index, int step)
           uart_puts("ALERT: BULLET HIT AN ALIEN!\n");
 
           // Deal damage to the alien
-          deal_damage(game_controller, j);
+          deal_damage(game_controller, j, alien->position.x, alien->position.y);
 
           // Clear the bullet
           clear_image(bullet->position.x, bullet->position.y,
                       bullet->size.width, bullet->size.height,
                       epd_bitmap_background);
-
+          
+          
           bullet->name = NULL;
         }
       }
@@ -590,7 +598,7 @@ void init_power_up(GameController *game_controller)
   powerup.position.x = pos_x[rand_col];
   powerup.position.y = 0;
   powerup.target.x = pos_x[rand_col];
-  powerup.target.y = 850;
+  powerup.target.y = 900;
   powerup.reach_target = 0;
 
   if (type == 0)
@@ -608,9 +616,9 @@ void init_power_up(GameController *game_controller)
 void move_PU_to_position(GameController *game_controller)
 {
   PowerUp *powerup = &game_controller->powerup;
-  clear_image(powerup->position.x, powerup->position.y, 90, 90,
-              epd_bitmap_background);
-
+  Spaceship *spaceship = &game_controller->spaceship;
+  
+  // Draw the powerup in its new position first
   if (powerup->position.y < powerup->target.y)
   {
     powerup->position.y += 2;
@@ -618,10 +626,40 @@ void move_PU_to_position(GameController *game_controller)
   else
   {
     powerup->reach_target = 1;
+    init_power_up(game_controller);
     uart_puts("ALERT: POWERUP REACHED THE TARGET!\n");
   }
 
+  // Clear the previous position of the power-up
+  clear_image(powerup->position.x, powerup->position.y - 2, 90, 90,
+              epd_bitmap_background);
+
+  // Check for collision with the spaceship
+  if (powerup->position.x < spaceship->position.x + spaceship->size.width &&
+      powerup->position.x + 90 > spaceship->position.x && // 90 is PU width
+      powerup->position.y < spaceship->position.y + spaceship->size.height &&
+      powerup->position.y + 90 > spaceship->position.y) // 90 is PU height
+  {
+    // Collision detected!
+    // Handle power-up effect (e.g., increase health, apply shield)
+    
+    uart_puts("POWER-UP COLLECTED!\n");
+    // set the powerip position to the end of the screen
+    powerup->position.y = 900;
+    if (powerup->sprite == epd_bitmap_health_allArray[0])
+    {
+      spaceship->health += 10;
+      
+    }
+    else
+    {}
+  }
+  // Redraw the aliens
+  draw_alien(game_controller);
+
+  // Draw the power-up in its new position
   draw_health_PU(game_controller);
+  draw_health_bar(game_controller);
 }
 
 int pu_reach_target(GameController *game_controller)
@@ -712,7 +750,7 @@ void receive_damage(GameController *game_controller)
   draw_health_bar(game_controller);
 }
 
-void deal_damage(GameController *game_controller, int index)
+void deal_damage(GameController *game_controller, int index, int posX, int posY)
 {
   Wave *current_wave =
       &game_controller->stages[0].waves[game_controller->current_wave];
@@ -721,6 +759,8 @@ void deal_damage(GameController *game_controller, int index)
 
   alien->health -= game_controller->spaceship.damage;
 
+uart_puts("Health: ");
+  uart_puts(itoa(alien->health));
   if (alien->health <= 0)
   {
     for (int j = 0; j < 5; j++)
@@ -730,12 +770,15 @@ void deal_damage(GameController *game_controller, int index)
       {
         clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
                     bullet->size.height, epd_bitmap_background);
+
+        // explosion(posX, posY);
         bullet->name = NULL;
       }
     }
 
     clear_image(alien->position.x, alien->position.y, alien->size.width,
                 alien->size.height, epd_bitmap_background);
+    explosion(posX, posY);
     alien->name = NULL;
   }
 }
@@ -1022,6 +1065,23 @@ void draw_badge(int badge)
   }
 }
 
+void explosion(int posX, int posY)
+{
+  framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, cinema_bg_width, cinema_bg_height, 0, 0);
+  display_explosion(posX, posY, 90, 90, 10, epd_bitmap_explosion_allArray);
+}
+
+void display_explosion(int x, int y, int w, int h, int num_frames, const unsigned long **video)
+{
+  for (int frame = 0; frame < num_frames; frame++)
+  {
+    draw_image(x, y, w, h, video[frame]);
+    // wait_msec(100500);
+    wait_msec(10000);
+    clear_image(x, y, 90, 90, epd_bitmap_background);
+  }
+}
+
 void change_spaceship(GameController *game_controller, int order)
 {
   int position_x = game_controller->spaceship.position.x;
@@ -1043,4 +1103,3 @@ void change_spaceship(GameController *game_controller, int order)
   default:
     break;
   }
-}

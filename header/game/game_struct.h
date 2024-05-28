@@ -96,4 +96,14 @@ typedef struct PowerUp {
   boolean (*draw)(); // Draw the PowerUp
   boolean (*use)();  // Use the PowerUp
 } PowerUp;
+
+
+typedef struct Explosion {
+  Position position;
+  int current_frame;
+   int num_frames;
+  int active;
+  const unsigned long **video_frames;
+} Explosion;
+
 #endif
