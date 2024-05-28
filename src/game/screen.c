@@ -342,6 +342,8 @@ void handle_wrong_input(GameController *game_controller, char *c)
 {
   if (c != NULL && c != '\n')
   {
-    manage_command(game_controller, "Wrong input", 0);
+    char log[20] = "Wrong input ( )";
+    log[13] = c;
+    manage_command(game_controller, log, 0);
   }
 }
