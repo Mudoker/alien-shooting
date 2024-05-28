@@ -139,7 +139,7 @@ void uart_hex(unsigned int d); // Print a hex number
 void uart_dec(int num);        // Print a decimal number
 unsigned int uart_isReadByteReady();
 unsigned char getUart();
-void uart_logs(int command_index, char *log, int is_positive);
+void uart_logs(int command_index, char *log, char *c, int is_positive);
 void uart_show_info();
 
 #endif

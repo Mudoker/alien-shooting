@@ -126,7 +126,7 @@ void uart_puts(char *s)
   }
 }
 
-void uart_logs(int command_index, char *log, int is_positive)
+void uart_logs(int command_index, char *log, char *c, int is_positive)
 {
 
   if (is_positive)
@@ -134,15 +134,18 @@ void uart_logs(int command_index, char *log, int is_positive)
     uart_puts(GREEN_TEXT);
     uart_puts("Command ");
     uart_dec(command_index);
-    uart_puts(" - ACK: ");
+    uart_puts(" - ACK");
   }
   else
   {
     uart_puts(RED_TEXT);
     uart_puts("Command ");
     uart_dec(command_index);
-    uart_puts(" - NAK: ");
+    uart_puts(" - NAK");
   }
+  uart_puts(" (Input: ");
+  uart_sendc(c);
+  uart_puts("): ");
   uart_puts(log);
   uart_puts("\n");
 }

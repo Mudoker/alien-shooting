@@ -256,6 +256,7 @@ Spaceship *init_current_ship_option()
   spaceship.sprite = epd_bitmap_ship_l1_allArray[0];
 
   return &spaceship;
+  return &spaceship;
 }
 
 void draw_spaceship_option(Spaceship *spaceship, int order, int clear,
