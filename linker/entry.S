@@ -1,22 +1,24 @@
-#define SYNC_INVALID_EL1t		0 
-#define IRQ_INVALID_EL1t		1 
-#define FIQ_INVALID_EL1t		2 
-#define ERROR_INVALID_EL1t		3 
+.globl vectors
 
-#define SYNC_INVALID_EL1h		4 
-#define IRQ_INVALID_EL1h		5 
-#define FIQ_INVALID_EL1h		6 
-#define ERROR_INVALID_EL1h		7 
+#define SYNC_INVALID_EL1t		0
+#define IRQ_INVALID_EL1t		1
+#define FIQ_INVALID_EL1t		2
+#define ERROR_INVALID_EL1t		3
 
-#define SYNC_INVALID_EL0_64		8 
-#define IRQ_INVALID_EL0_64		9 
-#define FIQ_INVALID_EL0_64		10 
-#define ERROR_INVALID_EL0_64	11 
+#define SYNC_INVALID_EL1h		4
+#define IRQ_INVALID_EL1h		5
+#define FIQ_INVALID_EL1h		6
+#define ERROR_INVALID_EL1h		7
 
-#define SYNC_INVALID_EL0_32		12 
-#define IRQ_INVALID_EL0_32		13 
-#define FIQ_INVALID_EL0_32		14 
-#define ERROR_INVALID_EL0_32    15 
+#define SYNC_INVALID_EL0_64		8
+#define IRQ_INVALID_EL0_64		9
+#define FIQ_INVALID_EL0_64		10
+#define ERROR_INVALID_EL0_64	11
+
+#define SYNC_INVALID_EL0_32		12
+#define IRQ_INVALID_EL0_32		13
+#define FIQ_INVALID_EL0_32		14
+#define ERROR_INVALID_EL0_32    15
 
 //stack frame size
 #define S_FRAME_SIZE			256
@@ -38,7 +40,7 @@
 	stp	x24, x25, [sp, #16 * 12]
 	stp	x26, x27, [sp, #16 * 13]
 	stp	x28, x29, [sp, #16 * 14]
-	str	x30, [sp, #16 * 15] 
+	str	x30, [sp, #16 * 15]
 .endm
 
 .macro kernel_exit
@@ -57,7 +59,7 @@
 	ldp	x24, x25, [sp, #16 * 12]
 	ldp	x26, x27, [sp, #16 * 13]
 	ldp	x28, x29, [sp, #16 * 14]
-	ldr	x30, [sp, #16 * 15] 
+	ldr	x30, [sp, #16 * 15]
 	add	sp, sp, #S_FRAME_SIZE
 	eret
 .endm
@@ -67,12 +69,6 @@
 	mov	x0, #\type
 	mrs	x1, esr_el1
 	mrs	x2, elr_el1
-
-        // We could pass this to a function to print an error here
-        // e.g. bl show_invalid_entry_message
-        //
-        // For now we'll just hang
-
 	b	err_hang
 .endm
 
@@ -83,7 +79,7 @@
 
 //Exception vectors table
 .align	11
-.globl vectors 
+.globl vectors
 vectors:
 	ventry	sync_invalid_el1t			// Synchronous EL1t
 	ventry	irq_invalid_el1t			// IRQ EL1t
@@ -152,9 +148,9 @@ error_invalid_el0_32:
 	handle_invalid_entry  ERROR_INVALID_EL0_32
 
 handle_el1_irq:
-	kernel_entry 
-	bl	handle_irq
-	kernel_exit 
+	kernel_entry
+	bl	handle_irq_elx
+	kernel_exit
 
 .globl err_hang
 err_hang: b err_hang
