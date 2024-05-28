@@ -136,5 +136,6 @@ unsigned int uart_isReadByteReady();
 unsigned char getUart();
 void uart_logs(int command_index, char *log);
 void uart_show_info();
+BaudRateConfig get_baud_rate(int baud_rate); // Get the baud rate configuration
 
 #endif
