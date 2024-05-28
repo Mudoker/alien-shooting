@@ -13,6 +13,7 @@ void wait_msec(unsigned int n)
     } while (r < expiredTime);
 }
 
+
 void set_wait_timer(int set, unsigned int msVal)
 {
     static unsigned long expiredTime = 0; // declare static to keep value
