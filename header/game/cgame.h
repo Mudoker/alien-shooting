@@ -40,7 +40,8 @@ typedef enum
   SHIELD_BONUS = 1,
 } Badge;
 
-typedef enum {
+typedef enum
+{
   BULLET_BIG,
   BULLET_THUNDER
 } BossBulletType;
@@ -78,13 +79,13 @@ struct Display
 };
 
 // Function prototypes
-void gameCli();
+void game_cli();
 // Initialization functions
 void init_frame(int offset_x, int offset_y);
 void init_controller(GameController *game_controller);
 void init_spaceship(GameController *game_controller,
                     const unsigned long *sprite, int width, int height, int x,
-                    int y);
+                    int y, char *name, int damage, int health);
 void init_bullet(GameController *game_controller, const unsigned long *sprite,
                  int width, int height, int x, int y, int index);
 void init_stages(GameController *game_controller);
@@ -105,13 +106,13 @@ void draw_health_bar(GameController *game_controller);
 void draw_welcome_screen();
 void draw_alien(GameController *game_controller);
 void draw_health_PU(GameController *game_controller);
-void draw_shield_PU(GameController *game_controller);
 void explosion(int posX, int posY);
 void display_explosion(int x, int y, int w, int h, int num_frames, const unsigned long **video);
 char *itoa(int num);
 
 void draw_spaceship(GameController *game_controller);
-void draw_spaceship_option(Spaceship *spaceship, int order, int clear, Spaceship *current_ship_option);
+void draw_spaceship_option(Spaceship *spaceship, int order, int clear,
+                           Spaceship *current_ship_option);
 void draw_ship_selection_page();
 void draw_arrows(int order);
 void change_spaceship(GameController *game_controller, int order);
@@ -126,7 +127,8 @@ void draw_health_PU(GameController *game_controller);
 void clear_all_bullets(GameController *game_controller);
 void add_bullet(GameController *game_controller);
 void receive_damage(GameController *game_controller);
-void deal_damage(GameController *game_controller, int index, int posX, int posY);
+void deal_damage(GameController *game_controller, int index, int posX,
+                 int posY);
 void clear_wave(GameController *game_controller);
 void move_aliens(GameController *game_controller, int step);
 void calculate_bullet_positions(GameController *game_controller,
@@ -137,12 +139,14 @@ void draw_lose_screen(GameController *game_controller, int seconds);
 void draw_win_final_screen(GameController *game_controller, int seconds);
 void draw_win_screen(GameController *game_controller, int seconds);
 void lighting();
-void display_lighting(int x, int y, int w, int h, int num_frames, const unsigned long **video);
+void display_lighting(int x, int y, int w, int h, int num_frames,
+                      const unsigned long **video);
 void draw_stars(int seconds);
 void draw_completed_time(int seconds, int y);
 char *itoa(int num);
 void draw_badge(int badge);
 void change_spaceship(GameController *game_controller, int order);
 void add_alien_bullet(GameController *game_controller, int alien_index);
+void explosion(int posX, int posY);
 
 #endif // CGAME_H

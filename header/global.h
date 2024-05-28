@@ -10,28 +10,30 @@
 #define MAX_ARG_SIZE 100    // Maximum number of arguments size
 #define MAX_CMD_HISTORY 200 // Maximum number of command history
 
-#define IMAGE_WIDTH 816  // Image width
+// Image and video constants
+#define IMAGE_WIDTH 816   // Image width
 #define IMAGE_HEIGHT 1263 // Image height
 
-#define SCREEN_WIDTH 780 // Screen width
+// Cinema constants
+#define cinema_bg_width 780  // Cinema background width
+#define cinema_bg_height 900 // Cinema background height
+#define paddingLeft 180      // Padding left
+#define paddingTop 240       // Padding top
+#define VIDEO_HEIGHT 236     // Video height
+#define VIDEO_WIDTH 420      // Video width
+#define NUM_FRAMES 45        // Number of frames
+#define VIDEO_LOOP 2        // Video loop
+
+// Screen constants
+#define SCREEN_WIDTH 780  // Screen width
 #define SCREEN_HEIGHT 900 // Screen height
 
-#define cinema_bg_width 780 // Cinema background width
-#define cinema_bg_height 900 // Cinema background height
-#define paddingLeft 180 // Padding left
-#define paddingTop 240 // Padding top
-#define VIDEO_HEIGHT 236 // Video height
-#define VIDEO_WIDTH 420 // Video width
-
-#define NUM_FRAMES 45 // Number of frames
-#define VIDEO_LOOP 10 // Video loop
-
-#define NULL ((void *)0)
-#define SCROLL_STEP 4
-
-#define MAX_ENEMY 5 // Maximum number of enemies
-#define MAX_ENEMY_IN_ROW 5
-#define MAX_ENEMY_IN_COL 1
+// Utility constants
+#define NULL ((void *)0)   // Null pointer
+#define SCROLL_STEP 4      // Scroll step
+#define MAX_ENEMY 5        // Maximum number of enemies
+#define MAX_ENEMY_IN_ROW 5 // Maximum number of enemies in row
+#define MAX_ENEMY_IN_COL 1 // Maximum number of enemies in column
 
 // Text color codes
 #define RED "\033[0;31m"
@@ -54,22 +56,38 @@
 #define BLACK_BG "\033[40m"
 #define CLEAR "\x1b[49m"
 
-// User-defined data types
-// typedef enum { False = 0, True = 1 } boolean; // Boolean data type
-
 // OS trademark structure
-typedef struct {
+typedef struct
+{
   // OS information
-  const char *OS_NAME;    // OS name
-  const char *OS_ID;      // OS id
-  const char *OS_VERSION; // OS version
-  const char *CREATED_AT; // OS created date
-  const char *UPDATED_AT; // OS updated date
-  const char *PROMPT;     // Prompt symbol (Default: BrightOS>)
+  const char *ASCII_ART_LOGO;      // OS logo
+  const char *ASCII_ART_LOGO_TEXT; // OS logo small
+  const char *OS_NAME;             // OS name
+  const char *OS_ID;               // OS id
+  const char *OS_VERSION;          // OS version
+  const char *CREATED_AT;          // OS created date
+  const char *UPDATED_AT;          // OS updated date
+  const char *PROMPT;              // Prompt symbol (Default: BrightOS>)
+
+  // Acknowledgement
+  const char *ACK_SCHOOL;       // School name
+  const char *ACK_COURSE;       // Course name
+  const char *ACK_LECTURER;     // Lecturer name
+  const char *ACK_SUBMITTED_BY; // Submitted by
+  const char *ACK_DECLARATION;  // Declaration
 } Information;
 
-// Member information structure
 typedef struct {
+  char *PRIMARY_COLOR;    // Primary color (Default: Yellow)
+  char *SECONDARY_COLOR;  // Secondary color (Default: White)
+  char *BACKGROUND_COLOR; // Background color (Default: Black)
+  char *SUCCESS_COLOR;    // Success (Default: Green)
+  char *ERROR_COLOR;      // Error (Default: Red)
+} Theme;
+
+// Member information structure
+typedef struct
+{
   const char *NAME;         // Member name
   const char *SID;          // Member ID
   const char *GITHUB;       // Member GitHub
@@ -77,7 +95,8 @@ typedef struct {
 } Member;
 
 // Team information structure
-typedef struct {
+typedef struct
+{
   const char *TEAM_NAME;        // Team name
   const char *TEAM_ID;          // Team ID
   const char *TEAM_DESCRIPTION; // Team description
@@ -87,5 +106,6 @@ typedef struct {
 // Global variables and structures
 extern Information OS_INFO; // OS trademark information
 extern Team TEAM_X;         // Team X information
+extern Theme THEME;         // BrightOS theme configuration
 
 #endif
