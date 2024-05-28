@@ -2,6 +2,7 @@
 #define TIMER_H
 
 #include "gpio.h"
+#include "global.h"
 
 // Base MMIO address
 #define MMIO_BASE 0x3F000000

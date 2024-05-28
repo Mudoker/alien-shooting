@@ -23,7 +23,7 @@ void in_game_screen(GameController *game_controller)
   draw_spaceship(game_controller);
   draw_health_bar(game_controller);
   draw_alien(game_controller);
-  
+
   int last_powerup_update = 0; // Add this variable to track the time
   int bullet_timer = 0;
   int fire_timer = 0;
@@ -32,12 +32,14 @@ void in_game_screen(GameController *game_controller)
   int power_up_timer = 0;
   int powerup_active = 0;
   int next_powerup_time = 8000; // Initial delay for the first power-up
-  static int  shieldTimer = 0;
+  static int shieldTimer = 0;
   // lighting();
+
+  init_interrupts(); // Initialize interrupts
 
   while (1)
   {
-    // Check if a character is received
+    handle_irq_elx();
     clear_wave(game_controller);
     char c = getUart();
     switch (c)
@@ -103,9 +105,8 @@ void in_game_screen(GameController *game_controller)
 
       power_up_timer = 0;
     }
-   
-      game_controller->spaceship.shieldTimer -= 80;
 
+    game_controller->spaceship.shieldTimer -= 80;
   }
 }
 

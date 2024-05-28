@@ -7,13 +7,15 @@
 #include "../header/uart.h"
 #include "../header/video.h"
 
-int main() {
-  uart_init();       // Initialize UART
-  init_interrupts(); // Initialize interrupts
+int main()
+{
+  uart_init(); // Initialize UART
+  // init_interrupts(); // Initialize interrupts
 
-  while (1) {
-    handle_irq_elx(); // Handle pending interrupts
-  }
+  // while (1) {
+  //   handle_irq_elx(); // Handle pending interrupts
+  // }
+  gameCli();
 
   return 0;
 }
