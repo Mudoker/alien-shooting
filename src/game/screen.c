@@ -18,9 +18,6 @@ void in_game_screen(GameController *game_controller)
   draw_spaceship(game_controller);
   draw_health_bar(game_controller);
   draw_alien(game_controller);
-  // draw_health_PU(game_controller);
-  // draw_shield_PU(game_controller);
-  // explosion();
   
   int last_powerup_update = 0; // Add this variable to track the time
   int bullet_timer = 0;
@@ -30,6 +27,7 @@ void in_game_screen(GameController *game_controller)
   int power_up_timer = 0;
   int powerup_active = 0;
   int next_powerup_time = 8000; // Initial delay for the first power-up
+  static int  shieldTimer = 0;
   // lighting();
 
   while (1)
@@ -40,22 +38,22 @@ void in_game_screen(GameController *game_controller)
     switch (c)
     {
     case 'w':
-      manage_command(game_controller, "Moved spaceship to up");
+      manage_command(game_controller, "");
 
       move_spaceship(game_controller, KEY_UP, 10);
       break;
     case 's':
-      manage_command(game_controller, "Moved spaceship to down");
+      manage_command(game_controller, "");
 
       move_spaceship(game_controller, KEY_DOWN, 10);
       break;
     case 'a':
-      manage_command(game_controller, "Moved spaceship to left");
+      manage_command(game_controller, "");
 
       move_spaceship(game_controller, KEY_LEFT, 10);
       break;
     case 'd':
-      manage_command(game_controller, "Moved spaceship to right");
+      manage_command(game_controller, "");
 
       move_spaceship(game_controller, KEY_RIGHT, 10);
       break;
@@ -66,7 +64,7 @@ void in_game_screen(GameController *game_controller)
     // Increment the bullet timer
     bullet_timer += 30;
     alien_move_timer += 30;
-    power_up_timer += 30;
+    power_up_timer += 700;
 
     if (fire_timer == 5)
     {
@@ -91,7 +89,6 @@ void in_game_screen(GameController *game_controller)
       bullet_timer = 0;
     }
 
-    
     // Alien movement
     if (alien_move_timer >= 10000000)
     { // 1 second for smoother alien movement
@@ -103,6 +100,9 @@ void in_game_screen(GameController *game_controller)
 
       power_up_timer = 0;
     }
+   
+      game_controller->spaceship.shieldTimer -= 80;
+
   }
 
 

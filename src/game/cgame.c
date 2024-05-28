@@ -9,7 +9,10 @@
 #include "../../assets/games/health_logo.h"
 #include "../../assets/games/power_up/health.h"
 #include "../../assets/games/power_up/shield.h"
+#include "../../assets/games/power_up/bullet.h"
 #include "../../assets/games/powers_up/badge/bonus_bullets.h"
+#include "../../assets/games/powers_up/badge/bonus_shield.h"
+#include "../../assets/games/powers_up/badge/bonus_health.h"
 #include "../../assets/games/result_screens/digits/digits.h"
 #include "../../assets/games/result_screens/digits/secs.h"
 #include "../../assets/games/result_screens/lose_screen.h"
@@ -79,7 +82,8 @@ void init_spaceship(GameController *game_controller,
   spaceship.name = "Blader";
   spaceship.size.width = width;
   spaceship.size.height = height;
-  spaceship.bullet_bonus = 4;
+  spaceship.bullet_bonus = 0;
+  spaceship.shieldTimer = 0;
   spaceship.position.x = x;
   spaceship.position.y = y;
   spaceship.health = 100;
@@ -423,10 +427,108 @@ void move_spaceship(GameController *game_controller, int key, int step)
   draw_spaceship(game_controller);
 }
 
+BossBulletType currentBossBulletType = BULLET_BIG;
+int bossBulletIndex = 0;          // Index for the boss's bullet array
+unsigned int bossBulletTimer = 0; // Timer for boss bullet firing
+
+// void move_alien_bullet(GameController *game_controller, int step)
+// {
+//   // Adjust step size
+//   step = step / 20;
+//   static boolean thunderStrikeTriggered = False;
+
+//   // Iterate over aliens in the current wave
+//   for (int i = 0; i < game_controller->stages[0]
+//                           .waves[game_controller->current_wave]
+//                           .alien_count;
+//        i++)
+//   {
+//     Alien *alien = &game_controller->stages[0]
+//                         .waves[game_controller->current_wave]
+//                         .aliens[i];
+
+//     // Check if the alien is active
+//     if (alien->name != NULL)
+//     {
+
+//       // Iterate through each alien's bullets
+//       for (int j = 0; j < 5; j++)
+//       {
+//         Bullet *bullet = &alien->bullets[j];
+
+//         // Check if the bullet is active
+//         if (bullet->name != NULL)
+//         {
+//           // Clear the bullet at the previous position
+//           clear_image(bullet->position.x, bullet->position.y,
+//                       bullet->size.width, bullet->size.height,
+//                       epd_bitmap_background);
+
+//           bullet->position.y += step;
+
+//           int offset_y =
+//               alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 100
+//                                                                         : 50;
+//           int offset_x =
+//               alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 45
+//                                                                         : 0;
+
+//           // Check for collision with the spaceship
+//           if (bullet->position.x >=
+//                   game_controller->spaceship.position.x - offset_x &&
+//               bullet->position.x <= game_controller->spaceship.position.x +
+//                                         game_controller->spaceship.size.width +
+//                                         offset_x &&
+//               bullet->position.y >=
+//                   game_controller->spaceship.position.y - offset_y &&
+//               bullet->position.y <=
+//                   game_controller->spaceship.position.y +
+//                       game_controller->spaceship.size.height)
+//           {
+
+//             uart_puts("ALERT: ALIEN BULLET HIT THE SPACESHIP!\n");
+
+//             // Deal damage to the spaceship
+//             receive_damage(game_controller);
+
+//             // Clear the bullet
+//             bullet->name = NULL;
+//           }
+//           else if (bullet->position.y >= SCREEN_HEIGHT)
+//           {
+//             // Check if the bullet is out of the screen
+//             bullet->name = NULL;
+//           }
+//           else
+//           {
+//             // Draw the bullet
+//             draw_image(bullet->position.x, bullet->position.y,
+//                        bullet->size.width, bullet->size.height, bullet->sprite);
+
+//             draw_health_bar(game_controller);
+//           }
+//         }
+//         else
+//         {
+//           // If bullet is inactive, try to fire a new one
+//           if (randomNum() % 1000 < 1)
+//           {
+//             // 0.01% chance to fire a bullet each frame
+//             bullet->name = "Alien Bullet";
+//             bullet->position.x = alien->position.x + alien->size.width / 2 -
+//                                  bullet->size.width / 2;
+//             bullet->position.y = alien->position.y + alien->size.height;
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
+
 void move_alien_bullet(GameController *game_controller, int step)
 {
   // Adjust step size
-  step = step / 20;
+  step = step / 5;
 
   // Iterate over aliens in the current wave
   for (int i = 0; i < game_controller->stages[0]
@@ -437,6 +539,11 @@ void move_alien_bullet(GameController *game_controller, int step)
     Alien *alien = &game_controller->stages[0]
                         .waves[game_controller->current_wave]
                         .aliens[i];
+
+    if (alien->sprite == epd_bitmap_big_boss[0])
+    {
+      // step = step / 1.5;
+    }
 
     // Check if the alien is active
     if (alien->name != NULL)
@@ -456,8 +563,9 @@ void move_alien_bullet(GameController *game_controller, int step)
 
           // Calculate new position
           bullet->position.y += step;
+
           int offset_y =
-              alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 100
+              alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 80
                                                                         : 50;
           int offset_x =
               alien->bullets[0].sprite == epd_bitmap_bullet_big_boss[0] ? 45
@@ -501,7 +609,7 @@ void move_alien_bullet(GameController *game_controller, int step)
         else
         {
           // If bullet is inactive, try to fire a new one
-          if (randomNum() % 1000 < 1)
+          if (randomNum() % 1000 < 5)
           {
             // 0.01% chance to fire a bullet each frame
             bullet->name = "Alien Bullet";
@@ -514,6 +622,73 @@ void move_alien_bullet(GameController *game_controller, int step)
     }
   }
 }
+
+// void move_bullet(GameController *game_controller, int index, int step)
+// {
+//   // handle aliens' bullet movement
+//   move_alien_bullet(game_controller, step);
+
+//   // handle player bullet movement
+//   for (int i = 0; i < game_controller->spaceship.bullet_bonus + 1; i++)
+//   {
+//     Bullet *bullet = &game_controller->spaceship.bullets[index][i];
+
+//     // If the bullet is already inactive, skip it
+//     if (bullet->name == NULL)
+//     {
+//       continue;
+//     }
+
+//     // Clear the bullet at the previous position
+//     clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
+//                 bullet->size.height, epd_bitmap_background);
+
+//     // Calculate potential new position
+//     bullet->position.y -= step;
+
+//     // Check if the bullet is out of the screen
+//     if (bullet->position.y <= -bullet->size.height)
+//     {
+//       bullet->name = NULL;
+//       continue; // Skip to the next bullet, do not return
+//     }
+
+//     Wave *current_wave =
+//         &game_controller->stages[0].waves[game_controller->current_wave];
+//     for (int j = 0; j < current_wave->alien_count; j++)
+//     {
+//       Alien *alien = &current_wave->aliens[j];
+
+//       if (alien->name != NULL)
+//       {
+//         if (bullet->position.x >= alien->position.x &&
+//             bullet->position.x <= alien->position.x + alien->size.width &&
+//             bullet->position.y >= alien->position.y &&
+//             bullet->position.y <= alien->position.y + alien->size.height)
+//         {
+//           uart_puts("ALERT: BULLET HIT AN ALIEN!\n");
+
+//           // Deal damage to the alien
+//           deal_damage(game_controller, j, alien->position.x, alien->position.y);
+
+//           // Clear the bullet
+//           clear_image(bullet->position.x, bullet->position.y,
+//                       bullet->size.width, bullet->size.height,
+//                       epd_bitmap_background);
+
+//           bullet->name = NULL;
+//         }
+//       }
+//     }
+
+//     // If bullet is still active, draw it at the new position
+//     if (bullet->name != NULL)
+//     {
+//       draw_image(bullet->position.x, bullet->position.y, bullet->size.width,
+//                  bullet->size.height, bullet->sprite);
+//     }
+//   }
+// }
 
 void move_bullet(GameController *game_controller, int index, int step)
 {
@@ -558,6 +733,7 @@ void move_bullet(GameController *game_controller, int index, int step)
             bullet->position.y >= alien->position.y &&
             bullet->position.y <= alien->position.y + alien->size.height)
         {
+
           uart_puts("ALERT: BULLET HIT AN ALIEN!\n");
 
           // Deal damage to the alien
@@ -567,8 +743,7 @@ void move_bullet(GameController *game_controller, int index, int step)
           clear_image(bullet->position.x, bullet->position.y,
                       bullet->size.width, bullet->size.height,
                       epd_bitmap_background);
-          
-          
+
           bullet->name = NULL;
         }
       }
@@ -582,7 +757,6 @@ void move_bullet(GameController *game_controller, int index, int step)
     }
   }
 }
-
 int pos_x[5] = {0, 130, 260, 390, 520};
 int pos_y[4] = {0, 109, 218, 327};
 int row_counts[4] = {0, 0, 0, 0};
@@ -591,7 +765,7 @@ int col_counts[5] = {0, 0, 0, 0, 0};
 void init_power_up(GameController *game_controller)
 {
   int rand_col;
-  int type = randomNum() % 2;
+  int type = randomNum() % 3;
   PowerUp powerup;
   init_seed();
   rand_col = randomNum() % 5;
@@ -604,10 +778,17 @@ void init_power_up(GameController *game_controller)
   if (type == 0)
   {
     powerup.sprite = epd_bitmap_health_allArray[0];
+    powerup.type = 0;
+  }
+  else if (type == 1)
+  {
+    powerup.sprite = epd_bitmap_shield_allArray[0];
+    powerup.type = 1;
   }
   else
   {
-    powerup.sprite = epd_bitmap_shield_allArray[0];
+    powerup.sprite = epd_bitmap_bullet_PU_allArray[0];
+    powerup.type = 2;
   }
 
   game_controller->powerup = powerup;
@@ -617,7 +798,7 @@ void move_PU_to_position(GameController *game_controller)
 {
   PowerUp *powerup = &game_controller->powerup;
   Spaceship *spaceship = &game_controller->spaceship;
-  
+
   // Draw the powerup in its new position first
   if (powerup->position.y < powerup->target.y)
   {
@@ -642,17 +823,27 @@ void move_PU_to_position(GameController *game_controller)
   {
     // Collision detected!
     // Handle power-up effect (e.g., increase health, apply shield)
-    
+
     uart_puts("POWER-UP COLLECTED!\n");
     // set the powerip position to the end of the screen
     powerup->position.y = 900;
+
     if (powerup->sprite == epd_bitmap_health_allArray[0])
     {
+      draw_badge(HEALTH_BONUS);
       spaceship->health += 10;
-      
+    }
+    else if (powerup->sprite == epd_bitmap_shield_allArray[0])
+    {
+      draw_badge(SHIELD_BONUS);
+      spaceship->shieldTimer = 100;
     }
     else
-    {}
+    {
+      // Add a statement here
+      draw_badge(BULLET_BONUS);
+      spaceship->bullet_bonus += 1;
+    }
   }
   // Redraw the aliens
   draw_alien(game_controller);
@@ -669,21 +860,6 @@ int pu_reach_target(GameController *game_controller)
     return 0; // If any alien hasn't reached its position, return false
   }
   return 1; // All aliens have reached their positions
-}
-
-void draw_health_PU(GameController *game_controller)
-{
-  draw_image_object(game_controller->powerup.position.x,
-                    game_controller->powerup.position.y, 90, 90,
-                    game_controller->powerup.sprite, epd_bitmap_background);
-}
-
-void draw_shield_PU(GameController *game_controller)
-{
-  // int x = pos_x[rand() % 5];
-  // int y = pos_y[rand() % 4];
-  draw_image_object(780 / 2, 450, 90, 90, epd_bitmap_shield_allArray[0],
-                    epd_bitmap_background);
 }
 
 void clear_all_bullets(GameController *game_controller)
@@ -738,16 +914,22 @@ void add_bullet(GameController *game_controller)
     }
   }
 }
-
+static unsigned int shieldTimer = 0;
 // Receive damage from enemies
 void receive_damage(GameController *game_controller)
 {
-  game_controller->spaceship.health -= game_controller->stages[0]
+
+  // === DAMAGE LOGIC ===
+  if (game_controller->spaceship.shieldTimer <= 0) {
+    game_controller->spaceship.health -= game_controller->stages[0]
                                            .waves[game_controller->current_wave]
                                            .aliens[0]
                                            .damage;
-  clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
-  draw_health_bar(game_controller);
+  } 
+  uart_puts("shield timer: ");
+  uart_puts(itoa(game_controller->spaceship.shieldTimer));
+   clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
+    draw_health_bar(game_controller);
 }
 
 void deal_damage(GameController *game_controller, int index, int posX, int posY)
@@ -756,10 +938,10 @@ void deal_damage(GameController *game_controller, int index, int posX, int posY)
       &game_controller->stages[0].waves[game_controller->current_wave];
 
   Alien *alien = &current_wave->aliens[index];
+  Spaceship *spaceship = &game_controller->spaceship;
 
   alien->health -= game_controller->spaceship.damage;
-
-uart_puts("Health: ");
+  uart_puts("Health: ");
   uart_puts(itoa(alien->health));
   if (alien->health <= 0)
   {
@@ -771,7 +953,6 @@ uart_puts("Health: ");
         clear_image(bullet->position.x, bullet->position.y, bullet->size.width,
                     bullet->size.height, epd_bitmap_background);
 
-        // explosion(posX, posY);
         bullet->name = NULL;
       }
     }
@@ -920,6 +1101,13 @@ void calculate_bullet_positions(GameController *game_controller,
   }
 }
 
+void draw_health_PU(GameController *game_controller)
+{
+  draw_image_object(game_controller->powerup.position.x,
+                    game_controller->powerup.position.y, 90, 90,
+                    game_controller->powerup.sprite, epd_bitmap_background);
+}
+
 void draw_lose_screen(GameController *game_controller, int seconds)
 {
   draw_image_rect(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, epd_bitmap_lose_screen);
@@ -1037,9 +1225,9 @@ void draw_badge(int badge)
   const int POS_Y = (SCREEN_HEIGHT - BONUS_HEIGHT) / 2;
 
   // Badge Animation Constants
-  float badge_opacity = 1.0f;             // Initial opacity
-  int fade_duration = 100;                // Fade duration in frames
-  unsigned int animation_duration = 1000; // Animation duration in milliseconds
+  float badge_opacity = 1.0f;              // Initial opacity
+  int fade_duration = 100;                 // Fade duration in frames
+  unsigned int animation_duration = 10000; // Animation duration in milliseconds
 
   if (badge == BULLET_BONUS)
   {
@@ -1049,6 +1237,50 @@ void draw_badge(int badge)
       // Draw the badge with current opacity
       draw_image_with_opacity(POS_X, POS_Y, BONUS_WIDTH, BONUS_HEIGHT,
                               epd_bullet_bonus_badge[0], epd_bitmap_background,
+                              badge_opacity);
+
+      // Wait for a specific amount of time
+      unsigned int frame_duration = animation_duration / fade_duration;
+      wait_msec(frame_duration);
+
+      // Decrease opacity gradually
+      badge_opacity -= 1.0f / fade_duration;
+      if (badge_opacity < 0.0f)
+      {
+        badge_opacity = 0.0f;
+      }
+    }
+  }
+  else if (badge == SHIELD_BONUS)
+  {
+    // Gradually decrease opacity over fade duration
+    for (int frame = 0; frame < fade_duration; frame++)
+    {
+      // Draw the badge with current opacity
+      draw_image_with_opacity(POS_X, POS_Y, BONUS_WIDTH, BONUS_HEIGHT,
+                              epd_bitmap_shield_badge_allArray[0], epd_bitmap_background,
+                              badge_opacity);
+
+      // Wait for a specific amount of time
+      unsigned int frame_duration = animation_duration / fade_duration;
+      wait_msec(frame_duration);
+
+      // Decrease opacity gradually
+      badge_opacity -= 1.0f / fade_duration;
+      if (badge_opacity < 0.0f)
+      {
+        badge_opacity = 0.0f;
+      }
+    }
+  }
+  else if (badge == HEALTH_BONUS)
+  {
+    // Gradually decrease opacity over fade duration
+    for (int frame = 0; frame < fade_duration; frame++)
+    {
+      // Draw the badge with current opacity
+      draw_image_with_opacity(POS_X, POS_Y, BONUS_WIDTH, BONUS_HEIGHT,
+                              epd_bitmap_health_badge_allArray[0], epd_bitmap_background,
                               badge_opacity);
 
       // Wait for a specific amount of time
@@ -1114,15 +1346,12 @@ void lighting()
 
 void display_lighting(int x, int y, int w, int h, int num_frames, const unsigned long **video)
 {
-  for (int i = 0; i < 10; i++)
-  {
 
-    for (int frame = 0; frame < num_frames; frame++)
-    {
-      draw_image(x, y, w, h, video[frame]);
-      wait_msec(100500);
-      // wait_msec(10000);
-      clear_image(x, y, w, h, epd_bitmap_background);
-    }
+  for (int frame = 0; frame < num_frames; frame++)
+  {
+    draw_image(x, y, w, h, video[frame]);
+    wait_msec(100500);
+    // wait_msec(10000);
+    clear_image(x, y, w, h, epd_bitmap_background);
   }
 }
