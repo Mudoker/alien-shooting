@@ -113,7 +113,7 @@ void init_bullet(GameController *game_controller, const unsigned long *sprite,
 // Init stage
 void init_stages(GameController *game_controller)
 {
-  for (int i = 0; i < 9; i++)
+  for (int i = 0; i < 3; i++)
   {
     char name[MAX_STR_LENGTH];
     strcpy(name, "STAGE ");

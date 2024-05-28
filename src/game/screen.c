@@ -38,22 +38,22 @@ void in_game_screen(GameController *game_controller)
     switch (c)
     {
     case 'w':
-      manage_command(game_controller, "");
+      manage_command(game_controller, "Moved spaceship to up");
 
       move_spaceship(game_controller, KEY_UP, 10);
       break;
     case 's':
-      manage_command(game_controller, "");
+      manage_command(game_controller, "Moved spaceship to down");
 
       move_spaceship(game_controller, KEY_DOWN, 10);
       break;
     case 'a':
-      manage_command(game_controller, "");
+      manage_command(game_controller, "Moved spaceship to left");
 
       move_spaceship(game_controller, KEY_LEFT, 10);
       break;
     case 'd':
-      manage_command(game_controller, "");
+      manage_command(game_controller, "Moved spaceship to right");
 
       move_spaceship(game_controller, KEY_RIGHT, 10);
       break;
@@ -127,7 +127,7 @@ void stage_screen(GameController *game_controller)
 
       is_update = False;
 
-      int yOffset = 40; // Start with the offset for the active stage
+      int yOffset = 300; // Start with the offset for the active stage
       for (int i = 0; i < MAX_STAGES; i++)
       {
         int buttonState = (game_controller->stage_level ==
@@ -137,7 +137,7 @@ void stage_screen(GameController *game_controller)
         draw_button(SCREEN_WIDTH / 2 - 150, yOffset, 300, 60,
                     game_controller->stages[i].name, buttonState);
 
-        yOffset += 90; // Increase the y-offset for the next button
+        yOffset += 120; // Increase the y-offset for the next button
       }
     }
 

@@ -8,7 +8,7 @@
 #include "ui.h"
 
 #define MAX_ALIENS 20
-#define MAX_STAGES 9
+#define MAX_STAGES 3
 
 typedef enum
 {
