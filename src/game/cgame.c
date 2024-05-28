@@ -84,7 +84,7 @@ void init_spaceship(GameController *game_controller,
   spaceship.name = name;
   spaceship.size.width = width;
   spaceship.size.height = height;
-  spaceship.bullet_bonus = 0;
+  spaceship.bullet_bonus = 4;
   spaceship.shieldTimer = 0;
   spaceship.position.x = x;
   spaceship.position.y = y;
@@ -677,7 +677,7 @@ void move_PU_to_position(GameController *game_controller)
     else if (powerup->sprite == epd_bitmap_shield_allArray[0])
     {
       draw_badge(SHIELD_BONUS);
-      spaceship->shieldTimer = 100;
+      spaceship->shieldTimer = 10000000;
     }
     else
     {
@@ -755,11 +755,17 @@ void receive_damage(GameController *game_controller)
   // === DAMAGE LOGIC ===
   if (game_controller->spaceship.shieldTimer <= 0)
   {
-    game_controller->spaceship.health -= game_controller->stages[0]
-                                             .waves[game_controller->current_wave]
-                                             .aliens[0]
-                                             .damage;
+    // game_controller->spaceship.health -= game_controller->stages[0]
+    //                                          .waves[game_controller->current_wave]
+    //                                          .aliens[0]
+    //                                          .damage;
 
+  if (game_controller->spaceship.shieldTimer <= 0) {
+    game_controller->spaceship.health -= game_controller->stages[0]
+                                           .waves[game_controller->current_wave]
+                                           .aliens[0]
+                                           .damage;
+  } 
     if (game_controller->spaceship.health <= 0)
     {
       uart_puts(WHITE);
@@ -771,6 +777,8 @@ void receive_damage(GameController *game_controller)
     }
   }
 
+  uart_puts("Shield timer: ");
+  uart_puts(itoa(game_controller->spaceship.shieldTimer));
   clear_image(59, SCREEN_HEIGHT - 45, 250, 10, epd_bitmap_background);
   draw_health_bar(game_controller);
 }

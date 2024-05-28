@@ -120,8 +120,7 @@ void in_game_screen(GameController *game_controller)
 
       power_up_timer = 0;
     }
-
-    game_controller->spaceship.shieldTimer -= 80;
+    game_controller->spaceship.shieldTimer -= 1;
   }
 }
 

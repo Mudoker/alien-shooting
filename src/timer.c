@@ -53,13 +53,17 @@ int handle_system_timer()
 
 void wait_msec(unsigned int n)
 {
-  unsigned long start_time = TIMER_CLO;
-  unsigned long end_time = start_time + n * (TIMER_CLOCK_HZ / 1000);
-
-  while (TIMER_CLO < end_time)
-  {
-    // Wait until the specified time has elapsed
-  }
+    register unsigned long f, t, r, expiredTime;
+    // Get the current counter frequency (Hz)
+    asm volatile("mrs %0, cntfrq_el0" : "=r"(f));
+    // Read the current counter value
+    asm volatile("mrs %0, cntpct_el0" : "=r"(t));
+    // Calculate expire value for counter
+    expiredTime = t + ((f / 1000) * n) / 1000;
+    do
+    {
+        asm volatile("mrs %0, cntpct_el0" : "=r"(r));
+    } while (r < expiredTime);
 }
 
 
