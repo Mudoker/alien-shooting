@@ -10,14 +10,10 @@
 int main() {
   uart_init();       // Initialize UART
   init_interrupts(); // Initialize interrupts
-  init_sys_timer1();
 
-  // load_image();
-  // load_inf();
-  // load_image();
-  // load_inf();
-  // video_mode();
-  gameCli();
+  while (1) {
+    handle_irq_elx(); // Handle pending interrupts
+  }
 
   return 0;
 }

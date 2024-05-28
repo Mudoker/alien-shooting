@@ -1,16 +1,18 @@
 #include "../header/timer.h"
+#include "../header/uart.h"
 
 volatile unsigned long system_millis = 0;
+volatile int countdown = 60;
 
 // Function to get the current time in milliseconds
 unsigned long get_time_ms() { return system_millis; }
 
-void init_sys_timer1() {
+void init_system_timer() {
   // Set GPIO3 as output
   GPFSEL0 |= (1 << 9);
 
-  // Calculate timer period for 0.5 second
-  unsigned int timer1_period = TIMER_CLOCK_HZ / 2;
+  // Calculate timer period for 1 second
+  unsigned int timer1_period = TIMER_CLOCK_HZ;
 
   // Set timer compare register for system timer 1
   TIMER_C1 = TIMER_CLO + timer1_period;
@@ -19,28 +21,26 @@ void init_sys_timer1() {
   TIMER_CS |= TIMER_CS_MATCH_1;
 }
 
-void handle_sys_timer1() {
-  TIMER_C1 += TIMER_CLOCK_HZ / 2;
+void handle_system_timer() {
+  // Clear the match 1 interrupt flag
   TIMER_CS |= TIMER_CS_MATCH_1;
+  TIMER_C1 += TIMER_CLOCK_HZ; // Add one second to the compare value
+
+  // Decrement countdown
+  if (countdown > 0) {
+    countdown--;
+    uart_puts("Countdown: ");
+    uart_dec(countdown);
+    uart_puts("\n");
+  } else {
+    // uart_puts("Countdown complete!\n");
+
+    // Stop interrupts
+    return;
+  }
 
   // Toggle GPIO3
   GPSET0 ^= (1 << 3);
-}
-
-void init_sys_timer3() {
-  unsigned int timer3_period = TIMER_CLOCK_HZ / 2;
-  unsigned int timer3_cmp = TIMER_CLO + timer3_period;
-  TIMER_C3 = timer3_cmp;
-  TIMER_CS |= TIMER_CS_MATCH_3;
-}
-
-void handle_sys_timer3() {
-  unsigned int timer3_period = TIMER_CLOCK_HZ / 2;
-  unsigned int timer3_cmp = TIMER_C3 + timer3_period;
-  TIMER_C3 = timer3_cmp;
-  TIMER_CS |= TIMER_CS_MATCH_3;
-
-  // Additional logic can be added here if required
 }
 
 void wait_msec(unsigned int n) {

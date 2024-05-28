@@ -15,21 +15,16 @@
 #define TIMER_CHI (*(volatile unsigned int *)(TIMER_BASE + 0x08))
 #define TIMER_C0 (*(volatile unsigned int *)(TIMER_BASE + 0x0C))
 #define TIMER_C1 (*(volatile unsigned int *)(TIMER_BASE + 0x10))
-#define TIMER_C2 (*(volatile unsigned int *)(TIMER_BASE + 0x14))
-#define TIMER_C3 (*(volatile unsigned int *)(TIMER_BASE + 0x18))
 
 // Timer control bits
 #define TIMER_CS_MATCH_1 (1 << 1)
-#define TIMER_CS_MATCH_3 (1 << 3)
 #define TIMER_CLOCK_HZ 1000000
 
 // Timer initialization
-void init_sys_timer1();
-void init_sys_timer3();
+void init_system_timer();
 
 // Timer IRQ handlers
-void handle_sys_timer1();
-void handle_sys_timer3();
+void handle_system_timer();
 
 // Timer functions
 void wait_msec(unsigned int n);
