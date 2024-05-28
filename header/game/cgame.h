@@ -84,8 +84,8 @@ void gameCli();
 void init_frame(int offset_x, int offset_y);
 void init_controller(GameController *game_controller);
 void init_spaceship(GameController *game_controller,
-                    const unsigned long *sprite, int width, int height, int x,
-                    int y);
+                    const unsigned longsprite, int width, int height, int x,
+                    int y, char *name, int damage, int health);
 void init_bullet(GameController *game_controller, const unsigned long *sprite,
                  int width, int height, int x, int y, int index);
 void init_stages(GameController *game_controller);
