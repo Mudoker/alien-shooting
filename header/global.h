@@ -26,12 +26,11 @@
 #define NUM_FRAMES 45 // Number of frames
 #define VIDEO_LOOP 10 // Video loop
 
-#define NULL ((void *)0)
-#define SCROLL_STEP 4
-
-#define MAX_ENEMY 5 // Maximum number of enemies
-#define MAX_ENEMY_IN_ROW 5
-#define MAX_ENEMY_IN_COL 1
+#define NULL ((void *)0)   // Null pointer
+#define SCROLL_STEP 4      // Scroll step
+#define MAX_ENEMY 5        // Maximum number of enemies
+#define MAX_ENEMY_IN_ROW 5 // Maximum number of enemies in row
+#define MAX_ENEMY_IN_COL 1 // Maximum number of enemies in column
 
 // Text color codes
 #define RED "\033[0;31m"
@@ -53,9 +52,6 @@
 #define WHITE_BG "\033[47m"
 #define BLACK_BG "\033[40m"
 #define CLEAR "\x1b[49m"
-
-// User-defined data types
-// typedef enum { False = 0, True = 1 } boolean; // Boolean data type
 
 // OS trademark structure
 typedef struct
