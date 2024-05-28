@@ -701,140 +701,10 @@ void parse_command(char *input) {
 
     // Check for the flags provided
     if (is_equal(flags[0], "uart")) {
-      // Loop through the flags and set the UART configuration
-      for (int i = 1; i < MAX_FLAGS; i++) {
-        if (flags[i] == (char *)0) {
-          break;
-        }
-
-        // Extract the target and option from the flag (e.g., target: -baud,
-        // value: 115200)
-        char target[MAX_CMD_SIZE];
-        char option[MAX_CMD_SIZE];
-
-        // Parse the target and option
-        parse_target(flags[i], target, option);
-
-        // Check for the target and set the UART configuration
-        if (option == (char *)0) {
-          show_status(
-              1, "Invalid value. Type 'help ref' to see available targets.");
-          return;
-        }
-
-        // If the target is baud, set the baud rate
-        if (is_equal(target, "baud") || is_equal(target, "bdr")) {
-          BaudRateConfig baud_rate = get_baud_rate(string_to_int(option));
-
-          uart_puts("\n");
-
-          str_format("Baud Rate Configuration\n", THEME.PRIMARY_COLOR);
-
-          // Convert the baud rate to a string and display it
-          str_format("IBRD: ", THEME.PRIMARY_COLOR);
-          char *ibrd = int_to_string(baud_rate.ibrd);
-          str_format(ibrd, THEME.SECONDARY_COLOR);
-
-          uart_puts("\n");
-
-          str_format("FBRD: ", THEME.PRIMARY_COLOR);
-          char *fbrd = int_to_string(baud_rate.fbrd);
-          str_format(fbrd, THEME.SECONDARY_COLOR);
-
-          uart_puts("\n");
-
-          BAUD_RATE_CONFIG.ibrd = baud_rate.ibrd;
-          BAUD_RATE_CONFIG.fbrd = baud_rate.fbrd;
-          IS_CONFIG_BAUD_RATE = 1;
-
-          // SUCCESS_COLOR message
-          show_status(0, "Baud rate set successfully.");
-          IS_REINIT_UART = 1;
-        } else if (is_equal(target, "dbits") || is_equal(target, "dbs")) {
-          int val = string_to_int(option);
-
-          // Data bits must be between 5 and 8
-          if (DATA_BITS_CONFIG < 5 || DATA_BITS_CONFIG > 8) {
-            show_status(
-                1, "Invalid data bits. Data bits must be between 5 and 8.");
-            return;
-          }
-          DATA_BITS_CONFIG = val;
-
-          // SUCCESS_COLOR message
-          show_status(0, "Data bits set successfully.");
-          IS_REINIT_UART = 1;
-        } else if (is_equal(target, "sbits") || is_equal(target, "sbs")) {
-          int val = string_to_int(option);
-
-          if (val != 1 && val != 2) {
-            show_status(1,
-                        "Invalid stop bits. Stop bits must be either 1 or 2.");
-            return;
-          }
-
-          STOP_BIT_CONFIG = val;
-
-          // SUCCESS_COLOR message
-          show_status(0, "Stop bits set successfully.");
-          IS_REINIT_UART = 1;
-        } else if (is_equal(target, "par")) {
-          // Check for the parity option if null
-          if (option == (char *)0) {
-            show_status(
-                1, "Invalid parity. Parity must be either none, even or odd.");
-            return;
-          }
-
-          // Get the parity value
-          int val = string_to_int(option);
-
-          // Check for the parity value
-          if (val < 0 || val > 2) {
-            show_status(1, "Invalid parity. Parity must be either none (0), "
-                           "odd (1) or even (2).");
-            return;
-          }
-
-          PARITY_CONFIG = val;
-
-          // Succss message
-          show_status(0, "Parity set successfully.");
-          IS_REINIT_UART = 1;
-        } else if (is_equal(target, "handshake") || is_equal(target, "hs") ||
-                   is_equal(target, "flow")) {
-          // Check for the handshake option if null
-          if (option == (char *)0) {
-            show_status(1, "Invalid handshake. Handshake must be either "
-                           "CTS/RTS (1) or none (0) ");
-            return;
-          }
-
-          // Get the handshake value
-          int val = string_to_int(option);
-
-          // Check for the handshake value (0: none, 1: CTS/RTS, 2+: Not
-          // allowed)
-          if (val < 0 || val > 1) {
-            show_status(1, "Invalid handshake. Handshake must be either "
-                           "CTS/RTS (1) or none (0)");
-            return;
-          }
-
-          // SUCCESS_COLOR message
-          HANDSHAKE_CONFIG = string_to_int(option);
-          show_status(0, "Handshake set successfully.");
-          IS_REINIT_UART = 1;
-        } else {
-          show_status(
-              1, "Invalid command. Type 'help ref' to see available targets.");
-          return;
-        }
-      }
+      show_status(1, "This feature is not available in this version.");
     } else {
       show_status(1,
-                  "Invalid command. Type 'help ref' to see available targets.");
-      return;
+                  "Command not found. Type 'help' to see available commands.");
     }
   } else if (is_equal(command, "showinfo")) { // Show device information
     uart_puts("\n\n");
@@ -949,6 +819,17 @@ void parse_command(char *input) {
       tabulate(keys, 2, values, 6);
       return;
     }
+  } else if (is_equal(command, "image")) {
+    uart_puts("\n\n");
+    // Show image on the screen
+    load_image();
+  } else if (is_equal(command, "video")) {
+    uart_puts("\n\n");
+    // Show video on the screen
+    video_mode();
+  } else if (is_equal(command, "game")) {
+    // Show game on the screen
+    show_status(1, "This feature is not available in this version.");
   } else {
     show_status(1, "Command not found. Type 'help' to see available commands.");
   }
