@@ -21,7 +21,6 @@
 #define DISABLE_BASIC_IRQS (*(volatile unsigned int *)(INTERRUPT_BASE + 0x224))
 
 // IRQ definitions
-#define SYS_TIMER_IRQ_0 (1 << 0)
 #define SYS_TIMER_IRQ (1 << 1)
 #define UART0_IRQ (1 << 25)
 

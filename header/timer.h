@@ -13,11 +13,10 @@
 #define TIMER_CS (*(volatile unsigned int *)(TIMER_BASE + 0x00))
 #define TIMER_CLO (*(volatile unsigned int *)(TIMER_BASE + 0x04))
 #define TIMER_CHI (*(volatile unsigned int *)(TIMER_BASE + 0x08))
-#define TIMER_C0 (*(volatile unsigned int *)(TIMER_BASE + 0x0C))
 #define TIMER_C1 (*(volatile unsigned int *)(TIMER_BASE + 0x10))
 
 // Timer control bits
-#define TIMER_CS_MATCH_1 (1 << 1)
+#define TIMER_CS_MATCH (1 << 1)
 #define TIMER_CLOCK_HZ 1000000
 
 // Timer initialization

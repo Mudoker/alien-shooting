@@ -14,17 +14,19 @@ void init_system_timer() {
   // Calculate timer period for 1 second
   unsigned int timer1_period = TIMER_CLOCK_HZ;
 
-  // Set timer compare register for system timer 1
+  // Load the period into the compare register
   TIMER_C1 = TIMER_CLO + timer1_period;
 
   // Enable match 1 interrupt
-  TIMER_CS |= TIMER_CS_MATCH_1;
+  TIMER_CS |= TIMER_CS_MATCH;
 }
 
 void handle_system_timer() {
   // Clear the match 1 interrupt flag
-  TIMER_CS |= TIMER_CS_MATCH_1;
-  TIMER_C1 += TIMER_CLOCK_HZ; // Add one second to the compare value
+  TIMER_CS |= TIMER_CS_MATCH;
+
+  // Increment the system timer
+  TIMER_C1 += TIMER_CLOCK_HZ;
 
   // Decrement countdown
   if (countdown > 0) {
@@ -53,10 +55,13 @@ void wait_msec(unsigned int n) {
 }
 
 void set_wait_timer(int set, unsigned int msVal) {
-  static unsigned long expiredTime = 0; // Static to retain value
-  if (set) {                            // SET TIMER
+  // Set the timer to expire in msVal milliseconds
+  static unsigned long expiredTime = 0;
+
+  // If set is true, set the timer
+  if (set) {
     expiredTime = TIMER_CLO + msVal * (TIMER_CLOCK_HZ / 1000);
-  } else { // WAIT FOR TIMER TO EXPIRE
+  } else {
     while (TIMER_CLO < expiredTime) {
       // Wait until the timer has expired
     }
