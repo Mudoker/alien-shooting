@@ -5,7 +5,8 @@ CommandStack command_stack = {.top_index = -1};
 
 // List of available commands
 char *commands[] = {
-    "os", "help", "clear", "history", "setcolor", "ref", "showinfo", (char *)0,
+    "os",       "help",  "clear", "history", "setcolor", "ref",
+    "showinfo", "image", "video", "game",    (char *)0,
 };
 
 char *extended_commands[] = {
@@ -228,7 +229,16 @@ void show_help(char *command) {
   commands_desc[6][0] = "Show current device informatio";
   commands_desc[6][1] = "-v: show full information";
   commands_desc[6][2] = "\nE.g.: showinfo -v";
-  commands_desc[7][0] = (char *)0;
+  commands_desc[7][0] = "Show image on the screen";
+  commands_desc[7][1] = "None";
+  commands_desc[7][2] = "\nE.g.: image";
+  commands_desc[8][0] = "Show video on the screen";
+  commands_desc[8][1] = "None";
+  commands_desc[8][2] = "\nE.g.: video";
+  commands_desc[9][0] = "Show game on the screen";
+  commands_desc[9][1] = "None";
+  commands_desc[9][2] = "\nE.g.: game";
+  commands_desc[10][0] = (char *)0;
 
   // Display help menu
   uart_puts("\n");
@@ -283,6 +293,8 @@ void show_help(char *command) {
 
   // Display the table with the commands and descriptions
   tabulate(keys, 2, values, num_rows);
+
+  uart_puts("\n");
 }
 
 // Auto-complete command
@@ -291,6 +303,7 @@ char *autocomplete_command(char *buffer) {
   if (len(buffer) == 0) {
     return (char *)0;
   }
+
   // Check if the buffer starts with '?' and return "help" if true
   if (buffer[0] == '?') {
     buffer[0] = 'h';
@@ -625,7 +638,7 @@ void parse_command(char *input) {
           return;
         }
       } else if (is_equal(target, "pri")) { // Set primary color
-        color_option = to_color(option, 0);   // Get the color option
+        color_option = to_color(option, 0); // Get the color option
 
         if (color_option == (char *)0) {
           return;
@@ -633,7 +646,7 @@ void parse_command(char *input) {
 
         THEME.PRIMARY_COLOR = color_option;
       } else if (is_equal(target, "sec")) { // Set secondary color
-        color_option = to_color(option, 0);   // Get the color option
+        color_option = to_color(option, 0); // Get the color option
 
         if (color_option == (char *)0) {
           return;
@@ -641,7 +654,7 @@ void parse_command(char *input) {
 
         THEME.SECONDARY_COLOR = color_option;
       } else if (is_equal(target, "err")) { // Set error color
-        color_option = to_color(option, 0);   // Get the color option
+        color_option = to_color(option, 0); // Get the color option
 
         if (color_option == (char *)0) {
           return;
@@ -649,7 +662,7 @@ void parse_command(char *input) {
 
         THEME.ERROR_COLOR = color_option;
       } else if (is_equal(target, "suc")) { // Set success color
-        color_option = to_color(option, 0);   // Get the color option
+        color_option = to_color(option, 0); // Get the color option
 
         if (color_option == (char *)0) {
           return;
@@ -788,8 +801,8 @@ void parse_command(char *input) {
           // Succss message
           show_status(0, "Parity set successfully.");
           IS_REINIT_UART = 1;
-        } else if (is_equal(target, "handshake") ||
-                   is_equal(target, "hs") || is_equal(target, "flow")) {
+        } else if (is_equal(target, "handshake") || is_equal(target, "hs") ||
+                   is_equal(target, "flow")) {
           // Check for the handshake option if null
           if (option == (char *)0) {
             show_status(1, "Invalid handshake. Handshake must be either "
