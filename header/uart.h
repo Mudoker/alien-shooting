@@ -111,8 +111,7 @@
 #define UART_CLK 48000000
 
 // Baud rate configuration
-typedef struct
-{
+typedef struct {
   unsigned int ibrd; // Integer baud rate divisor
   unsigned int fbrd; // Fractional baud rate divisor
 } BaudRateConfig;
@@ -124,7 +123,7 @@ extern int STOP_BIT_CONFIG;             // Stop bit configuration
 extern int PARITY_CONFIG;               // Parity configuration
 extern int HANDSHAKE_CONFIG;            // Handshake configuration
 extern int IS_REINIT_UART;              // UART reinitialization state
-extern int IS_CONFIG_BAUD_RATE;         // Flag to check if the baud rate is configured
+extern int IS_CONFIG_BAUD_RATE; // Flag to check if the baud rate is configured
 
 // Function prototypes
 void uart_init();              // Initialize UART
@@ -135,7 +134,8 @@ void uart_hex(unsigned int d); // Print a hex number
 void uart_dec(int num);        // Print a decimal number
 unsigned int uart_isReadByteReady();
 unsigned char getUart();
-void uart_logs(int command_index, char *log);
+void uart_alert(char *alert);
+void uart_logs(int command_index, char *log, char *c, int is_positive);
 void uart_show_info();
 
 #endif
