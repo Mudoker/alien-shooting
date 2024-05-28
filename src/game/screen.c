@@ -1,6 +1,12 @@
 #include "../../header/game/screen.h"
 #include "../../header/game/ui.h"
 
+// Function prototypes
+void result_screen(GameController *game_controller, int defeat_count);
+void lose_screen(GameController *game_controller, int seconds);
+void win_final_screen(GameController *game_controller, int seconds);
+void win_screen(GameController *game_controller, int seconds);
+
 void in_game_screen(GameController *game_controller)
 {
   game_controller->current_wave = 0;
@@ -24,6 +30,7 @@ void in_game_screen(GameController *game_controller)
   int fire_timer = 0;
   int alien_move_timer = 0;
   int alien_move_step = 10;
+  int power_up_timer = 0;
 
   while (1)
   {
@@ -60,6 +67,7 @@ void in_game_screen(GameController *game_controller)
     // Increment the bullet timer
     bullet_timer += 30;
     alien_move_timer += 30;
+    power_up_timer += 30;
 
     if (fire_timer == 5)
     {
@@ -90,9 +98,13 @@ void in_game_screen(GameController *game_controller)
       move_aliens(game_controller, alien_move_step);
       alien_move_timer = 0;
     }
-  }
+    if (power_up_timer >= 10000000)
+    {
+      move_PU_to_position(game_controller);
 
-  // game_loop(game_controller);
+      power_up_timer = 0;
+    }
+  }
 }
 
 void stage_screen(GameController *game_controller)
