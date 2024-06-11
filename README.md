@@ -63,4 +63,4 @@ To start the game, simply press the '1' key from the main menu to enter the game
 - Failure to complete a stage within the time limit or depletion of the spaceship's health results in automatic game termination and a loss.
 - To exit the game environment, players can input the letter 'x'. However, be cautious as this action will result in the loss of all progress made.
 
-Enjoy the thrill of Alien Shooting and may the stars guide your path to victory!
+Enjoy the thrill of Alien Shooting and may the stars guide your path to victory!!
