@@ -78,6 +78,12 @@ void framebf_init(int pw, int ph, int vw, int vh, int offsetX, int offsetY) {
   }
 }
 
+void framebf_clear(unsigned int color) {
+  for (int y = 0; y < height; y++)
+    for (int x = 0; x < width; x++)
+      draw_pixelARGB32(x, y, color);
+}
+
 void draw_pixelARGB32(int x, int y, unsigned int attr) {
   int offs = (y * pitch) + ((COLOR_DEPTH / 8) * x);
   *((unsigned int *)(fb + offs)) = attr;

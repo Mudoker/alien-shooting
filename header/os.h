@@ -11,6 +11,7 @@
 #include "./uart.h"
 #include "./utils.h"
 #include "./video.h"
+#include "./text.h"
 
 // Struct to store command stack
 typedef struct CommandStack {

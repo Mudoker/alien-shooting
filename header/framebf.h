@@ -6,6 +6,7 @@
 #include "utils.h"
 
 void framebf_init(int pw, int ph, int vw, int vh, int offsetX, int offsetY);
+void framebf_clear(unsigned int color);
 void draw_pixelARGB32(int x, int y, unsigned int attr);
 void draw_pixelARGB32_image(int x, int y, unsigned int attr,
                             const unsigned long *background);

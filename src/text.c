@@ -4,7 +4,8 @@
 void load_inf() {
   int offset_x = 0, offset_y = 0;
 
-  framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_AREA_WIDTH, TEXT_AREA_HEIGHT,
+  framebf_clear(0x00000000);
+  framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT,
                offset_x, offset_y);
 
   draw_image_rect(0, 0, 136, 103, epd_bitmap_logoallArray[0]);
@@ -110,11 +111,14 @@ void load_inf() {
     case 'd':
       update_position(1, 0, &offset_x, &offset_y);
       break;
+    case 'x':
+      uart_puts("\n\nExiting text mode\n\n");
+      return;
     default:
       break;
     }
 
-    framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, TEXT_AREA_HEIGHT,
-                 TEXT_AREA_HEIGHT, offset_x, offset_y);
+    framebf_init(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_WIDTH, SCREEN_HEIGHT,
+                 offset_x, offset_y);
   }
 }

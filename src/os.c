@@ -6,7 +6,7 @@ CommandStack command_stack = {.top_index = -1};
 // List of available commands
 char *commands[] = {
     "os",       "help",  "clear", "history", "setcolor", "ref",
-    "showinfo", "image", "video", "game",    (char *)0,
+    "showinfo", "image", "video", "game",    "text",     (char *)0,
 };
 
 char *extended_commands[] = {
@@ -238,7 +238,10 @@ void show_help(char *command) {
   commands_desc[9][0] = "Show game on the screen";
   commands_desc[9][1] = "None";
   commands_desc[9][2] = "\nE.g.: game";
-  commands_desc[10][0] = (char *)0;
+  commands_desc[10][0] = "Show text on the screen";
+  commands_desc[10][1] = "None";
+  commands_desc[10][2] = "\nE.g.: text";
+  commands_desc[11][0] = (char *)0;
 
   // Display help menu
   uart_puts("\n");
@@ -818,8 +821,14 @@ void parse_command(char *input) {
       tabulate(keys, 2, values, 6);
       return;
     }
+  } else if (is_equal(command, "text")) {
+    uart_puts("\n\n");
+
+    // Show image on the screen
+    load_inf();
   } else if (is_equal(command, "image")) {
     uart_puts("\n\n");
+
     // Show image on the screen
     load_image();
   } else if (is_equal(command, "video")) {
