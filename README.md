@@ -13,7 +13,7 @@ Team Number: 10
 Team Members:
 
 - Doan Huu Quoc (s3927776@student.rmit.edu.au)
-- Kim Seokyung (s3939114@rmit.edu.vn)
+- Seokyung Kim (s3939114@rmit.edu.vn)
 - Tran Vu Quang Anh (s3916566@rmit.edu.vn)
 - Nguyen Dinh Viet (s3927291@rmit.edu.vn)
 
